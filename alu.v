@@ -108,11 +108,13 @@ module sr_latch(input logic set, reset,
 
 endmodule
 
-module d_latch(input logic clk, data,
+module d_latch(input logic clk, rst, data,
     output logic q, qbar);
 
     wire set, reset;
-    wire notdata, notclk;
+    wire notclk, bfreset;
+    wire acdata, notacdata, notdata;
+    wire norreset;
 
     sr_latch srl (
         .set(set),
@@ -121,26 +123,43 @@ module d_latch(input logic clk, data,
         .qbar(qbar)
     );
 
+    /*
+     * if data, clk and rst are high at the same time
+     * the set and reset of the sr latch could get a
+     * high at the same time. So we are anding data and
+     * notrst
+     * */
     nor #3 (notdata, data, data);
+    nor #3 (acdata, notdata, rst);
+
+    nor #3 (notacdata, acdata, acdata);
     nor #3 (notclk, clk, clk);
-    nor #3 (set, notclk, notdata);
-    nor #3 (reset, notclk, data);
+    nor #3 (set, notclk, notacdata);
+    nor #3 (bfreset, notclk, acdata);
+
+    /*
+     * asynchronosly resetting the sr latch
+     * */
+    nor #3 (norreset, bfreset, rst);
+    nor #3 (reset, norreset, norreset);
 
 endmodule
 
-module ms_flipflop(input logic eclk, ieclk, data,
+module ms_flipflop(input logic eclk, ieclk, rst, data,
     output logic q, qbar);
 
     wire mout;
 
     d_latch master (
         .clk(eclk),
+        .rst(rst),
         .data(data),
         .q(mout)
     );
 
     d_latch slave (
         .clk(ieclk),
+        .rst(rst),
         .data(mout),
         .q(q),
         .qbar(qbar)
@@ -148,17 +167,118 @@ module ms_flipflop(input logic eclk, ieclk, data,
 
 endmodule
 
-module counter(input logic clk, reset,
+module counter(input logic eclk, ieclk, rst,
     output logic [3:0] count);
 
+    wire q0, q1, q2, q3;
+    wire qb0, qb1, qb2, qb3;
+    wire d0, d1, d2, d3;
+    wire eclk1, eclk2, eclk3;
+    wire ieclk1, ieclk2, ieclk3;
 
+    ms_flipflop msff0 (
+        .eclk(eclk),
+        .ieclk(ieclk),
+        .rst(rst),
+        .data(qb0),
+        .q(count[0]),
+        .qbar(qb0)
+    );
+
+    edge_detector ed1 (
+        .clk(count[0]),
+        .edgclk(eclk1)
+    );
+
+    edge_detector ied1 (
+        .clk(qb0),
+        .edgclk(ieclk1)
+    );
+
+    ms_flipflop msff1 (
+        .eclk(eclk1),
+        .ieclk(ieclk1),
+        .rst(rst),
+        .data(qb1),
+        .q(count[1]),
+        .qbar(qb1)
+    );
+
+    edge_detector ed2 (
+        .clk(count[1]),
+        .edgclk(eclk2)
+    );
+
+    edge_detector ied2 (
+        .clk(qb1),
+        .edgclk(ieclk2)
+    );
+
+    ms_flipflop msff2 (
+        .eclk(eclk2),
+        .ieclk(ieclk2),
+        .rst(rst),
+        .data(qb2),
+        .q(count[2]),
+        .qbar(qb2)
+    );
+
+    edge_detector ed3 (
+        .clk(count[2]),
+        .edgclk(eclk3)
+    );
+
+    edge_detector ied3 (
+        .clk(qb2),
+        .edgclk(ieclk3)
+    );
+
+    ms_flipflop msff3 (
+        .eclk(eclk3),
+        .ieclk(ieclk3),
+        .rst(rst),
+        .data(qb3),
+        .q(count[3]),
+        .qbar(qb3)
+    );
 
 endmodule
 
-
 module testbench;
 
+    reg eclk, ieclk, reset;
+    wire [3:0] out;
+    integer i = 0;
+
+    counter cc (
+        .eclk(eclk),
+        .ieclk(ieclk),
+        .rst(reset),
+        .count(out)
+    );
+
     initial begin
+
+        $display("%4b", out);
+
+        reset = 1'b1;
+        #30;
+        reset = 1'b0;
+
+        for (i = 0; i < 16; i++) begin
+            eclk = 1'b1;
+            ieclk = 1'b0;
+            #30;
+            eclk = 1'b0;
+            #60;
+            ieclk = 1'b1;
+            #30;
+            ieclk = 1'b0;
+            #60;
+            $display("%4b", out);
+        end
+
+        // #60 $display("%4b", out);
 
         $finish;
     end
