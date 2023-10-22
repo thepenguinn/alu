@@ -244,43 +244,157 @@ module counter(input logic eclk, ieclk, rst,
 
 endmodule
 
+module and5in(input logic in0, in1, in2, in3, in4,
+    output logic out);
+
+    /*
+     * in[0-3] takes the inverted values for select signals
+     * ie, for 00101 give 11010, because we are using nor gates.
+     * */
+
+    wire nor0, nor1, nor2;
+    wire notnor0, notnor1, notnor2;
+
+    nor #3 (nor0, in0, in1);
+    nor #3 (notnor0, nor0, nor0);
+
+    nor #3 (nor1, notnor0, in2);
+    nor #3 (notnor1, nor1, nor1);
+
+    nor #3 (nor2, notnor1, in3);
+    nor #3 (notnor2, nor2, nor2);
+
+    nor #3 (out, notnor2, in4);
+
+endmodule
+
+module mux16(input logic [15:0] in, input logic [3:0] sl,
+    output logic out);
+
+    /*
+     * propagation delay -> 112 units
+     * */
+    reg sl00, sl01, sl02, sl03; // the actual sl values
+    wire sl10, sl11, sl12, sl13; // the inverted sl values
+    wire notin00, notin01, notin02, notin03, notin04, notin05, notin06,
+        notin07, notin08, notin09, notin10, notin11, notin12, notin13,
+        notin14, notin15;
+    wire out00, out01, out02, out03, out04, out05, out06, out07,
+        out08, out09, out10, out11, out12, out13, out14, out15;
+
+    assign sl00 = sl[0];
+    assign sl01 = sl[1];
+    assign sl02 = sl[2];
+    assign sl03 = sl[3];
+
+    nor #3 (sl10, sl00, sl00);
+    nor #3 (sl11, sl01, sl01);
+    nor #3 (sl12, sl02, sl02);
+    nor #3 (sl13, sl03, sl03);
+
+    nor #3 (notin00, in[0], in[0]);
+    nor #3 (notin01, in[1], in[1]);
+    nor #3 (notin02, in[2], in[2]);
+    nor #3 (notin03, in[3], in[3]);
+    nor #3 (notin04, in[4], in[4]);
+    nor #3 (notin05, in[5], in[5]);
+    nor #3 (notin06, in[6], in[6]);
+    nor #3 (notin07, in[7], in[7]);
+    nor #3 (notin08, in[8], in[8]);
+    nor #3 (notin09, in[9], in[9]);
+    nor #3 (notin10, in[10], in[10]);
+    nor #3 (notin11, in[11], in[11]);
+    nor #3 (notin12, in[12], in[12]);
+    nor #3 (notin13, in[13], in[13]);
+    nor #3 (notin14, in[14], in[14]);
+    nor #3 (notin15, in[15], in[15]);
+
+    /*
+     * I know this is a mess, but why not ? :)
+     * */
+    and5in and00 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl00), .in4(notin00), .out(out00));
+    and5in and01 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl10), .in4(notin01), .out(out01));
+    and5in and02 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl00), .in4(notin02), .out(out02));
+    and5in and03 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl10), .in4(notin03), .out(out03));
+    and5in and04 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl00), .in4(notin04), .out(out04));
+    and5in and05 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl10), .in4(notin05), .out(out05));
+    and5in and06 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl00), .in4(notin06), .out(out06));
+    and5in and07 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl10), .in4(notin07), .out(out07));
+    and5in and08 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl00), .in4(notin08), .out(out08));
+    and5in and09 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl10), .in4(notin09), .out(out09));
+    and5in and10 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl00), .in4(notin10), .out(out10));
+    and5in and11 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl10), .in4(notin11), .out(out11));
+    and5in and12 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl00), .in4(notin12), .out(out12));
+    and5in and13 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl10), .in4(notin13), .out(out13));
+    and5in and14 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl00), .in4(notin14), .out(out14));
+    and5in and15 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(notin15), .out(out15));
+
+    wire nor00, nor01, nor02, nor03, nor04, nor05, nor06, nor07,
+        nor08, nor09, nor10, nor11, nor12, nor13, nor14;
+
+    wire or00, or01, or02, or03, or04, or05, or06, or07,
+        or08, or09, or10, or11, or12, or13;
+
+        nor #3 (or00, nor00, nor00);
+        nor #3 (or01, nor01, nor01);
+        nor #3 (or02, nor02, nor02);
+        nor #3 (or03, nor03, nor03);
+        nor #3 (or04, nor04, nor04);
+        nor #3 (or05, nor05, nor05);
+        nor #3 (or06, nor06, nor06);
+        nor #3 (or07, nor07, nor07);
+        nor #3 (or08, nor08, nor08);
+        nor #3 (or09, nor09, nor09);
+        nor #3 (or10, nor10, nor10);
+        nor #3 (or11, nor11, nor11);
+        nor #3 (or12, nor12, nor12);
+        nor #3 (or13, nor13, nor13);
+
+        nor #3 (out, nor14, nor14);
+
+        nor #3 (nor00, out00, out01);
+        nor #3 (nor01, out02, or00);
+        nor #3 (nor02, out03, or01);
+        nor #3 (nor03, out04, or02);
+        nor #3 (nor04, out05, or03);
+        nor #3 (nor05, out06, or04);
+        nor #3 (nor06, out07, or05);
+        nor #3 (nor07, out08, or06);
+        nor #3 (nor08, out09, or07);
+        nor #3 (nor09, out10, or08);
+        nor #3 (nor10, out11, or09);
+        nor #3 (nor11, out12, or10);
+        nor #3 (nor12, out13, or11);
+        nor #3 (nor13, out14, or12);
+        nor #3 (nor14, out15, or13);
+
+endmodule
+
 module testbench;
 
-    reg eclk, ieclk, reset;
-    wire [3:0] out;
-    integer i = 0;
+    reg [15:0] in;
+    reg [3:0] sl;
+    wire out;
+    integer i;
 
-    counter cc (
-        .eclk(eclk),
-        .ieclk(ieclk),
-        .rst(reset),
-        .count(out)
+    mux16 m16 (
+        .in(in),
+        .sl(sl),
+        .out(out)
     );
 
     initial begin
 
-        $display("%4b", out);
-
-        reset = 1'b1;
-        #30;
-        reset = 1'b0;
+        in = 16'b0000_0000_0000_0000;
+        $display("%b", in);
 
         for (i = 0; i < 16; i++) begin
-            eclk = 1'b1;
-            ieclk = 1'b0;
-            #30;
-            eclk = 1'b0;
-            #60;
-            ieclk = 1'b1;
-            #30;
-            ieclk = 1'b0;
-            #60;
-            $display("%4b", out);
+            sl = i;
+            #112;
+            $display("%b -> %b", sl, out);
+
         end
 
-        // #60 $display("%4b", out);
-
-        $finish;
     end
 
 endmodule
