@@ -268,6 +268,48 @@ module and5in(input logic in0, in1, in2, in3, in4,
 
 endmodule
 
+module demux16(input logic in, input logic [3:0] sl,
+    output logic [15:0] out);
+
+    reg sl00, sl01, sl02, sl03;
+    wire sl10, sl11, sl12, sl13;
+    wire notin;
+
+    assign sl00 = sl[0];
+    assign sl01 = sl[1];
+    assign sl02 = sl[2];
+    assign sl03 = sl[3];
+
+    nor #3 (sl10, sl00, sl00);
+    nor #3 (sl11, sl01, sl01);
+    nor #3 (sl12, sl02, sl02);
+    nor #3 (sl13, sl03, sl03);
+
+    nor #3 (notin, in, in);
+
+    /*
+     * I know this is a mess, but why not ? :)
+     * */
+    and5in and00 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl00), .in4(notin), .out(out[0]));
+    and5in and01 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl10), .in4(notin), .out(out[1]));
+    and5in and02 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl00), .in4(notin), .out(out[2]));
+    and5in and03 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl10), .in4(notin), .out(out[3]));
+    and5in and04 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl00), .in4(notin), .out(out[4]));
+    and5in and05 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl10), .in4(notin), .out(out[5]));
+    and5in and06 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl00), .in4(notin), .out(out[6]));
+    and5in and07 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl10), .in4(notin), .out(out[7]));
+    and5in and08 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl00), .in4(notin), .out(out[8]));
+    and5in and09 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl10), .in4(notin), .out(out[9]));
+    and5in and10 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl00), .in4(notin), .out(out[10]));
+    and5in and11 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl10), .in4(notin), .out(out[11]));
+    and5in and12 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl00), .in4(notin), .out(out[12]));
+    and5in and13 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl10), .in4(notin), .out(out[13]));
+    and5in and14 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl00), .in4(notin), .out(out[14]));
+    and5in and15 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(notin), .out(out[15]));
+
+
+endmodule
+
 module mux16(input logic [15:0] in, input logic [3:0] sl,
     output logic out);
 
@@ -372,12 +414,12 @@ endmodule
 
 module testbench;
 
-    reg [15:0] in;
+    reg in;
     reg [3:0] sl;
-    wire out;
+    wire [15:0] out;
     integer i;
 
-    mux16 m16 (
+    demux16 dm16 (
         .in(in),
         .sl(sl),
         .out(out)
@@ -385,7 +427,7 @@ module testbench;
 
     initial begin
 
-        in = 16'b0000_0000_0000_0000;
+        in = 1'b1;
         $display("%b", in);
 
         for (i = 0; i < 16; i++) begin
