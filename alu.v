@@ -271,6 +271,9 @@ endmodule
 module demux16(input logic in, input logic [3:0] sl,
     output logic [15:0] out);
 
+    /*
+     * propagation delay -> 25 units
+     * */
     reg sl00, sl01, sl02, sl03;
     wire sl10, sl11, sl12, sl13;
     wire notin;
@@ -412,6 +415,15 @@ module mux16(input logic [15:0] in, input logic [3:0] sl,
 
 endmodule
 
+module alu(input logic eclk, ieclk, ina, inb, rst,
+    input logic [2:0] op,
+    output logic out, regout);
+
+
+
+endmodule
+
+
 module testbench;
 
     reg in;
@@ -432,7 +444,7 @@ module testbench;
 
         for (i = 0; i < 16; i++) begin
             sl = i;
-            #112;
+            #25;
             $display("%b -> %b", sl, out);
 
         end
