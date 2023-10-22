@@ -428,6 +428,27 @@ module mux16(input logic [15:0] in, input logic [3:0] sl,
 
 endmodule
 
+module and4in(input logic in0, in1, in2, in3,
+    output logic out);
+
+    /*
+     * in[0-3] takes the inverted values for input signals
+     * ie, for 0010 give 1101, because we are using nor gates.
+     * */
+
+    wire nor0, nor1;
+    wire notnor0, notnor1;
+
+    nor #3 (nor0, in0, in1);
+    nor #3 (notnor0, nor0, nor0);
+
+    nor #3 (nor1, notnor0, in2);
+    nor #3 (notnor1, nor1, nor1);
+
+    nor #3 (out, notnor1, in3);
+
+endmodule
+
 module alu(input logic eclk, ieclk, ina, inb, rst,
     input logic [2:0] op,
     output logic out, regout);
