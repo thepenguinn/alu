@@ -71,6 +71,19 @@ module not_gate(input logic a,
 
 endmodule
 
+module nand_gate(input logic a, b,
+    output logic y);
+
+    wire nota, notb;
+    wire andab;
+
+    nor #3 (nota, a, a);
+    nor #3 (notb, b, b);
+    nor #3 (andab, nota, notb);
+    nor #3 (y, andab, andab);
+
+endmodule
+
 module ring_oscillator(input logic en,
     output logic s1, s2, s3);
 
