@@ -248,7 +248,7 @@ module and5in(input logic in0, in1, in2, in3, in4,
     output logic out);
 
     /*
-     * in[0-3] takes the inverted values for select signals
+     * in[0-4] takes the inverted values for input signals
      * ie, for 00101 give 11010, because we are using nor gates.
      * */
 
