@@ -71,6 +71,13 @@ module not_gate(input logic a,
 
 endmodule
 
+module nor_gate(input logic a, b,
+    output logic y);
+
+    nor #3 (y, a, b);
+
+endmodule
+
 module nand_gate(input logic a, b,
     output logic y);
 
@@ -453,35 +460,153 @@ module alu(input logic eclk, ieclk, ina, inb, rst,
     input logic [2:0] op,
     output logic out, regout);
 
+    wire op00, op01, op02;
+    wire op10, op11, op12;
 
+    wire opout02, opout03, opout04, opout05, opout06, opout07;
+    wire out02, out03, out04, out05, out06, out07;
+    wire out00and01;
+
+    assign op00 = op[0];
+    assign op01 = op[1];
+    assign op02 = op[2];
+
+    nor #3 (op10, op00, op00);
+    nor #3 (op11, op01, op01);
+    nor #3 (op12, op02, op02);
+
+    wire op1and2, notop1and2;
+    wire cout, notcout;
+    wire sum, notsum;
+    wire dwrst, notdwrst;
+    wire notrst;
+    wire andrstd0, andrstd1;
+    wire data, notdata;
+
+    nor #3 (op1and2, op01, op02);
+    nor #3 (notop1and2, op1and2, op1and2);
+
+    nor #3 (notsum, sum, sum);
+    nor #3 (out00and01, notsum, notop1and2);
+
+    nor #3 (dwrst, notop1and2, op10);
+    nor #3 (notdwrst, dwrst, dwrst);
+
+    nor #3 (notrst, rst, rst);
+    nor #3 (notcout, cout, cout);
+    nor #3 (andrstd0, notrst, notdwrst);
+    nor #3 (andrstd1, notcout, rst);
+
+    nor #3 (notdata, andrstd0, andrstd1);
+    nor #3 (data, notdata, notdata);
+
+    // inverting inb for SUB
+
+    wire fxor, sxor0, sxor1, lxnor, inbforfa;
+
+    nor #3 (fxor, dwrst, inb);
+    nor #3 (sxor0, dwrst, fxor);
+    nor #3 (sxor1, fxor, inb);
+    nor #3 (lxnor, sxor0, sxor1);
+    nor #3 (inbforfa, lxnor, lxnor);
+
+    ms_flipflop coutreg (
+        .eclk(eclk),
+        .ieclk(ieclk),
+        .data(data),
+        .q(regout)
+    );
+
+    full_adder fadder (
+        .a(ina),
+        .b(inbforfa),
+        .cin(regout),
+        .sum(sum),
+        .cout(cout)
+    );
+
+    xor_gate gxor   ( .a(ina), .b(inb), .y(opout02));
+    and_gate gand   ( .a(ina), .b(inb), .y(opout03));
+    not_gate gnot   ( .a(ina),          .y(opout04));
+    or_gate  gor    ( .a(ina), .b(inb), .y(opout05));
+    nor_gate gnor   ( .a(ina), .b(inb), .y(opout06));
+    nand_gate gnand ( .a(ina), .b(inb), .y(opout07));
+
+    and4in and2 (.in0(op02), .in1(op11), .in2(op00), .in3(opout02), .out(out02));
+    and4in and3 (.in0(op02), .in1(op11), .in2(op10), .in3(opout03), .out(out03));
+    and4in and4 (.in0(op12), .in1(op01), .in2(op00), .in3(opout04), .out(out04));
+    and4in and5 (.in0(op12), .in1(op01), .in2(op10), .in3(opout05), .out(out05));
+    and4in and6 (.in0(op12), .in1(op11), .in2(op00), .in3(opout06), .out(out06));
+    and4in and7 (.in0(op12), .in1(op11), .in2(op10), .in3(opout07), .out(out07));
+
+    wire nor00, nor01, nor02, nor03, nor04, nor05;
+    wire or00, or01, or02, or03, or04;
+
+    nor #3 (or00, nor00, nor00);
+    nor #3 (or01, nor01, nor01);
+    nor #3 (or02, nor02, nor02);
+    nor #3 (or03, nor03, nor03);
+    nor #3 (or04, nor04, nor04);
+
+    nor #3 (out, nor05, nor05);
+
+    nor #3 (nor00, out00and01, out02);
+    nor #3 (nor01, out03, or00);
+    nor #3 (nor02, out04, or01);
+    nor #3 (nor03, out05, or02);
+    nor #3 (nor04, out06, or03);
+    nor #3 (nor05, out07, or04);
 
 endmodule
 
 
 module testbench;
 
-    reg in;
-    reg [3:0] sl;
-    wire [15:0] out;
-    integer i;
+    reg eclk, ieclk;
+    reg rst, ina, inb;
+    reg [2:0] op;
+    wire out, regout;
 
-    demux16 dm16 (
-        .in(in),
-        .sl(sl),
-        .out(out)
+
+    alu alu (
+        .eclk(eclk),
+        .ieclk(ieclk),
+        .rst(rst),
+        .op(op),
+        .out(out),
+        .regout(regout)
     );
 
     initial begin
 
-        in = 1'b1;
-        $display("%b", in);
+        op = 3'b001;
+        ina = 1'b0;
+        ina = 1'b0;
+        rst = 1'b1;
+        #300;
+        $display("%b, %b", out, regout);
 
-        for (i = 0; i < 16; i++) begin
-            sl = i;
-            #25;
-            $display("%b -> %b", sl, out);
+        eclk = 1'b0;
+        ieclk = 1'b0;
 
-        end
+        #30;
+
+        eclk = 1'b1;
+        #100;
+        eclk = 1'b0;
+        #150;
+        ieclk = 1'b1;
+        #100;
+        ieclk = 1'b0;
+        #150;
+
+        rst = 1'b0;
+
+        #300;
+        $display("%b, %b", out, regout);
+
+        $finish;
+
 
     end
 
