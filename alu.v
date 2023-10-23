@@ -500,6 +500,10 @@ module alu(input logic eclk, ieclk, ina, inb, rst,
     nor #3 (notdata, andrstd0, andrstd1);
     nor #3 (data, notdata, notdata);
 
+    initial begin
+        $monitor("eclk:%b, ieclk:%b, %b, %b, %b, %b, %0t", eclk, ieclk, data, rst, regout, sum, $time);
+    end
+
     // inverting inb for SUB
 
     wire fxor, sxor0, sxor1, lxnor, inbforfa;
@@ -514,6 +518,7 @@ module alu(input logic eclk, ieclk, ina, inb, rst,
         .eclk(eclk),
         .ieclk(ieclk),
         .data(data),
+        .rst(notop1and2),
         .q(regout)
     );
 
@@ -532,12 +537,21 @@ module alu(input logic eclk, ieclk, ina, inb, rst,
     nor_gate gnor   ( .a(ina), .b(inb), .y(opout06));
     nand_gate gnand ( .a(ina), .b(inb), .y(opout07));
 
-    and4in and2 (.in0(op02), .in1(op11), .in2(op00), .in3(opout02), .out(out02));
-    and4in and3 (.in0(op02), .in1(op11), .in2(op10), .in3(opout03), .out(out03));
-    and4in and4 (.in0(op12), .in1(op01), .in2(op00), .in3(opout04), .out(out04));
-    and4in and5 (.in0(op12), .in1(op01), .in2(op10), .in3(opout05), .out(out05));
-    and4in and6 (.in0(op12), .in1(op11), .in2(op00), .in3(opout06), .out(out06));
-    and4in and7 (.in0(op12), .in1(op11), .in2(op10), .in3(opout07), .out(out07));
+    wire notopout02, notopout03, notopout04, notopout05, notopout06, notopout07;
+
+    nor #3 (notopout02, opout02, opout02);
+    nor #3 (notopout03, opout03, opout03);
+    nor #3 (notopout04, opout04, opout04);
+    nor #3 (notopout05, opout05, opout05);
+    nor #3 (notopout06, opout06, opout06);
+    nor #3 (notopout07, opout07, opout07);
+
+    and4in and2 (.in0(op02), .in1(op11), .in2(op00), .in3(notopout02), .out(out02));
+    and4in and3 (.in0(op02), .in1(op11), .in2(op10), .in3(notopout03), .out(out03));
+    and4in and4 (.in0(op12), .in1(op01), .in2(op00), .in3(notopout04), .out(out04));
+    and4in and5 (.in0(op12), .in1(op01), .in2(op10), .in3(notopout05), .out(out05));
+    and4in and6 (.in0(op12), .in1(op11), .in2(op00), .in3(notopout06), .out(out06));
+    and4in and7 (.in0(op12), .in1(op11), .in2(op10), .in3(notopout07), .out(out07));
 
     wire nor00, nor01, nor02, nor03, nor04, nor05;
     wire or00, or01, or02, or03, or04;
@@ -567,10 +581,11 @@ module testbench;
     reg [2:0] op;
     wire out, regout;
 
-
     alu alu (
         .eclk(eclk),
         .ieclk(ieclk),
+        .ina(ina),
+        .inb(inb),
         .rst(rst),
         .op(op),
         .out(out),
@@ -579,18 +594,18 @@ module testbench;
 
     initial begin
 
-        op = 3'b001;
+        op = 3'b010;
         ina = 1'b0;
-        ina = 1'b0;
+        inb = 1'b0;
         rst = 1'b1;
         #300;
         $display("%b, %b", out, regout);
 
         eclk = 1'b0;
         ieclk = 1'b0;
-
         #30;
 
+        // single duty cycle
         eclk = 1'b1;
         #100;
         eclk = 1'b0;
@@ -601,6 +616,17 @@ module testbench;
         #150;
 
         rst = 1'b0;
+
+        // single duty cycle
+        eclk = 1'b1;
+        #100;
+        eclk = 1'b0;
+        #150;
+        ieclk = 1'b1;
+        #100;
+        ieclk = 1'b0;
+        #150;
+
 
         #300;
         $display("%b, %b", out, regout);
