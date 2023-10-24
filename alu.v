@@ -92,23 +92,62 @@ module nand_gate(input logic a, b,
 endmodule
 
 module ring_oscillator(input logic en,
-    output logic s1, s2, s3);
+    output logic out);
 
-    wire s4;
+    wire s4, s2, s3;
     wire noten, nots3;
 
     nor (noten, en, en);
     nor (nots3, s3, s3);
     nor (s4, noten, nots3);
 
-    nor #30 (s2, s1, s1);
-    nor #30 (s3, s2, s2);
-    nor #30 (s1, s4, s4);
+    nor #300 (s2, out, out);
+    nor #300 (s3, s2, s2);
+    nor #300 (out, s4, s4);
 
 endmodule
 
 module edge_detector(input logic clk,
-    output logic edgclk);
+    output logic eclk);
+
+    wire notclk;
+    wire nct, nnct;
+
+    nor #200 (notclk, clk, clk);
+    nor      (nct, clk, clk);
+    nor      (nnct, notclk, notclk);
+    nor      (eclk, nct, nnct);
+
+endmodule
+
+module edge_detector_long(input logic clk,
+    output logic eclk);
+
+    wire notclk;
+    wire nct, nnct;
+
+    nor #1500 (notclk, clk, clk);
+    nor       (nct, clk, clk);
+    nor       (nnct, notclk, notclk);
+    nor       (eclk, nct, nnct);
+
+endmodule
+
+module edge_detector_half(input logic clk,
+    output logic eclk);
+
+    wire notclk;
+    wire nct, nnct;
+
+    nor #500 (notclk, clk, clk);
+    nor     (nct, clk, clk);
+    nor     (nnct, notclk, notclk);
+    nor     (eclk, nct, nnct);
+
+endmodule
+
+module edge_detector_short(input logic clk,
+    output logic eclk);
 
     wire notclk;
     wire nct, nnct;
@@ -116,7 +155,7 @@ module edge_detector(input logic clk,
     nor #30 (notclk, clk, clk);
     nor     (nct, clk, clk);
     nor     (nnct, notclk, notclk);
-    nor     (edgclk, nct, nnct);
+    nor     (eclk, nct, nnct);
 
 endmodule
 
@@ -207,12 +246,12 @@ module counter(input logic eclk, ieclk, rst,
 
     edge_detector ed1 (
         .clk(count[0]),
-        .edgclk(eclk1)
+        .eclk(eclk1)
     );
 
     edge_detector ied1 (
         .clk(qb0),
-        .edgclk(ieclk1)
+        .eclk(ieclk1)
     );
 
     ms_flipflop msff1 (
@@ -226,12 +265,12 @@ module counter(input logic eclk, ieclk, rst,
 
     edge_detector ed2 (
         .clk(count[1]),
-        .edgclk(eclk2)
+        .eclk(eclk2)
     );
 
     edge_detector ied2 (
         .clk(qb1),
-        .edgclk(ieclk2)
+        .eclk(ieclk2)
     );
 
     ms_flipflop msff2 (
@@ -245,12 +284,12 @@ module counter(input logic eclk, ieclk, rst,
 
     edge_detector ed3 (
         .clk(count[2]),
-        .edgclk(eclk3)
+        .eclk(eclk3)
     );
 
     edge_detector ied3 (
         .clk(qb2),
-        .edgclk(ieclk3)
+        .eclk(ieclk3)
     );
 
     ms_flipflop msff3 (
@@ -334,7 +373,7 @@ module demux16(input logic in, input logic [3:0] sl,
 endmodule
 
 module mux16(input logic [15:0] in, input logic [3:0] sl,
-    output logic out);
+    output logic out, last);
 
     /*
      * propagation delay -> 112 units
@@ -393,6 +432,8 @@ module mux16(input logic [15:0] in, input logic [3:0] sl,
     and5in and13 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl10), .in4(notin13), .out(out13));
     and5in and14 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl00), .in4(notin14), .out(out14));
     and5in and15 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(notin15), .out(out15));
+
+    assign last = out15;
 
     wire nor00, nor01, nor02, nor03, nor04, nor05, nor06, nor07,
         nor08, nor09, nor10, nor11, nor12, nor13, nor14;
@@ -500,9 +541,9 @@ module alu(input logic eclk, ieclk, ina, inb, rst,
     nor #3 (notdata, andrstd0, andrstd1);
     nor #3 (data, notdata, notdata);
 
-    initial begin
-        $monitor("eclk:%b, ieclk:%b, %b, %b, %b, %b, %0t", eclk, ieclk, data, rst, regout, sum, $time);
-    end
+    // initial begin
+    //     $monitor("eclk:%b, ieclk:%b, %b, %b, %b, %b, %0t", eclk, ieclk, data, rst, regout, sum, $time);
+    // end
 
     // inverting inb for SUB
 
@@ -573,67 +614,210 @@ module alu(input logic eclk, ieclk, ina, inb, rst,
 
 endmodule
 
+module alu16(input logic clk, on,
+    input logic [15:0] ina, inb,
+    input logic [2:0] op,
+    output logic [16:0] out);
 
-module testbench;
+    wire eclk, ieclk, notclk;
 
-    reg eclk, ieclk;
-    reg rst, ina, inb;
-    reg [2:0] op;
-    wire out, regout;
+    nor #3 (notclk, clk, clk);
+
+    edge_detector ed00 (
+        .clk(clk),
+        .eclk(eclk)
+    );
+
+    edge_detector ed01 (
+        .clk(notclk),
+        .eclk(ieclk)
+    );
+
+    wire noton, longon, notlongon;
+    wire shorteclk, notshorteclk;
+    wire dldata, dlout;
+    wire rstsig;
+    wire longonlq, notlongonlq;
+
+    nor #3 (noton, on, on);
+
+    edge_detector edlong (
+        .clk(noton),
+        .eclk(longon)
+    );
+
+    edge_detector_short edshort (
+        .clk(clk),
+        .eclk(shorteclk)
+    );
+
+    d_latch longonl (
+        .clk(longon),
+        .rst(on),
+        .data(longon),
+        .q(longonlq)
+    );
+
+    nor #3 (notlongonlq, longonlq, longonlq);
+    nor #3 (notshorteclk, shorteclk, shorteclk);
+    nor #3 (dldata, notshorteclk, notlongonlq);
+
+    d_latch dl (
+        .clk(longonlq),
+        .rst(on),
+        .data(dldata),
+        .q(dlout)
+    );
+
+    initial begin
+        $monitor("%b, %b, %0t", on, dlout, $time);
+    end
+
+
+    edge_detector_half edhalf (
+        .clk(dlout),
+        .eclk(rstsig)
+    );
+
+    wire initbar, noteclk, lastcount;
+
+    ms_flipflop init (
+        .eclk(eclk),
+        .ieclk(ieclk),
+        .rst(on),
+        .data(lastcount),
+        .qbar(initbar)
+    );
+
+    nor #3 (noteclk, eclk, eclk);
+    nor #3 (eclkcounter, noteclk, initbar);
+
+    wire [15:0] dmout;
+    wire [3:0] count;
+    wire muxaout, muxbout;
+    wire aluout;
+
+    counter counter (
+        .eclk(eclkcounter),
+        .ieclk(ieclk),
+        .rst(rstsig),
+        .count(count)
+    );
+
+    mux16 muxa (
+        .in(ina),
+        .sl(count),
+        .out(muxaout),
+        .last(lastcount)
+    );
+
+    mux16 muxb (
+        .in(inb),
+        .sl(count),
+        .out(muxbout)
+    );
 
     alu alu (
         .eclk(eclk),
         .ieclk(ieclk),
-        .ina(ina),
-        .inb(inb),
-        .rst(rst),
+        .ina(muxaout),
+        .inb(muxbout),
+        .rst(rstsig),
         .op(op),
-        .out(out),
-        .regout(regout)
+        .out(aluout),
+        .regout(out[16])
+    );
+
+    demux16 demux(
+        .in(eclkcounter), // some clock
+        .sl(count),
+        .out(dmout)
+    );
+
+    ms_flipflop msff00 (.eclk(dmout[00]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[00]));
+    ms_flipflop msff01 (.eclk(dmout[01]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[01]));
+    ms_flipflop msff02 (.eclk(dmout[02]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[02]));
+    ms_flipflop msff03 (.eclk(dmout[03]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[03]));
+    ms_flipflop msff04 (.eclk(dmout[04]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[04]));
+    ms_flipflop msff05 (.eclk(dmout[05]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[05]));
+    ms_flipflop msff06 (.eclk(dmout[06]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[06]));
+    ms_flipflop msff07 (.eclk(dmout[07]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[07]));
+    ms_flipflop msff08 (.eclk(dmout[08]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[08]));
+    ms_flipflop msff09 (.eclk(dmout[09]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[09]));
+    ms_flipflop msff10 (.eclk(dmout[10]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[10]));
+    ms_flipflop msff11 (.eclk(dmout[11]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[11]));
+    ms_flipflop msff12 (.eclk(dmout[12]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[12]));
+    ms_flipflop msff13 (.eclk(dmout[13]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[13]));
+    ms_flipflop msff14 (.eclk(dmout[14]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[14]));
+    ms_flipflop msff15 (.eclk(dmout[15]), .ieclk(ieclk), .rst(on), .data(aluout), .q(out[15]));
+
+endmodule
+
+
+module testbench;
+
+      //   // single duty cycle
+      //   eclk = 1'b1;
+      //   #100;
+      //   eclk = 1'b0;
+      //   #150;
+      //   ieclk = 1'b1;
+      //   #100;
+      //   ieclk = 1'b0;
+      //   #150;
+
+    reg en;
+    wire clkout;
+
+    reg [15:0] aluina, aluinb;
+    reg [2:0] aluop;
+    reg aluon;
+    wire [16:0] aluout;
+
+    integer i = 0;
+
+
+    ring_oscillator rosci (
+        .en(en),
+        .out(clkout)
+    );
+
+    alu16 alu (
+        .clk(clkout),
+        .on(aluon),
+        .ina(aluina),
+        .inb(aluinb),
+        .op(aluop),
+        .out(aluout)
     );
 
     initial begin
 
-        op = 3'b010;
-        ina = 1'b0;
-        inb = 1'b0;
-        rst = 1'b1;
-        #300;
-        $display("%b, %b", out, regout);
+        en = 1'b0;
+        #900;
+        en = 1'b1;
 
-        eclk = 1'b0;
-        ieclk = 1'b0;
-        #30;
+        aluina = 16'b0000_0000_0000_0001;
+        aluinb = 16'b0000_0000_0000_0000;
 
-        // single duty cycle
-        eclk = 1'b1;
-        #100;
-        eclk = 1'b0;
-        #150;
-        ieclk = 1'b1;
-        #100;
-        ieclk = 1'b0;
-        #150;
+        aluop = 3'b000;
 
-        rst = 1'b0;
-
-        // single duty cycle
-        eclk = 1'b1;
-        #100;
-        eclk = 1'b0;
-        #150;
-        ieclk = 1'b1;
-        #100;
-        ieclk = 1'b0;
-        #150;
-
-
-        #300;
-        $display("%b, %b", out, regout);
-
-        $finish;
-
+        aluon = 1'b0;
+        #1000;
+        aluon = 1'b1;
+        #1000;
+        aluon = 1'b0;
 
     end
+
+    always @(posedge clkout) begin
+        if (i < 18) begin
+            i++;
+            // $display("%b, -> %b", clkout, aluout);
+        end else begin
+            // $finish;
+        end
+    end
+
 
 endmodule
