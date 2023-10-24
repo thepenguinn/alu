@@ -760,10 +760,10 @@ module testbench;
         #900;
         en = 1'b1;
 
-        aluina = 16'b1011_1111_1111_0000;
-        aluinb = 16'b0100_1111_0011_1111;
+        aluina = 16'b0000_0000_0001_1111;
+        aluinb = 16'b0000_0000_0001_1111;
 
-        aluop = 3'b011;
+        aluop = 3'b001;
 
         aluon = 1'b0;
         #100;
@@ -774,7 +774,7 @@ module testbench;
     end
 
     always @(posedge clkout) begin
-        if (en == 1'b1) begin
+        if (aluon == 1'b0) begin
             if (i < 17) begin
                 i++;
                 $display("%b %b", alucount, aluout);
