@@ -120,19 +120,6 @@ module edge_detector(input logic clk,
 
 endmodule
 
-module edge_detector_long(input logic clk,
-    output logic eclk);
-
-    wire notclk;
-    wire nct, nnct;
-
-    nor #1500 (notclk, clk, clk);
-    nor       (nct, clk, clk);
-    nor       (nnct, notclk, notclk);
-    nor       (eclk, nct, nnct);
-
-endmodule
-
 module edge_detector_half(input logic clk,
     output logic eclk);
 
