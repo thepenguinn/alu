@@ -687,7 +687,7 @@ module alu16(input logic clk, on,
     );
 
     demux16 demux(
-        .in(eclkcounter), // some clock
+        .in(eclk), // some clock
         .sl(count),
         .out(dmout)
     );
