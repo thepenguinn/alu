@@ -5,12 +5,13 @@
 
 #include "sim.h"
 
-#define TB_FILE_NAME "alutest_tb_tmp.v"
-#define ALU_FILE_NAME "alu.v"
+#define FILE_NAME_TB  "alutester_tb_file.v"
+#define FILE_NAME_ALU "alu.v"
+#define FILE_NAME_VVP "alutester_vvp_file"
 
 static char TB_above[] =
 
-    "`include \"" ALU_FILE_NAME "\"\n"
+    "`include \"" FILE_NAME_ALU "\"\n"
 
     "module testbench;\n"
 
@@ -84,9 +85,9 @@ static int compile_alu() {
     char *cmd[] = {
         "iverilog",
         "-o",
-        "alu_test_build",
+        FILE_NAME_VVP,
         "-g2012",
-        TB_FILE_NAME,
+        FILE_NAME_TB,
         NULL
     };
 
@@ -124,7 +125,7 @@ int sim_run_alu(char *op, char *ina, char *inb, char *out) {
 
     FILE *tb_file;
 
-    tb_file = fopen(TB_FILE_NAME, "w");
+    tb_file = fopen(FILE_NAME_TB, "w");
 
     // - 1 because we don't need the last NULL terminator
     fwrite(TB_above, sizeof(char), (sizeof(TB_above) / sizeof(char)) - 1, tb_file);
