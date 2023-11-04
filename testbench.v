@@ -34,7 +34,7 @@ module testbench;
         en = 1'b1;
 
         aluina = 16'b0111_0000_0000_0010;
-        aluinb = 16'b0000_0000_0000_0011;
+        aluinb = 16'b1000_0000_0000_0011;
 
         aluop = 3'b000;
 
@@ -50,7 +50,7 @@ module testbench;
         if (aluon == 1'b0) begin
             if (i < 18) begin
                 i++;
-                $display("%b %b", alucount, aluout);
+                #20 $display("%b %b %b", clkout, alucount, aluout);
             end else begin
                 $finish;
             end
