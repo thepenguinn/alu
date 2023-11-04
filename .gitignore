@@ -2,3 +2,7 @@ a.out
 hai.v
 testbench_tmp.v
 alu
+alutester
+*.o
+alutester_tb_file.v
+alutester_vvp_file
