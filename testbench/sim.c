@@ -5,10 +5,6 @@
 
 #include "sim.h"
 
-#define FILE_NAME_TB  "alutester_tb_file.v"
-#define FILE_NAME_ALU "alu.v"
-#define FILE_NAME_VVP "alutester_vvp_file"
-
 static char TB_above[] =
 
     "`include \"" FILE_NAME_ALU "\"\n"
@@ -64,11 +60,11 @@ static char TB_below[] =
 
     "    end\n"
 
-    "    always @(posedge clkout) begin\n"
+    "    always @(clkout) begin\n"
     "        if (aluon == 1'b0) begin\n"
-    "            if (i < 18) begin\n"
+    "            if (i < " TOSTR(TOTAL_EDGE_CYCLES) ") begin\n"
     "                i++;\n"
-    "                #20 $display(\"%b\", aluout);\n"
+    "                #20 $write(\"%b%b\", clkout, aluout);\n"
     "            end else begin\n"
     "                $finish;\n"
     "            end\n"
@@ -77,6 +73,8 @@ static char TB_below[] =
 
     "endmodule\n"
 ;
+
+static int run_alu(char *out, int outsize);
 
 static int compile_alu() {
 
@@ -109,19 +107,54 @@ static int compile_alu() {
             i++;
         }
 
-        printf("haha, its the child\n");
-        // _exit(0);
+        _exit(0);
     } else {
         // parent
         wait(NULL);
-        printf("child finished\n");
     }
 
     return 0;
 
 }
 
-int sim_run_alu(char *op, char *ina, char *inb, char *out) {
+static int run_alu(char *out, int outsize) {
+
+    int pid;
+    int pipe_out[2];
+
+    pipe(pipe_out);
+
+    char *cmd[] = {
+        "vvp",
+        FILE_NAME_VVP,
+        NULL
+    };
+
+    pid = fork();
+
+    if (pid == -1) {
+        fprintf(stderr, "Forking failed.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (pid == 0) {
+        // child
+
+        dup2(pipe_out[1], STDOUT_FILENO);
+
+        execvp(cmd[0], cmd);
+    }
+
+    // parent
+
+    read(pipe_out[0], out, outsize - 1);
+
+    wait(NULL);
+
+    return 0;
+}
+
+int sim_run_alu(struct CycleEvent *cycle, int outsize) {
 
     FILE *tb_file;
 
@@ -130,9 +163,9 @@ int sim_run_alu(char *op, char *ina, char *inb, char *out) {
     // - 1 because we don't need the last NULL terminator
     fwrite(TB_above, sizeof(char), (sizeof(TB_above) / sizeof(char)) - 1, tb_file);
 
-    fprintf(tb_file, "        aluop = 16'b%s;\n", op);
-    fprintf(tb_file, "        aluina = 16'b%s;\n", ina);
-    fprintf(tb_file, "        aluinb = 16'b%s;\n", inb);
+    fprintf(tb_file, "        aluop = 16'b%s;\n", cycle->op);
+    fprintf(tb_file, "        aluina = 16'b%s;\n", cycle->ina);
+    fprintf(tb_file, "        aluinb = 16'b%s;\n", cycle->inb);
 
     fwrite(TB_below, sizeof(char), (sizeof(TB_below) / sizeof(char)) - 1, tb_file);
 
@@ -140,9 +173,7 @@ int sim_run_alu(char *op, char *ina, char *inb, char *out) {
 
     compile_alu();
 
+    run_alu((char *)(cycle->out), outsize);
+
     return 0;
-}
-
-int testing() {
-
 }
