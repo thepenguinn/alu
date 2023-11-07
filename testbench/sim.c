@@ -143,11 +143,12 @@ static int run_alu(char *out, int outsize) {
         dup2(pipe_out[1], STDOUT_FILENO);
 
         execvp(cmd[0], cmd);
+        _exit(0);
     }
 
     // parent
 
-    read(pipe_out[0], out, outsize - 1);
+    read(pipe_out[0], out, outsize);
 
     wait(NULL);
 

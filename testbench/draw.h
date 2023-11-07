@@ -1,4 +1,4 @@
-static int botwin_height = 4;
+static int botwin_height = 5;
 static int hori_padding = 3;
 static int vert_padding = 1;
 
@@ -10,6 +10,13 @@ static int vert_padding = 1;
 #define COLOR_DEFAULT_FG  -1
 
 /*
+ * We don't want to modify the colors from 0-15, when we initialize
+ * colors and color pairs.
+ * So, our colors and color pair ids will start from 16
+ * */
+#define COLOR_MOD_START 16
+
+/*
  * Since we are using use_default_colors() from ncurses library, the zeroth
  * pair doesn't seems to be overriden by assigning a new pair to it.
  *
@@ -17,7 +24,7 @@ static int vert_padding = 1;
  * 16 because we don't want to mess up other 0-15 colors.
  * */
 
-#define ColorPair(x) COLOR_PAIR((x) + 1)
+#define ColorPair(x) COLOR_PAIR((x) + COLOR_MOD_START)
 
 
 enum ColorHex {
@@ -41,6 +48,9 @@ enum ColorHex {
 enum SymbolChars {
 
     CHAR_MINUS,
+    CHAR_RIGHT_TRIANGLE,
+    CHAR_LEFT_TRIANGLE,
+    CHAR_SUM,
     CHAR_END
 
 };
@@ -48,6 +58,8 @@ enum SymbolChars {
 enum ColorPairs {
 
     PAIR_BRT_WHITE_DEF_BG,
+    PAIR_BRT_GREY_DEF_BG,
+    PAIR_DIM_GREY_DEF_BG,
     PAIR_DIM_WHITE_DEF_BG,
     PAIR_DIM_BROWN_DEF_BG,
     PAIR_END
@@ -74,6 +86,10 @@ enum ColorElements {
     ELEMENT_NORMAL_CLK,
     ELEMENT_SELECTED_CLK,
     ELEMENT_CURRENT_BIT,
+    ELEMENT_YES_TRIANGLE,
+    ELEMENT_NO_TRIANGLE,
+    ELMENT_NORMAL_OPCODE,
+    ELMENT_SELECTED_OPCODE,
     ELEMENT_END
 
 };
@@ -112,3 +128,5 @@ struct MenuState {
 
 void draw_init_colorschemes(void);
 void draw_topwin(WINDOW *win, struct MenuState *menustate);
+void draw_botwin(WINDOW *win, struct MenuState *menustate);
+void draw_mvwchgat(WINDOW *win, int ycord, int xcord, int n, enum ColorElements attridx);
