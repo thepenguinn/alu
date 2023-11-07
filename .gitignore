@@ -6,3 +6,6 @@ alutester
 *.o
 alutester_tb_file.v
 alutester_vvp_file
+testbench/another.c
+testbench/test.c
+testbench/true.c
