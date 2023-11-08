@@ -3,26 +3,21 @@ module full_adder(input logic a, b, cin,
 
     wire anorb;
     wire xnor1, xnor2;
-    wire xor1;
-    wire bxor1nor1, bxor1nor2, bxor2nor1, bxor2nor2;
-    wire xor1norcin;
-
+    wire xnor1nor1, xnor1nor2, xnor2nor1, xnor2nor2;
     wire xnor1norcin;
 
     // sum
     nor #3 (anorb, a, b);
-    nor #3 (bxor1nor1, a, anorb);
-    nor #3 (bxor1nor2, b, anorb);
-    nor #3 (xnor1, bxor1nor1, bxor1nor2);
-    nor #3 (xor1, xnor1, xnor1);
-    nor #3 (xor1norcin, xor1, cin);
-    nor #3 (bxor2nor1, xor1, xor1norcin);
-    nor #3 (bxor2nor2, cin, xor1norcin);
-    nor #3 (xnor2, bxor2nor1, bxor2nor2);
-    nor #3 (sum, xnor2, xnor2);
+    nor #3 (xnor1nor1, a, anorb);
+    nor #3 (xnor1nor2, b, anorb);
+    nor #3 (xnor1, xnor1nor1, xnor1nor2);
+
+    nor #3 (xnor1norcin, xnor1, cin);
+    nor #3 (xnor2nor1, xnor1, xnor1norcin);
+    nor #3 (xnor2nor2, cin, xnor1norcin);
+    nor #3 (sum, xnor2nor1, xnor2nor2);
 
     // cout
-    nor #3 (xnor1norcin, xnor1, cin);
     nor #3 (cout, xnor1norcin, anorb);
 
 endmodule
