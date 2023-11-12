@@ -24,6 +24,53 @@
     coordinate (FinalCornerTmp)
 }
 
+\newcommand\constcornerhoz [1] {
+    \constcorner {\cH} {#1}
+}
+
+\newcommand\constcornervrt [1] {
+    \constcorner {\cV} {#1}
+}
+
+\newcommand\varcornerpos[2] {
+    coordinate (curtmp)
+    coordinate (FinalCornerTmp) at #2
+
+    coordinate (LastCornerTmp) at (curtmp#1FinalCornerTmp)
+    coordinate (cornedgtmp) at ($(FinalCornerTmp)!0.1cm!-45:(LastCornerTmp)$)
+    coordinate (fsttmp) at
+    (intersection of curtmp--LastCornerTmp and FinalCornerTmp--cornedgtmp)
+
+    (curtmp) -- (fsttmp) -- (FinalCornerTmp)
+}
+
+\newcommand\varcornerneg[2] {
+    coordinate (curtmp)
+    #2 coordinate (FinalCornerTmp)
+
+    (curtmp#1FinalCornerTmp) coordinate (LastCornerTmp)
+    ($(FinalCornerTmp)!0.1cm!+45:(LastCornerTmp)$) coordinate (cornedgtmp)
+    (intersection of curtmp--LastCornerTmp and FinalCornerTmp--cornedgtmp)
+    coordinate (fsttmp)
+
+    (curtmp) -- (fsttmp) -- (FinalCornerTmp)
+}
+
+\newcommand\varcornervrtneg[1] {
+    \varcornerneg {\cV} {#1}
+}
+
+\newcommand\varcornervrtpos[1] {
+    \varcornerpos {\cV} {#1}
+}
+
+\newcommand\varcornerhozneg[1] {
+    \varcornerneg {\cH} {#1}
+}
+
+\newcommand\varcornerhozpos[1] {
+    \varcornerpos {\cH} {#1}
+}
 
 % \ctikzsubcircuitdef{msFlop} {EC, IEC, D, RST, Q} {
 % \ctikzsubcircuitdef{test} {EC} {
