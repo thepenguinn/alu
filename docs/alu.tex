@@ -31,14 +31,14 @@
 }
 
 \newcommand\constcorner[2] {
-    coordinate (curtmp)
+    coordinate (LCJTMP)
     #2 coordinate (finaltmp)
 
-    (curtmp#1finaltmp) coordinate (LCVTMP)
+    (LCJTMP#1finaltmp) coordinate (LCVTMP)
     ($(LCVTMP)!\cornerbase!0:(finaltmp)$) coordinate (SCBTMP)
-    ($(LCVTMP)!\cornerbase!0:(curtmp)$) coordinate (FCBTMP)
+    ($(LCVTMP)!\cornerbase!0:(LCJTMP)$) coordinate (FCBTMP)
 
-    (curtmp) -- (FCBTMP) -- (SCBTMP)
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
 }
 
 \newcommand\constcornerright[1] {
@@ -71,35 +71,35 @@
 }
 
 \newcommand\markvarcornerpos[2] {
-    coordinate (curtmp)
+    coordinate (LCJTMP)
     #2 coordinate (SCBTMP)
 
-    (curtmp#1SCBTMP) coordinate (LCVTMP)
+    (LCJTMP#1SCBTMP) coordinate (LCVTMP)
     ($(SCBTMP)!0.1cm!-45:(LCVTMP)$) coordinate (cornedgtmp)
-    (intersection of curtmp--LCVTMP and finaltmp--cornedgtmp)
+    (intersection of LCJTMP--LCVTMP and SCBTMP--cornedgtmp)
     coordinate (FCBTMP)
 }
 
 \newcommand\markvarcornerneg[2] {
-    coordinate (curtmp)
+    coordinate (LCJTMP)
     #2 coordinate (SCBTMP)
 
-    (curtmp#1SCBTMP) coordinate (LCVTMP)
+    (LCJTMP#1SCBTMP) coordinate (LCVTMP)
     ($(SCBTMP)!0.1cm!+45:(LCVTMP)$) coordinate (cornedgtmp)
-    (intersection of curtmp--LCVTMP and finaltmp--cornedgtmp)
+    (intersection of LCJTMP--LCVTMP and SCBTMP--cornedgtmp)
     coordinate (FCBTMP)
 }
 
 \newcommand\varcornerpos[2] {
 
     \markvarcornerpos {#1} {#2}
-    (curtmp) -- (FCBTMP) -- (SCBTMP)
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
 }
 
 \newcommand\varcornerneg[2] {
 
     \markvarcornerneg {#1} {#2}
-    (curtmp) -- (FCBTMP) -- (SCBTMP)
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
 
 }
 
@@ -156,6 +156,83 @@
     \varcornerpos {\cH} {#1}
 }
 
+\newcommand\markaroundcornerpos[3] {
+    \markvarcornerpos {#2} {#3}
+
+    ($(SCBTMP)!#1cm!90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1cm!90:(LCVTMP)$) coordinate (nexsidetmp)
+    (bevltmp#2nexsidetmp) coordinate (SCBTMP)
+    (LCJTMP#2SCBTMP) coordinate (LCVTMP)
+
+    ($(SCBTMP)!0.1cm!-45:(LCVTMP)$) coordinate (cornedgtmp)
+    (intersection of LCJTMP--LCVTMP and SCBTMP--cornedgtmp)
+    coordinate (FCBTMP)
+
+}
+
+\newcommand\markaroundcornerneg[3] {
+    \markvarcornerneg {#2} {#3}
+
+    ($(SCBTMP)!#1cm!-90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1cm!-90:(LCVTMP)$) coordinate (nexsidetmp)
+    (bevltmp#2nexsidetmp) coordinate (SCBTMP)
+    (LCJTMP#2SCBTMP) coordinate (LCVTMP)
+
+    ($(SCBTMP)!0.1cm!+45:(LCVTMP)$) coordinate (cornedgtmp)
+    (intersection of LCJTMP--LCVTMP and SCBTMP--cornedgtmp)
+    coordinate (FCBTMP)
+
+}
+
+\newcommand\aroundcornerpos[3] {
+
+    \markaroundcornerpos {#1} {#2} {#3}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\aroundcornerneg[3] {
+
+    \markaroundcornerneg {#1} {#2} {#3}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+
+}
+
+\newcommand\aroundcornerupright[2] {
+    \slightup
+    \aroundcornerneg {#1} {\cV} {#2}
+}
+\newcommand\aroundcornerdownleft[2] {
+    \slightdown
+    \aroundcornerneg {#1} {\cV} {#2}
+}
+
+\newcommand\aroundcornerupleft[2] {
+    \slightup
+    \aroundcornerpos {#1} {\cV} {#2}
+}
+\newcommand\aroundcornerdownright[2] {
+    \slightdown
+    \aroundcornerpos {#1} {\cV} {#2}
+}
+
+\newcommand\aroundcornerrightdown[2] {
+    \slightright
+    \aroundcornerneg {#1} {\cH} {#2}
+}
+\newcommand\aroundcornerleftup[2] {
+    \slightleft
+    \aroundcornerneg {#1} {\cH} {#2}
+}
+
+\newcommand\aroundcornerrightup[2] {
+    \slightright
+    \aroundcornerpos {#1} {\cH} {#2}
+}
+\newcommand\aroundcornerleftdown[2] {
+    \slightleft
+    \aroundcornerpos {#1} {\cH} {#2}
+}
+
 % \ctikzsubcircuitdef{msFlop} {EC, IEC, D, RST, Q} {
 % \ctikzsubcircuitdef{test} {EC} {
 %     coordinate(#1-EC)
@@ -198,6 +275,38 @@ draw only bottom pins = {5, 6}, }
     }
 }
 
+\tikzset{mux08/.style = {muxdemux, muxdemux def = {
+    NL = 12, NR = 3, NB = 5, NT = 0,
+    Lh = 13, Rh = 7.8,
+    % Lh = 10, Rh = 6.5,
+    inset Lh = 4.5, inset Rh = 2.75,
+    % inset Lh = 3.5, inset Rh = 1.75,
+    inset w = 1,
+    w = 4.5,
+    % w = 3.5,
+    square pins = 1
+},
+draw only left pins={1,2,5-6,8-11},
+draw only right pins={1-2},
+draw only bottom pins={2-4}
+}
+}
+
+%  node [muxdemux, rotate = -90, muxdemux def = {NL=10, NR=3, NT=0, NB=4,
+%  w = 2.5, Lh = 10, Rh = 6.5, inset Lh = 3.5, inset w = .75, inset Rh = 1.75,
+%  square pins=1
+%  },
+%  draw only left pins={2-9},
+%  draw only right pins={1-2},
+%  draw only bottom pins={2-4}
+%  ]
+%  (mux) {
+%      \begin{turn}{90}
+%          \texttt{MUX8}
+%      \end{turn}
+%  }
+
+%  % (mux.rpin 3) -- ++(1,1)
 
 \def\fulladdername{\texttt{ADDER}}
 % \def\logicopstyle{\texttt{}}
@@ -344,8 +453,37 @@ draw only bottom pins = {5, 6}, }
     \constcornerleft {(fladBinvrt)}
     \constcornerdown {(flad-B)}
     -- (flad-B)
+
+    % TESTING
+    % (flad-Cout) ++(4,-2)
+
+    % node (testmux) [mux08, anchor = lpin 1]{\texttt{MUX}}%
     ;
 
+\end{circuitikz}
+
+\begin{circuitikz}
+
+    \draw [line join = round]
+    (0,0) ++(4,0)
+    coordinate (start)
+
+    \varcornerleftdown {++(-4,-2)}
+    coordinate (end)
+    -- ++(0,-4)
+    coordinate (acend)
+
+    (start) ++(0,0.75)
+
+    \markcorneraroundpos {0.75} {\cH} {(end)}
+
+    -- (SCBTMP|-acend)
+    -- ++(0.75,0)
+    \slightup
+
+    (start)
+    -- ++(0,0.75)
+    ;
 
 \end{circuitikz}
 
