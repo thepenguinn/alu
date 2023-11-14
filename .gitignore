@@ -12,3 +12,4 @@ testbench/true.c
 *.aux
 *.log
 *.pdf
+*.tstp
