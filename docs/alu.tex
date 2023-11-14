@@ -12,18 +12,56 @@
 \def\cV{|-}
 \def\cH{-|}
 
-\newcommand\constcorner[2] {
-    coordinate (curtmp)
-    #2 coordinate (FinalCornerTmp)
-
-    (curtmp#1FinalCornerTmp) coordinate (LCTmp)
-    ($(LCTmp)!\cornerbase!0:(FinalCornerTmp)$) coordinate (sectmp)
-    ($(LCTmp)!\cornerbase!0:(curtmp)$) coordinate (fsttmp)
-
-    (curtmp) -- (fsttmp) -- (sectmp)
-    coordinate (FinalCornerTmp)
+% to get rid of lines not properly joining after setting
+% a coordinate at some other position and continue drawing
+\newcommand\slightleft[0] {
+    -- ++(-0.005,0)
 }
 
+\newcommand\slightright[0] {
+    -- ++(0.005,0)
+}
+
+\newcommand\slightup[0] {
+    -- ++(0,0.005)
+}
+
+\newcommand\slightdown[0] {
+    -- ++(0,-0.005)
+}
+
+\newcommand\constcorner[2] {
+    coordinate (curtmp)
+    #2 coordinate (finaltmp)
+
+    (curtmp#1finaltmp) coordinate (LCVTMP)
+    ($(LCVTMP)!\cornerbase!0:(finaltmp)$) coordinate (SCBTMP)
+    ($(LCVTMP)!\cornerbase!0:(curtmp)$) coordinate (FCBTMP)
+
+    (curtmp) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\constcornerright[1] {
+    \slightright
+    \constcorner {\cH} {#1}
+}
+
+\newcommand\constcornerleft[1] {
+    \slightleft
+    \constcorner {\cH} {#1}
+}
+
+\newcommand\constcornerup [1] {
+    \slightup
+    \constcorner {\cV} {#1}
+}
+
+\newcommand\constcornerdown [1] {
+    \slightdown
+    \constcorner {\cV} {#1}
+}
+
+%%
 \newcommand\constcornerhoz [1] {
     \constcorner {\cH} {#1}
 }
@@ -32,30 +70,76 @@
     \constcorner {\cV} {#1}
 }
 
-\newcommand\varcornerpos[2] {
+\newcommand\markvarcornerpos[2] {
     coordinate (curtmp)
-    coordinate (FinalCornerTmp) at #2
+    #2 coordinate (SCBTMP)
 
-    coordinate (LastCornerTmp) at (curtmp#1FinalCornerTmp)
-    coordinate (cornedgtmp) at ($(FinalCornerTmp)!0.1cm!-45:(LastCornerTmp)$)
-    coordinate (fsttmp) at
-    (intersection of curtmp--LastCornerTmp and FinalCornerTmp--cornedgtmp)
+    (curtmp#1SCBTMP) coordinate (LCVTMP)
+    ($(SCBTMP)!0.1cm!-45:(LCVTMP)$) coordinate (cornedgtmp)
+    (intersection of curtmp--LCVTMP and finaltmp--cornedgtmp)
+    coordinate (FCBTMP)
+}
 
-    (curtmp) -- (fsttmp) -- (FinalCornerTmp)
+\newcommand\markvarcornerneg[2] {
+    coordinate (curtmp)
+    #2 coordinate (SCBTMP)
+
+    (curtmp#1SCBTMP) coordinate (LCVTMP)
+    ($(SCBTMP)!0.1cm!+45:(LCVTMP)$) coordinate (cornedgtmp)
+    (intersection of curtmp--LCVTMP and finaltmp--cornedgtmp)
+    coordinate (FCBTMP)
+}
+
+\newcommand\varcornerpos[2] {
+
+    \markvarcornerpos {#1} {#2}
+    (curtmp) -- (FCBTMP) -- (SCBTMP)
 }
 
 \newcommand\varcornerneg[2] {
-    coordinate (curtmp)
-    #2 coordinate (FinalCornerTmp)
 
-    (curtmp#1FinalCornerTmp) coordinate (LastCornerTmp)
-    ($(FinalCornerTmp)!0.1cm!+45:(LastCornerTmp)$) coordinate (cornedgtmp)
-    (intersection of curtmp--LastCornerTmp and FinalCornerTmp--cornedgtmp)
-    coordinate (fsttmp)
+    \markvarcornerneg {#1} {#2}
+    (curtmp) -- (FCBTMP) -- (SCBTMP)
 
-    (curtmp) -- (fsttmp) -- (FinalCornerTmp)
 }
 
+\newcommand\varcornerupright[1] {
+    \slightup
+    \varcornerneg {\cV} {#1}
+}
+\newcommand\varcornerdownleft[1] {
+    \slightdown
+    \varcornerneg {\cV} {#1}
+}
+
+\newcommand\varcornerupleft[1] {
+    \slightup
+    \varcornerpos {\cV} {#1}
+}
+\newcommand\varcornerdownright[1] {
+    \slightdown
+    \varcornerpos {\cV} {#1}
+}
+
+\newcommand\varcornerrightdown[1] {
+    \slightright
+    \varcornerneg {\cH} {#1}
+}
+\newcommand\varcornerleftup[1] {
+    \slightleft
+    \varcornerneg {\cH} {#1}
+}
+
+\newcommand\varcornerrightup[1] {
+    \slightright
+    \varcornerpos {\cH} {#1}
+}
+\newcommand\varcornerleftdown[1] {
+    \slightleft
+    \varcornerpos {\cH} {#1}
+}
+
+%%
 \newcommand\varcornervrtneg[1] {
     \varcornerneg {\cV} {#1}
 }
@@ -202,25 +286,6 @@ draw only bottom pins = {5, 6}, }
     \subctkmsFlipFlop{#1} {#2}
     (#1.center) node[]{#3}
 }
-
-% to get rid of lines not properly joining after setting
-% a coordinate at some other position and continue drawing
-\newcommand\slightleft[0] {
-    -- ++(-0.005,0)
-}
-
-\newcommand\slightright[0] {
-    -- ++(0.005,0)
-}
-
-\newcommand\slightup[0] {
-    -- ++(0,0.005)
-}
-
-\newcommand\slightdown[0] {
-    -- ++(0,-0.005)
-}
-
 \begin{document}
 
 \section{1 bit ALU}
@@ -274,11 +339,11 @@ draw only bottom pins = {5, 6}, }
     coordinate (ainitBoutheight)
 
     (ainit-Bout)
-    \constcornerhoz {++(0.75,1)}
-    \slightup
-
-    \constcornervrt {(ainitBoutheight)}
-    \slightleft
+    \constcornerright {++(0.75,1)}
+    \constcornerup {(ainitBoutheight)}
+    \constcornerleft {(fladBinvrt)}
+    \constcornerdown {(flad-B)}
+    -- (flad-B)
     ;
 
 
