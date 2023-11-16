@@ -15,19 +15,19 @@
 % to get rid of lines not properly joining after setting
 % a coordinate at some other position and continue drawing
 \newcommand\slightleft[0] {
-    -- ++(-0.005,0)
+    -- +(-0.005,0)
 }
 
 \newcommand\slightright[0] {
-    -- ++(0.005,0)
+    -- +(0.005,0)
 }
 
 \newcommand\slightup[0] {
-    -- ++(0,0.005)
+    -- +(0,0.005)
 }
 
 \newcommand\slightdown[0] {
-    -- ++(0,-0.005)
+    -- +(0,-0.005)
 }
 
 \newcommand\constcorner[2] {
@@ -161,11 +161,14 @@
 
     ($(SCBTMP)!#1cm!90:(FCBTMP)$) coordinate (bevltmp)
     ($(SCBTMP)!#1cm!90:(LCVTMP)$) coordinate (nexsidetmp)
-    (bevltmp#2nexsidetmp) coordinate (SCBTMP)
-    (LCJTMP#2SCBTMP) coordinate (LCVTMP)
+    ($(bevltmp)!0.1cm!90:(SCBTMP)$) coordinate (bevlpartmp)
 
-    ($(SCBTMP)!0.1cm!-45:(LCVTMP)$) coordinate (cornedgtmp)
-    (intersection of LCJTMP--LCVTMP and SCBTMP--cornedgtmp)
+    (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
+
+    (intersection of nexsidetmp--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (SCBTMP)
+
+    (intersection of LCJTMP--LCVTMP and bevltmp--bevlpartmp)
     coordinate (FCBTMP)
 
 }
@@ -175,11 +178,14 @@
 
     ($(SCBTMP)!#1cm!-90:(FCBTMP)$) coordinate (bevltmp)
     ($(SCBTMP)!#1cm!-90:(LCVTMP)$) coordinate (nexsidetmp)
-    (bevltmp#2nexsidetmp) coordinate (SCBTMP)
-    (LCJTMP#2SCBTMP) coordinate (LCVTMP)
+    ($(bevltmp)!0.1cm!-90:(SCBTMP)$) coordinate (bevlpartmp)
 
-    ($(SCBTMP)!0.1cm!+45:(LCVTMP)$) coordinate (cornedgtmp)
-    (intersection of LCJTMP--LCVTMP and SCBTMP--cornedgtmp)
+    (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
+
+    (intersection of nexsidetmp--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (SCBTMP)
+
+    (intersection of LCJTMP--LCVTMP and bevltmp--bevlpartmp)
     coordinate (FCBTMP)
 
 }
@@ -233,6 +239,78 @@
     \aroundcornerpos {#1} {\cH} {#2}
 }
 
+\newcommand\markaroundcornertillpos[4] {
+
+    \markaroundcornerpos {#1} {#2} {#3}
+    (LCJTMP)
+    #4 coordinate (TILLTMP)
+
+    (LCJTMP#2TILLTMP) coordinate (LCVTMP)
+    (intersection of TILLTMP--LCVTMP and FCBTMP--SCBTMP)
+    coordinate (SCBTMP)
+
+}
+
+\newcommand\markaroundcornertillneg[4] {
+
+    \markaroundcornerneg {#1} {#2} {#3}
+    (LCJTMP)
+    #4 coordinate (TILLTMP)
+
+    (LCJTMP#2TILLTMP) coordinate (LCVTMP)
+    (intersection of TILLTMP--LCVTMP and FCBTMP--SCBTMP)
+    coordinate (SCBTMP)
+
+}
+
+\newcommand\aroundcornertillpos[4] {
+
+    \markaroundcornertillpos {#1} {#2} {#3} {#4}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\aroundcornertillneg[4] {
+
+    \markaroundcornertillneg {#1} {#2} {#3} {#4}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+
+}
+
+\newcommand\aroundcornertillupright[3] {
+    \slightup
+    \aroundcornertillneg {#1} {\cV} {#2} {#3}
+}
+\newcommand\aroundcornertilldownleft[3] {
+    \slightdown
+    \aroundcornertillneg {#1} {\cV} {#2} {#3}
+}
+
+\newcommand\aroundcornertillupleft[3] {
+    \slightup
+    \aroundcornertillpos {#1} {\cV} {#2} {#3}
+}
+\newcommand\aroundcornertilldownright[3] {
+    \slightdown
+    \aroundcornertillpos {#1} {\cV} {#2} {#3}
+}
+
+\newcommand\aroundcornertillrightdown[3] {
+    \slightright
+    \aroundcornertillneg {#1} {\cH} {#2} {#3}
+}
+\newcommand\aroundcornertillleftup[3] {
+    \slightleft
+    \aroundcornertillneg {#1} {\cH} {#2} {#3}
+}
+
+\newcommand\aroundcornertillrightup[3] {
+    \slightright
+    \aroundcornertillpos {#1} {\cH} {#2} {#3}
+}
+\newcommand\aroundcornertillleftdown[3] {
+    \slightleft
+    \aroundcornertillpos {#1} {\cH} {#2} {#3}
+}
 % \ctikzsubcircuitdef{msFlop} {EC, IEC, D, RST, Q} {
 % \ctikzsubcircuitdef{test} {EC} {
 %     coordinate(#1-EC)
@@ -451,38 +529,26 @@ draw only bottom pins={2-4}
     \constcornerright {++(0.75,1)}
     \constcornerup {(ainitBoutheight)}
     \constcornerleft {(fladBinvrt)}
+    coordinate (fladBinsecbend)
     \constcornerdown {(flad-B)}
+    coordinate (fladjustBin)
     -- (flad-B)
+
+    (msff-Q) -- ++(0.75,0)
+    coordinate (msqout)
+
+    -- (msqout|-ainitBoutheight)
+
+    \constcornerup {++(-1,0.75)}
+    \aroundcornerleftdown {0.75} {(fladBinsecbend)}
+
+    \aroundcornertilldownright {0.75} {(fladjustBin)} {(flad-Cin)}
+    -- (flad-Cin)
 
     % TESTING
     % (flad-Cout) ++(4,-2)
 
     % node (testmux) [mux08, anchor = lpin 1]{\texttt{MUX}}%
-    ;
-
-\end{circuitikz}
-
-\begin{circuitikz}
-
-    \draw [line join = round]
-    (0,0) ++(4,0)
-    coordinate (start)
-
-    \varcornerleftdown {++(-4,-2)}
-    coordinate (end)
-    -- ++(0,-4)
-    coordinate (acend)
-
-    (start) ++(0,0.75)
-
-    \markcorneraroundpos {0.75} {\cH} {(end)}
-
-    -- (SCBTMP|-acend)
-    -- ++(0.75,0)
-    \slightup
-
-    (start)
-    -- ++(0,0.75)
     ;
 
 \end{circuitikz}
