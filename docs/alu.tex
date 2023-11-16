@@ -438,29 +438,26 @@ draw only bottom pins={2-4}
     node [fullAdder] (#1-flad) {\fulladdername}
 }
 
+% #1 pinname pinnumber
+\newcommand\markcoordinate[3] {
+
+    coordinate (#1-#2) at (#1.#3)
+    coordinate (#1-b#2) at (#1.b#3)
+    ($(#1-#2)!0.25cm!180:(#1-b#2)$)
+    coordinate (#1-p#2)
+
+}
+
 \ctikzsubcircuitdef{subctkfullAdder} {
     A, B, Cin, Cout, Sum,
     bA, bB, bCin, bCout, bSum%
 } {
     node (#1) [fullAdder, anchor = lpin 1]{}%
-    coordinate (#1-B)      at (#1.lpin 1)
-    coordinate (#1-A)      at (#1.lpin 3)
-    coordinate (#1-Cin)    at (#1.lpin 2)
-    coordinate (#1-Sum)    at (#1.rpin 3)
-    coordinate (#1-Cout)   at (#1.rpin 1)%
-    coordinate (#1-bB)    at (#1.blpin 1)
-    coordinate (#1-bA)    at (#1.blpin 3)
-    coordinate (#1-bCin)  at (#1.blpin 2)
-    coordinate (#1-bSum)  at (#1.brpin 3)
-    coordinate (#1-bCout) at (#1.brpin 1)
-    (#1.top left) ++(-0.5,0)
-    coordinate (#1-lpad)
-    (#1.bottom right) ++(0.5,0)
-    coordinate (#1-rpad)
-    (#1.top left) ++(0,0.5)
-    coordinate (#1-tpad)
-    (#1.bottom right) ++(0,-0.5)
-    coordinate (#1-bpad)
+    \markcoordinate {#1} {B}    {lpin 1}
+    \markcoordinate {#1} {A}    {lpin 3}
+    \markcoordinate {#1} {Cin}  {lpin 2}
+    \markcoordinate {#1} {Sum}  {rpin 3}
+    \markcoordinate {#1} {Cout} {rpin 1}%
 }
 
 \ctikzsubcircuitdef{subctkaluInit} {
@@ -468,28 +465,13 @@ draw only bottom pins={2-4}
     bB, bCin, bOp, bMux, bRst, bBout, bCout%
 } {
     node (#1) [aluInit, anchor = lpin 1]{}%
-    coordinate (#1-B)      at (#1.lpin 1)
-    coordinate (#1-Cin)    at (#1.lpin 2)
-    coordinate (#1-Bout)   at (#1.rpin 1)
-    coordinate (#1-Cout)   at (#1.rpin 2)
-    coordinate (#1-Mux)    at (#1.bpin 5)
-    coordinate (#1-Op)     at (#1.bpin 6)
-    coordinate (#1-Rst)    at (#1.tpin 1)%
-    coordinate (#1-bB)    at (#1.blpin 1)
-    coordinate (#1-bCin)  at (#1.blpin 2)
-    coordinate (#1-bBout) at (#1.brpin 1)
-    coordinate (#1-bCout) at (#1.brpin 2)
-    coordinate (#1-bMux)  at (#1.bbpin 5)
-    coordinate (#1-bOp)   at (#1.bbpin 6)
-    coordinate (#1-bRst)  at (#1.btpin 1)
-    (#1.top left) ++(-0.5,0)
-    coordinate (#1-lpad)
-    (#1.bottom right) ++(0.5,0)
-    coordinate (#1-rpad)
-    (#1.top left) ++(0,0.5)
-    coordinate (#1-tpad)
-    (#1.bottom right) ++(0,-0.5)
-    coordinate (#1-bpad)
+    \markcoordinate {#1} {B}    {lpin 1}
+    \markcoordinate {#1} {Cin}  {lpin 2}
+    \markcoordinate {#1} {Bout} {rpin 1}
+    \markcoordinate {#1} {Cout} {rpin 2}
+    \markcoordinate {#1} {Mux}  {bpin 5}
+    \markcoordinate {#1} {Op}   {bpin 6}
+    \markcoordinate {#1} {Rst}  {tpin 1}%
 }
 
 \ctikzsubcircuitdef{subctkmsFlipFlop} {
@@ -497,26 +479,12 @@ draw only bottom pins={2-4}
     bD, bRst, bEclk, bIeclk, bQ, bQbar%
 } {
     node (#1) [msFlipFlop, anchor = lpin 1]{}%
-    coordinate (#1-D)       at (#1.lpin 2)
-    coordinate (#1-Rst)     at (#1.lpin 1)
-    coordinate (#1-Eclk)    at (#1.tpin 1)
-    coordinate (#1-Ieclk)   at (#1.tpin 2)
-    coordinate (#1-Q)       at (#1.rpin 2)
-    coordinate (#1-Qbar)    at (#1.rpin 1)%
-    coordinate (#1-bD)     at (#1.blpin 2)
-    coordinate (#1-bRst)   at (#1.blpin 1)
-    coordinate (#1-bEclk)  at (#1.btpin 1)
-    coordinate (#1-bIeclk) at (#1.btpin 2)
-    coordinate (#1-bQ)     at (#1.brpin 2)
-    coordinate (#1-bQbar)  at (#1.brpin 1)%
-    (#1.top left) ++(-0.5,0)
-    coordinate (#1-lpad)
-    (#1.bottom right) ++(0.5,0)
-    coordinate (#1-rpad)
-    (#1.top left) ++(0,0.5)
-    coordinate (#1-tpad)
-    (#1.bottom right) ++(0,-0.5)
-    coordinate (#1-bpad)
+    \markcoordinate {#1} {D}     {lpin 2}
+    \markcoordinate {#1} {Rst}   {lpin 1}
+    \markcoordinate {#1} {Eclk}  {tpin 1}
+    \markcoordinate {#1} {Ieclk} {tpin 2}
+    \markcoordinate {#1} {Q}     {rpin 2}
+    \markcoordinate {#1} {Qbar}  {rpin 1}%
 }
 
 \ctikzsubcircuitactivate{test}
@@ -585,13 +553,6 @@ draw only bottom pins={2-4}
     \constcornerhoz {++(0.75,-1)} -- ++(0.25,0)
 
     \msFlipFlop{msff}{D} {\texttt{MS FLIPFLOP}}
-
-    (msff-Q) -- ++(0,2)
-
-    \constcornerfromleft {(msff-Eclk)}
-    (msff-Eclk) -- ++(0,2)
-
-    (flad-bSum) ++(0,-0.2pt) -- ++(0.28,0)
 
     ;
 
