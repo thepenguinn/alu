@@ -411,6 +411,14 @@ draw only bottom pins={2-4}
     coordinate (#1-bCin)  at (#1.blpin 2)
     coordinate (#1-bSum)  at (#1.brpin 3)
     coordinate (#1-bCout) at (#1.brpin 1)
+    (#1.top left) ++(-0.25,0)
+    coordinate (#1-lpad)
+    (#1.bottom right) ++(0.25,0)
+    coordinate (#1-rpad)
+    (#1.top left) ++(0,0.25)
+    coordinate (#1-tpad)
+    (#1.bottom right) ++(0,-0.25)
+    coordinate (#1-bpad)
 }
 
 \ctikzsubcircuitdef{subctkaluInit} {
@@ -432,6 +440,14 @@ draw only bottom pins={2-4}
     coordinate (#1-bMux)  at (#1.bbpin 5)
     coordinate (#1-bOp)   at (#1.bbpin 6)
     coordinate (#1-bRst)  at (#1.btpin 1)
+    (#1.top left) ++(-0.25,0)
+    coordinate (#1-lpad)
+    (#1.bottom right) ++(0.25,0)
+    coordinate (#1-rpad)
+    (#1.top left) ++(0,0.25)
+    coordinate (#1-tpad)
+    (#1.bottom right) ++(0,-0.25)
+    coordinate (#1-bpad)
 }
 
 \ctikzsubcircuitdef{subctkmsFlipFlop} {
@@ -451,6 +467,14 @@ draw only bottom pins={2-4}
     coordinate (#1-bIeclk) at (#1.btpin 2)
     coordinate (#1-bQ)     at (#1.brpin 2)
     coordinate (#1-bQbar)  at (#1.brpin 1)%
+    (#1.top left) ++(-0.25,0)
+    coordinate (#1-lpad)
+    (#1.bottom right) ++(0.25,0)
+    coordinate (#1-rpad)
+    (#1.top left) ++(0,0.25)
+    coordinate (#1-tpad)
+    (#1.bottom right) ++(0,-0.25)
+    coordinate (#1-bpad)
 }
 
 \ctikzsubcircuitactivate{test}
@@ -507,6 +531,7 @@ draw only bottom pins={2-4}
 \begin{circuitikz}[american]
 
     \draw [line join = round]
+
     (0,0)
 
     \fullAdder{flad}{Cin} {\texttt{\fulladdername}}
