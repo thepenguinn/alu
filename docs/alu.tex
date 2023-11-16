@@ -30,13 +30,18 @@
     -- +(0,-0.005)
 }
 
-\newcommand\constcorner[2] {
+\newcommand\markconstcorner[2] {
     coordinate (LCJTMP)
     #2 coordinate (finaltmp)
 
     (LCJTMP#1finaltmp) coordinate (LCVTMP)
     ($(LCVTMP)!\cornerbase!0:(finaltmp)$) coordinate (SCBTMP)
     ($(LCVTMP)!\cornerbase!0:(LCJTMP)$) coordinate (FCBTMP)
+
+}
+
+\newcommand\constcorner[2] {
+    \markconstcorner {#1} {#2}
 
     (LCJTMP) -- (FCBTMP) -- (SCBTMP)
 }
@@ -68,6 +73,43 @@
 
 \newcommand\constcornervrt [1] {
     \constcorner {\cV} {#1}
+}
+
+\newcommand\markconstcornerfrom[2] {
+
+    \markconstcorner {#1} {#2}
+
+    (LCVTMP) coordinate (fsttmp)
+    ($(LCVTMP)!\cornerbase!180:(FCBTMP)$) coordinate (LCVTMP)
+    (fsttmp) coordinate (FCBTMP)
+
+    (SCBTMP) ++($(LCVTMP)-(FCBTMP)$) coordinate (SCBTMP)
+}
+
+\newcommand\constcornerfrom[2] {
+
+    \markconstcornerfrom {#1} {#2}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\constcornerfromright[1] {
+    \slightright
+    \constcornerfrom {\cH} {#1}
+}
+
+\newcommand\constcornerfromleft[1] {
+    \slightleft
+    \constcornerfrom {\cH} {#1}
+}
+
+\newcommand\constcornerfromup [1] {
+    \slightup
+    \constcornerfrom {\cV} {#1}
+}
+
+\newcommand\constcornerfromdown [1] {
+    \slightdown
+    \constcornerfrom {\cV} {#1}
 }
 
 \newcommand\markvarcornerpos[2] {
@@ -544,36 +586,13 @@ draw only bottom pins={2-4}
 
     \msFlipFlop{msff}{D} {\texttt{MS FLIPFLOP}}
 
-    (flad-B) ++(-0.75,0)
-    coordinate (fladBinvrt)
+    (msff-Q) -- ++(0,2)
 
-    (ainit-Bout) ++(0,2)
-    coordinate (ainitBoutheight)
+    \constcornerfromleft {(msff-Eclk)}
+    (msff-Eclk) -- ++(0,2)
 
-    (ainit-Bout)
-    \constcornerright {++(0.75,1)}
-    \constcornerup {(ainitBoutheight)}
-    \constcornerleft {(fladBinvrt)}
-    coordinate (fladBinsecbend)
-    \constcornerdown {(flad-B)}
-    coordinate (fladjustBin)
-    -- (flad-B)
+    (flad-bSum) ++(0,-0.2pt) -- ++(0.28,0)
 
-    (msff-Q) -- ++(0.75,0)
-    coordinate (msqout)
-
-    -- (msqout|-ainitBoutheight)
-
-    \constcornerup {++(-1,0.75)}
-    \aroundcornerleftdown {0.75} {(fladBinsecbend)}
-
-    \aroundcornertilldownright {0.75} {(fladjustBin)} {(flad-Cin)}
-    -- (flad-Cin)
-
-    % TESTING
-    % (flad-Cout) ++(4,-2)
-
-    % node (testmux) [mux08, anchor = lpin 1]{\texttt{MUX}}%
     ;
 
 \end{circuitikz}
