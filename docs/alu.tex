@@ -353,6 +353,7 @@
     \slightleft
     \aroundcornertillpos {#1} {\cH} {#2} {#3}
 }
+
 % \ctikzsubcircuitdef{msFlop} {EC, IEC, D, RST, Q} {
 % \ctikzsubcircuitdef{test} {EC} {
 %     coordinate(#1-EC)
@@ -379,37 +380,41 @@ draw only bottom pins = {5, 6}, }
 
 
 \tikzset{logicOp/.style = {muxdemux, muxdemux def = {
-    NL = 2, NR = 1, NB = 0, NT = 0,
-    Lh = 3, Rh = 3,
-    w = 5
+    NL = 3, NR = 2, NB = 0, NT = 0,
+    Lh = 2.5, Rh = 2.5,
+    w = 4
     },
+    draw only left pins = {2,3},
+    draw only right pins = {1},
     }
 }
 
 \tikzset{msFlipFlop/.style = {muxdemux, muxdemux def = {
-    NL = 2, NR = 2, NB = 0, NT = 6,
+    NL = 2, NR = 2, NB = 2, NT = 6,
     Lh = 3, Rh = 3,
     w = 5
     },
+    draw only left pins = {2},
     draw only top pins = {1,2},
+    draw only bottom pins = {2},
     }
 }
 
 \tikzset{mux08/.style = {muxdemux, muxdemux def = {
-    NL = 12, NR = 3, NB = 5, NT = 0,
-    Lh = 13, Rh = 7.8,
-    % Lh = 10, Rh = 6.5,
-    inset Lh = 4.5, inset Rh = 2.75,
-    % inset Lh = 3.5, inset Rh = 1.75,
+    NL = 10, NR = 3, NB = 5, NT = 0,
+    % Lh = 13, Rh = 7.8,
+    Lh = 10, Rh = 6.5,
+    % inset Lh = 4.5, inset Rh = 2.75,
+    inset Lh = 3.5, inset Rh = 1.75,
     inset w = 1,
-    w = 4.5,
-    % w = 3.5,
+    % w = 4.5,
+    w = 3.25,
     square pins = 1
-},
-draw only left pins={1,2,5-6,8-11},
-draw only right pins={1-2},
-draw only bottom pins={2-4}
-}
+    },
+    draw only left pins={2-5,6-9},
+    draw only right pins={1-2},
+    draw only bottom pins={2-4}
+    }
 }
 
 %  node [muxdemux, rotate = -90, muxdemux def = {NL=10, NR=3, NT=0, NB=4,
@@ -480,11 +485,22 @@ draw only bottom pins={2-4}
 } {
     node (#1) [msFlipFlop, anchor = lpin 1]{}%
     \markcoordinate {#1} {D}     {lpin 2}
-    \markcoordinate {#1} {Rst}   {lpin 1}
+    \markcoordinate {#1} {Rst}   {bpin 2}
     \markcoordinate {#1} {Eclk}  {tpin 1}
     \markcoordinate {#1} {Ieclk} {tpin 2}
     \markcoordinate {#1} {Q}     {rpin 2}
     \markcoordinate {#1} {Qbar}  {rpin 1}%
+}
+
+
+\ctikzsubcircuitdef{subctklogicOp} {
+    Ain, Bin, Oout,
+    bAin, bBin, bOout%
+} {
+    node (#1) [logicOp, anchor = lpin 1]{}%
+    \markcoordinate {#1} {Ain} {lpin 2}
+    \markcoordinate {#1} {Bin} {lpin 3}
+    \markcoordinate {#1} {Oout} {rpin 1}%
 }
 
 \ctikzsubcircuitactivate{test}
@@ -492,6 +508,7 @@ draw only bottom pins={2-4}
 \ctikzsubcircuitactivate{subctkfullAdder}
 \ctikzsubcircuitactivate{subctkaluInit}
 \ctikzsubcircuitactivate{subctkmsFlipFlop}
+\ctikzsubcircuitactivate{subctklogicOp}
 
 \newcommand\fullAdder[3] {
     \subctkfullAdder{#1} {#2}
@@ -507,6 +524,12 @@ draw only bottom pins={2-4}
     \subctkmsFlipFlop{#1} {#2}
     (#1.center) node[]{#3}
 }
+
+\newcommand\logicOp[3] {
+    \subctklogicOp{#1} {#2}
+    (#1.center) node[]{#3}
+}
+
 \begin{document}
 
 \section{1 bit ALU}
@@ -553,6 +576,92 @@ draw only bottom pins={2-4}
     \constcornerhoz {++(0.75,-1)} -- ++(0.25,0)
 
     \msFlipFlop{msff}{D} {\texttt{MS FLIPFLOP}}
+
+    (ainit-Bout) ++(0,2)
+    coordinate (ainitBoutheight)
+
+    (ainit-Bout)
+    \constcornerright {++(0.75,1)}
+
+    \constcornerup {(ainitBoutheight)}
+    \constcornerfromleft {(flad-pB)}
+    coordinate (fladleftvrt)
+    \constcornerdown {(flad-B)}
+    -- (flad-B)
+
+    (msff-Q) -- (msff-pQ) -- ++(0.5,0)
+    coordinate (msffQout)
+    -- (ainitBoutheight-|msffQout)
+    \constcornerup {++(-1,0.75)}
+
+    \aroundcornerleftdown {0.75} {(fladleftvrt)}
+    \aroundcornertilldownright {0.75} {(flad-pB)} {(flad-Cin)}
+    -- (flad-Cin)
+
+    (flad-A) ++(0,-1.75)
+    \logicOp{xorgate}{Ain} {\texttt{XOR}}
+
+    (xorgate-Oout) ++(0,-1.35)
+    \logicOp{andgate}{Ain} {\texttt{AND}}
+
+    (andgate-Bin) ++(0,-0.75)
+    \logicOp{notgate}{Oout} {\texttt{NOT}}
+
+    (notgate-Oout) ++(0,-1.35)
+    \logicOp{orgate}{Ain} {\texttt{OR}}
+
+    (orgate-Bin) ++(0,-0.75)
+    \logicOp{norgate}{Oout} {\texttt{NOR}}
+
+    (norgate-Oout) ++(0,-1.35)
+    \logicOp{nandgate}{Ain} {\texttt{NAND}}
+
+
+    % TESTING
+
+    (msff-Rst)
+    \constcornerdown {++(1,-0.75)}
+    coordinate (msffRstheight)
+    -- ++(1,0)
+
+    ++(-1,-2.50)
+
+    node (mux8) [mux08, anchor = rpin 1] {\texttt{MUX}}
+
+    (mux8.lpin 2) ++(-1.5,0)
+    coordinate (muxvrt)
+
+    % TOP
+
+    (flad-Sum) -- (flad-pSum)
+    \varcornerrightdown {(muxvrt|-mux8.lpin 2)}
+    -- (mux8.lpin 2)
+
+    (xorgate-Oout) -- (xorgate-pOout)
+    \varcornerrightdown {(muxvrt|-mux8.lpin 4)}
+    -- (mux8.lpin 4)
+
+    (andgate-Oout) -- (andgate-pOout)
+    \varcornerrightdown {(muxvrt|-mux8.lpin 5)}
+    -- (mux8.lpin 5)
+
+    % BOTTOM
+
+    (notgate-Oout) -- (notgate-pOout)
+    \varcornerrightdown {(muxvrt|-mux8.lpin 6)}
+    -- (mux8.lpin 6)
+
+    (orgate-Oout) -- (orgate-pOout)
+    \varcornerrightdown {(muxvrt|-mux8.lpin 7)}
+    -- (mux8.lpin 7)
+
+    (norgate-Oout) -- (norgate-pOout)
+    \varcornerrightup {(muxvrt|-mux8.lpin 8)}
+    -- (mux8.lpin 8)
+
+    (nandgate-Oout) -- (nandgate-pOout)
+    \varcornerrightup {(muxvrt|-mux8.lpin 9)}
+    -- (mux8.lpin 9)
 
     ;
 
