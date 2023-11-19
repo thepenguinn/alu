@@ -362,8 +362,8 @@
 \newcommand\markundercornerpos[3] {
     \markvarcornerpos {#2} {#3}
 
-    ($(SCBTMP)!#1cm!-90:(FCBTMP)$) coordinate (bevltmp)
-    ($(SCBTMP)!#1cm!-90:(LCVTMP)$) coordinate (nexsidetmp)
+    ($(SCBTMP)!#1!-90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1!-90:(LCVTMP)$) coordinate (nexsidetmp)
     ($(bevltmp)!0.1cm!-90:(SCBTMP)$) coordinate (bevlpartmp)
 
     (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
@@ -379,8 +379,8 @@
 \newcommand\markundercornerneg[3] {
     \markvarcornerneg {#2} {#3}
 
-    ($(SCBTMP)!#1cm!90:(FCBTMP)$) coordinate (bevltmp)
-    ($(SCBTMP)!#1cm!90:(LCVTMP)$) coordinate (nexsidetmp)
+    ($(SCBTMP)!#1!90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1!90:(LCVTMP)$) coordinate (nexsidetmp)
     ($(bevltmp)!0.1cm!90:(SCBTMP)$) coordinate (bevlpartmp)
 
     (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
@@ -395,13 +395,19 @@
 
 \newcommand\undercornerpos[3] {
 
-    \markundercornerpos {#1} {#2} {#3}
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markundercornerpos {\n{MAGTMP}} {#2} {#3}
     (LCJTMP) -- (FCBTMP) -- (SCBTMP)
 }
 
 \newcommand\undercornerneg[3] {
 
-    \markundercornerneg {#1} {#2} {#3}
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markundercornerneg {\n{MAGTMP}} {#2} {#3}
     (LCJTMP) -- (FCBTMP) -- (SCBTMP)
 
 }
@@ -652,6 +658,25 @@ draw only bottom pins = {5, 6}, }
 %     }}
 
 % \tikzset{barbarrow/.style = {> = {Straight Barb[right, length = 5pt, width = 5pt]}}}
+
+\begin{circuitikz}
+
+    \draw
+    (0,0)
+
+    \varcornerrightdown {++(4,-2)}
+    coordinate (end)
+
+    (0,1)
+    \aroundcornerrightdown {1} {(end)}
+
+    (0,-1)
+    \undercornerrightdown {(0,1)} {(end)}
+
+
+    ;
+
+\end{circuitikz}
 
 \begin{circuitikz}[american]
 
