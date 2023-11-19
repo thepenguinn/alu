@@ -6,6 +6,7 @@
 \usepackage{ifthen}
 
 \usetikzlibrary{intersections}
+\usetikzlibrary{calc}
 
 \def\cornerhypo{0.15}
 \def\cornerbase{0.5cm}
@@ -198,6 +199,8 @@
     \varcornerpos {\cH} {#1}
 }
 
+% AROUND CORNER
+
 \newcommand\markaroundcornerpos[3] {
     \markvarcornerpos {#2} {#3}
 
@@ -352,6 +355,91 @@
 \newcommand\aroundcornertillleftdown[3] {
     \slightleft
     \aroundcornertillpos {#1} {\cH} {#2} {#3}
+}
+
+% UNDER CORNER
+
+\newcommand\markundercornerpos[3] {
+    \markvarcornerpos {#2} {#3}
+
+    ($(SCBTMP)!#1cm!-90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1cm!-90:(LCVTMP)$) coordinate (nexsidetmp)
+    ($(bevltmp)!0.1cm!-90:(SCBTMP)$) coordinate (bevlpartmp)
+
+    (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
+
+    (intersection of nexsidetmp--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (SCBTMP)
+
+    (intersection of LCJTMP--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (FCBTMP)
+
+}
+
+\newcommand\markundercornerneg[3] {
+    \markvarcornerneg {#2} {#3}
+
+    ($(SCBTMP)!#1cm!90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1cm!90:(LCVTMP)$) coordinate (nexsidetmp)
+    ($(bevltmp)!0.1cm!90:(SCBTMP)$) coordinate (bevlpartmp)
+
+    (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
+
+    (intersection of nexsidetmp--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (SCBTMP)
+
+    (intersection of LCJTMP--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (FCBTMP)
+
+}
+
+\newcommand\undercornerpos[3] {
+
+    \markundercornerpos {#1} {#2} {#3}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\undercornerneg[3] {
+
+    \markundercornerneg {#1} {#2} {#3}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+
+}
+
+\newcommand\undercornerupright[2] {
+    \slightup
+    \undercornerneg {#1} {\cV} {#2}
+}
+\newcommand\undercornerdownleft[2] {
+    \slightdown
+    \undercornerneg {#1} {\cV} {#2}
+}
+
+\newcommand\undercornerupleft[2] {
+    \slightup
+    \undercornerpos {#1} {\cV} {#2}
+}
+\newcommand\undercornerdownright[2] {
+    \slightdown
+    \undercornerpos {#1} {\cV} {#2}
+}
+
+\newcommand\undercornerrightdown[2] {
+    \slightright
+    \undercornerneg {#1} {\cH} {#2}
+}
+\newcommand\undercornerleftup[2] {
+    \slightleft
+    \undercornerneg {#1} {\cH} {#2}
+}
+
+\newcommand\undercornerrightup[2] {
+    \slightright
+    \undercornerpos {#1} {\cH} {#2}
+}
+\newcommand\undercornerleftdown[2] {
+    \slightleft
+    \undercornerpos {#1} {\cH} {#2}
 }
 
 % \ctikzsubcircuitdef{msFlop} {EC, IEC, D, RST, Q} {
@@ -529,6 +617,10 @@ draw only bottom pins = {5, 6}, }
     \subctklogicOp{#1} {#2}
     (#1.center) node[]{#3}
 }
+
+% \newcommand\testing[] {
+%
+% }
 
 \begin{document}
 
