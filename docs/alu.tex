@@ -204,8 +204,8 @@
 \newcommand\markaroundcornerpos[3] {
     \markvarcornerpos {#2} {#3}
 
-    ($(SCBTMP)!#1cm!90:(FCBTMP)$) coordinate (bevltmp)
-    ($(SCBTMP)!#1cm!90:(LCVTMP)$) coordinate (nexsidetmp)
+    ($(SCBTMP)!#1!90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1!90:(LCVTMP)$) coordinate (nexsidetmp)
     ($(bevltmp)!0.1cm!90:(SCBTMP)$) coordinate (bevlpartmp)
 
     (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
@@ -221,8 +221,8 @@
 \newcommand\markaroundcornerneg[3] {
     \markvarcornerneg {#2} {#3}
 
-    ($(SCBTMP)!#1cm!-90:(FCBTMP)$) coordinate (bevltmp)
-    ($(SCBTMP)!#1cm!-90:(LCVTMP)$) coordinate (nexsidetmp)
+    ($(SCBTMP)!#1!-90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1!-90:(LCVTMP)$) coordinate (nexsidetmp)
     ($(bevltmp)!0.1cm!-90:(SCBTMP)$) coordinate (bevlpartmp)
 
     (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
@@ -237,13 +237,19 @@
 
 \newcommand\aroundcornerpos[3] {
 
-    \markaroundcornerpos {#1} {#2} {#3}
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markaroundcornerpos {\n{MAGTMP}} {#2} {#3}
     (LCJTMP) -- (FCBTMP) -- (SCBTMP)
 }
 
 \newcommand\aroundcornerneg[3] {
 
-    \markaroundcornerneg {#1} {#2} {#3}
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markaroundcornerneg {\n{MAGTMP}} {#2} {#3}
     (LCJTMP) -- (FCBTMP) -- (SCBTMP)
 
 }
@@ -310,13 +316,19 @@
 
 \newcommand\aroundcornertillpos[4] {
 
-    \markaroundcornertillpos {#1} {#2} {#3} {#4}
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markaroundcornertillpos {\n{MAGTMP}} {#2} {#3} {#4}
     (LCJTMP) -- (FCBTMP) -- (SCBTMP)
 }
 
 \newcommand\aroundcornertillneg[4] {
 
-    \markaroundcornertillneg {#1} {#2} {#3} {#4}
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markaroundcornertillneg {\n{MAGTMP}} {#2} {#3} {#4}
     (LCJTMP) -- (FCBTMP) -- (SCBTMP)
 
 }
@@ -668,7 +680,7 @@ draw only bottom pins = {5, 6}, }
     coordinate (end)
 
     (0,1)
-    \aroundcornerrightdown {1} {(end)}
+    \aroundcornerrightdown {(1,0)} {(end)}
 
     (0,-1)
     \undercornerrightdown {(0,1)} {(end)}
@@ -711,8 +723,8 @@ draw only bottom pins = {5, 6}, }
     -- (ainitBoutheight-|msffQout)
     \constcornerup {++(-1,0.75)}
 
-    \aroundcornerleftdown {0.75} {(fladleftvrt)}
-    \aroundcornertilldownright {0.75} {(flad-pB)} {(flad-Cin)}
+    \aroundcornerleftdown {(0.75,0)} {(fladleftvrt)}
+    \aroundcornertilldownright {(0.75,0)} {(flad-pB)} {(flad-Cin)}
     -- (flad-Cin)
 
     (flad-A) ++(0,-1.75)
