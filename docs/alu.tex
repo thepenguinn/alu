@@ -290,83 +290,88 @@
     \aroundcornerpos {#1} {\cH} {#2}
 }
 
-\newcommand\markaroundcornertillpos[4] {
+% AROUND CORNER TILL
+% gap vrt/hoz pivotpoint tillpoint vectorfromtillpoint
+
+\newcommand\markaroundcornertillpos[5] {
 
     \markaroundcornerpos {#1} {#2} {#3}
     (LCJTMP)
     #4 coordinate (TILLTMP)
+    +#5 coordinate (TILLPARTMP)
 
-    (LCJTMP#2TILLTMP) coordinate (LCVTMP)
-    (intersection of TILLTMP--LCVTMP and FCBTMP--SCBTMP)
+    (intersection of TILLTMP--TILLPARTMP and FCBTMP--SCBTMP)
     coordinate (SCBTMP)
+    (FCBTMP#2SCBTMP) coordinate (LCVTMP)
 
 }
 
-\newcommand\markaroundcornertillneg[4] {
+\newcommand\markaroundcornertillneg[5] {
 
     \markaroundcornerneg {#1} {#2} {#3}
     (LCJTMP)
     #4 coordinate (TILLTMP)
+    +#5 coordinate (TILLPARTMP)
 
-    (LCJTMP#2TILLTMP) coordinate (LCVTMP)
-    (intersection of TILLTMP--LCVTMP and FCBTMP--SCBTMP)
+    (intersection of TILLTMP--TILLPARTMP and FCBTMP--SCBTMP)
     coordinate (SCBTMP)
+    (FCBTMP#2SCBTMP) coordinate (LCVTMP)
 
 }
 
-\newcommand\aroundcornertillpos[4] {
-
-    let \p{MAGCORDTMP} = #1,
-    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
-    in
-    \markaroundcornertillpos {\n{MAGTMP}} {#2} {#3} {#4}
-    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
-}
-
-\newcommand\aroundcornertillneg[4] {
+\newcommand\aroundcornertillpos[5] {
 
     let \p{MAGCORDTMP} = #1,
     \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
     in
-    \markaroundcornertillneg {\n{MAGTMP}} {#2} {#3} {#4}
+    \markaroundcornertillpos {\n{MAGTMP}} {#2} {#3} {#4} {#5}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\aroundcornertillneg[5] {
+
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markaroundcornertillneg {\n{MAGTMP}} {#2} {#3} {#4} {#5}
     (LCJTMP) -- (FCBTMP) -- (SCBTMP)
 
 }
 
-\newcommand\aroundcornertillupright[3] {
+\newcommand\aroundcornertillupright[4] {
     \slightup
-    \aroundcornertillneg {#1} {\cV} {#2} {#3}
+    \aroundcornertillneg {#1} {\cV} {#2} {#3} {#4}
 }
-\newcommand\aroundcornertilldownleft[3] {
+\newcommand\aroundcornertilldownleft[4] {
     \slightdown
-    \aroundcornertillneg {#1} {\cV} {#2} {#3}
+    \aroundcornertillneg {#1} {\cV} {#2} {#3} {#4}
 }
 
-\newcommand\aroundcornertillupleft[3] {
+\newcommand\aroundcornertillupleft[4] {
     \slightup
-    \aroundcornertillpos {#1} {\cV} {#2} {#3}
+    \aroundcornertillpos {#1} {\cV} {#2} {#3} {#4}
 }
-\newcommand\aroundcornertilldownright[3] {
+\newcommand\aroundcornertilldownright[4] {
     \slightdown
-    \aroundcornertillpos {#1} {\cV} {#2} {#3}
+    \aroundcornertillpos {#1} {\cV} {#2} {#3} {#4}
 }
 
-\newcommand\aroundcornertillrightdown[3] {
+\newcommand\aroundcornertillrightdown[4] {
     \slightright
-    \aroundcornertillneg {#1} {\cH} {#2} {#3}
+    \aroundcornertillneg {#1} {\cH} {#2} {#3} {#4}
 }
-\newcommand\aroundcornertillleftup[3] {
+\newcommand\aroundcornertillleftup[4] {
     \slightleft
-    \aroundcornertillneg {#1} {\cH} {#2} {#3}
+    \aroundcornertillneg {#1} {\cH} {#2} {#3} {#4}
 }
 
-\newcommand\aroundcornertillrightup[3] {
+\newcommand\aroundcornertillrightup[4] {
     \slightright
-    \aroundcornertillpos {#1} {\cH} {#2} {#3}
+    \aroundcornertillpos {#1} {\cH} {#2} {#3} {#4}
 }
-\newcommand\aroundcornertillleftdown[3] {
+\newcommand\aroundcornertillleftdown[4] {
     \slightleft
-    \aroundcornertillpos {#1} {\cH} {#2} {#3}
+    \aroundcornertillpos {#1} {\cH} {#2} {#3} {#4}
 }
 
 % UNDER CORNER
@@ -458,6 +463,89 @@
 \newcommand\undercornerleftdown[2] {
     \slightleft
     \undercornerpos {#1} {\cH} {#2}
+}
+
+% UNDER CORNER TILL
+
+\newcommand\markundercornertillpos[5] {
+
+    \markundercornerpos {#1} {#2} {#3}
+    (LCJTMP)
+    #4 coordinate (TILLTMP)
+    +#5 coordinate (TILLPARTMP)
+
+    (intersection of TILLTMP--TILLPARTMP and FCBTMP--SCBTMP)
+    coordinate (SCBTMP)
+    (FCBTMP#2SCBTMP) coordinate (LCVTMP)
+
+}
+
+\newcommand\markundercornertillneg[5] {
+
+    \markundercornerneg {#1} {#2} {#3}
+    (LCJTMP)
+    #4 coordinate (TILLTMP)
+    +#5 coordinate (TILLPARTMP)
+
+    (intersection of TILLTMP--TILLPARTMP and FCBTMP--SCBTMP)
+    coordinate (SCBTMP)
+    (FCBTMP#2SCBTMP) coordinate (LCVTMP)
+
+}
+
+\newcommand\undercornertillpos[5] {
+
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markundercornertillpos {\n{MAGTMP}} {#2} {#3} {#4} {#5}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\undercornertillneg[5] {
+
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markundercornertillneg {\n{MAGTMP}} {#2} {#3} {#4} {#5}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+
+}
+
+\newcommand\undercornertillupright[4] {
+    \slightup
+    \undercornertillneg {#1} {\cV} {#2} {#3} {#4}
+}
+\newcommand\undercornertilldownleft[4] {
+    \slightdown
+    \undercornertillneg {#1} {\cV} {#2} {#3} {#4}
+}
+
+\newcommand\undercornertillupleft[4] {
+    \slightup
+    \undercornertillpos {#1} {\cV} {#2} {#3} {#4}
+}
+\newcommand\undercornertilldownright[4] {
+    \slightdown
+    \undercornertillpos {#1} {\cV} {#2} {#3} {#4}
+}
+
+\newcommand\undercornertillrightdown[4] {
+    \slightright
+    \undercornertillneg {#1} {\cH} {#2} {#3} {#4}
+}
+\newcommand\undercornertillleftup[4] {
+    \slightleft
+    \undercornertillneg {#1} {\cH} {#2} {#3} {#4}
+}
+
+\newcommand\undercornertillrightup[4] {
+    \slightright
+    \undercornertillpos {#1} {\cH} {#2} {#3} {#4}
+}
+\newcommand\undercornertillleftdown[4] {
+    \slightleft
+    \undercornertillpos {#1} {\cH} {#2} {#3} {#4}
 }
 
 % \ctikzsubcircuitdef{msFlop} {EC, IEC, D, RST, Q} {
@@ -671,25 +759,6 @@ draw only bottom pins = {5, 6}, }
 
 % \tikzset{barbarrow/.style = {> = {Straight Barb[right, length = 5pt, width = 5pt]}}}
 
-\begin{circuitikz}
-
-    \draw
-    (0,0)
-
-    \varcornerrightdown {++(4,-2)}
-    coordinate (end)
-
-    (0,1)
-    \aroundcornerrightdown {(1,0)} {(end)}
-
-    (0,-1)
-    \undercornerrightdown {(0,1)} {(end)}
-
-
-    ;
-
-\end{circuitikz}
-
 \begin{circuitikz}[american]
 
     \draw [line join = round]
@@ -724,7 +793,7 @@ draw only bottom pins = {5, 6}, }
     \constcornerup {++(-1,0.75)}
 
     \aroundcornerleftdown {(0.75,0)} {(fladleftvrt)}
-    \aroundcornertilldownright {(0.75,0)} {(flad-pB)} {(flad-Cin)}
+    \aroundcornertilldownright {(0.75,0)} {(flad-pB)} {(flad-Cin)} {(1,0)}
     -- (flad-Cin)
 
     (flad-A) ++(0,-1.75)
