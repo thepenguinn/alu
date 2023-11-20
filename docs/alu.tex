@@ -697,12 +697,32 @@ draw only bottom pins = {5, 6}, }
     \markcoordinate {#1} {Oout} {rpin 1}%
 }
 
+\ctikzsubcircuitdef{subctkmuxEight} {
+    in0, in2, in3, in4, in5, in6, in7, sl0, sl1, sl2, out, and01,
+    bin0, bin2, bin3, bin4, bin5, bin6, bin7, bsl0, bsl1, bsl2, bout, band01%
+} {
+    node (#1) [mux08, anchor = lpin 1] {}%
+    \markcoordinate {#1}   {in0} {lpin 2}
+    \markcoordinate {#1}   {in2} {lpin 4}
+    \markcoordinate {#1}   {in3} {lpin 5}
+    \markcoordinate {#1}   {in4} {lpin 6}
+    \markcoordinate {#1}   {in5} {lpin 7}
+    \markcoordinate {#1}   {in6} {lpin 8}
+    \markcoordinate {#1}   {in7} {lpin 9}%
+    \markcoordinate {#1}   {sl0} {bpin 2}
+    \markcoordinate {#1}   {sl1} {bpin 3}
+    \markcoordinate {#1}   {sl2} {bpin 4}%
+    \markcoordinate {#1} {and01} {rpin 1}
+    \markcoordinate {#1}   {out} {rpin 2}
+}
+
 \ctikzsubcircuitactivate{test}
 \ctikzsubcircuitactivate{onebitalu}
 \ctikzsubcircuitactivate{subctkfullAdder}
 \ctikzsubcircuitactivate{subctkaluInit}
 \ctikzsubcircuitactivate{subctkmsFlipFlop}
 \ctikzsubcircuitactivate{subctklogicOp}
+\ctikzsubcircuitactivate{subctkmuxEight}
 
 \newcommand\fullAdder[3] {
     \subctkfullAdder{#1} {#2}
@@ -723,6 +743,12 @@ draw only bottom pins = {5, 6}, }
     \subctklogicOp{#1} {#2}
     (#1.center) node[]{#3}
 }
+
+\newcommand\muxEight[3] {
+    \subctkmuxEight{#1} {#2}
+    (#1.narrow center) node[]{#3}
+}
+
 
 % \newcommand\testing[] {
 %
@@ -796,7 +822,7 @@ draw only bottom pins = {5, 6}, }
     \aroundcornertilldownright {(0.75,0)} {(flad-pB)} {(flad-Cin)} {(1,0)}
     -- (flad-Cin)
 
-    (flad-A) ++(0,-1.75)
+    (flad-A) ++(0,-1.5)
     \logicOp{xorgate}{Ain} {\texttt{XOR}}
 
     (xorgate-Oout) ++(0,-1.35)
@@ -818,48 +844,60 @@ draw only bottom pins = {5, 6}, }
     % TESTING
 
     (msff-Rst)
-    \constcornerdown {++(1,-0.75)}
+    \constcornerdown {++(1,-0.5)}
     coordinate (msffRstheight)
     -- ++(1,0)
 
     ++(-1,-2.50)
 
-    node (mux8) [mux08, anchor = rpin 1] {\texttt{MUX}}
+    \muxEight{muxate}{and01} {\texttt{MUX}}
 
-    (mux8.lpin 2) ++(-1.5,0)
+    (muxate.lpin 2) ++(-1.75,0)
     coordinate (muxvrt)
 
     % TOP
 
     (flad-Sum) -- (flad-pSum)
-    \varcornerrightdown {(muxvrt|-mux8.lpin 2)}
-    -- (mux8.lpin 2)
+    \varcornerrightdown {(muxvrt|-muxate.lpin 2) ++(-0.75,0)}
+    coordinate (okthis)
+    -- (muxate.lpin 2)
 
     (xorgate-Oout) -- (xorgate-pOout)
-    \varcornerrightdown {(muxvrt|-mux8.lpin 4)}
-    -- (mux8.lpin 4)
+    \undercornertillrightdown
+    {($(muxate.lpin 1)-(muxate.lpin 3)$)} {(okthis)}
+    {(muxvrt|-muxate.lpin 4)} {(1,0)}
+    coordinate (xorgatelastbend)
+    -- (muxate.lpin 4)
 
-    (andgate-Oout) -- (andgate-pOout)
-    \varcornerrightdown {(muxvrt|-mux8.lpin 5)}
-    -- (mux8.lpin 5)
+    (andgate-Oout) % -- (andgate-pOout)
+    \undercornertillrightdown
+    {($(muxate.lpin 1)-(muxate.lpin 2)$)} {(xorgatelastbend)}
+    {(muxate.lpin 5)} {(1,0)}
+    -- (muxate.lpin 5)
 
     % BOTTOM
 
     (notgate-Oout) -- (notgate-pOout)
-    \varcornerrightdown {(muxvrt|-mux8.lpin 6)}
-    -- (mux8.lpin 6)
+    \varcornerrightdown {(muxvrt|-muxate.lpin 6)}
+    coordinate (norgatelastbend)
+    -- (muxate.lpin 6)
 
     (orgate-Oout) -- (orgate-pOout)
-    \varcornerrightdown {(muxvrt|-mux8.lpin 7)}
-    -- (mux8.lpin 7)
-
-    (norgate-Oout) -- (norgate-pOout)
-    \varcornerrightup {(muxvrt|-mux8.lpin 8)}
-    -- (mux8.lpin 8)
+    \undercornertillrightdown
+    {($(muxate.lpin 1)-(muxate.lpin 2)$)} {(norgatelastbend)}
+    {(muxate.lpin 7)} {(1,0)}
+    -- (muxate.lpin 7)
 
     (nandgate-Oout) -- (nandgate-pOout)
-    \varcornerrightup {(muxvrt|-mux8.lpin 9)}
-    -- (mux8.lpin 9)
+    \varcornerrightup {(muxvrt|-muxate.lpin 9)}
+    coordinate (nandgatelastbend)
+    -- (muxate.lpin 9)
+
+    (norgate-Oout) -- (norgate-pOout)
+    \undercornertillrightup
+    {($(muxate.lpin 1)-(muxate.lpin 2)$)} {(nandgatelastbend)}
+    {(muxate.lpin 8)} {(1,0)}
+    -- (muxate.lpin 8)
 
     ;
 
