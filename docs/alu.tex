@@ -750,10 +750,256 @@ draw only bottom pins = {5, 6}, }
     (#1.narrow center) node[]{#3}
 }
 
+\ctikzsubcircuitdef{subctkaluOneBit} {
+    Ain, Bin, Eclk, Ieclk, Op0, Op1, Op2, Rstsig, Regout, Aluout%
+} {
+    \fullAdder{#1-flad}{Cin} {}
+    (#1-flad-Cout)
+    \constcornerhoz {++(0.75,1)} -- ++(0.25,0)
+    %%
+    \aluInit{#1-ainit}{Cin} {}
+    (#1-ainit-Cout)
+    \constcornerhoz {++(0.75,-1)} -- ++(0.25,0)
+    %%
+    \msFlipFlop{#1-msff}{D} {}
+    %%
+    (#1-ainit-Bout) ++(0,2)
+    coordinate (#1-ainitBoutheight)
+    %%
+    (#1-ainit-Bout)
+    \constcornerright {++(0.75,1)}
+    %%
+    \constcornerup {(#1-ainitBoutheight)}
+    \constcornerfromleft {(#1-flad-pB)}
+    coordinate (#1-fladleftvrt)
+    \constcornerdown {(#1-flad-B)}
+    -- (#1-flad-B)
+    %%
+    (#1-msff-Q) -- (#1-msff-pQ) -- ++(0.5,0)
+    coordinate (#1-msffQout)
+    -- (#1-ainitBoutheight-|#1-msffQout)
+    \constcornerup {++($(#1-flad-B)-(#1-flad-Cin)$) ++(-1,0)}
+    %%
+    \aroundcornerleftdown {($(#1-flad-B)-(#1-flad-Cin)$)} {(#1-fladleftvrt)}
+    \aroundcornertilldownright {($(#1-flad-B)-(#1-flad-Cin)$)} {(#1-flad-pB)}
+    {(#1-flad-Cin)} {(1,0)}
+    -- (#1-flad-Cin)
+    %%
+    (#1-msff-Rst)
+    \constcornerdown {++(1,-0.75)}
+    \constcornerright {++(2,-1)}
+    coordinate (#1-msffRstvrt)
+    \constcornerdown {++(-1,-3)}
+    -- ++(-0.5,0)
+    %%
+    coordinate (#1-tmp)
+    \muxEight {#1-mux} {pand01} {}
+    (#1-tmp)
+    -- (#1-mux-and01)
+    %%
+    ($(#1-mux-in5)!0.5!(#1-mux-in6)$)
+    coordinate (#1-muxbotmid)
+    (#1-muxbotmid-|#1-ainit-Mux) ++(-1,0)
+    coordinate (#1-muxbotcnt)
+    %%
+    (#1-muxbotcnt) ++(0,0.75)
+    \logicOp {#1-orgate} {Out} {}
+    %%
+    (#1-muxbotcnt) ++(0,-2)
+    \logicOp {#1-nandgate} {Out} {}
+    %%
+    (#1-muxbotcnt-|#1-orgate-Ain) ++(0,2)
+    \logicOp {#1-notgate} {Out} {}
+    %%
+    (#1-muxbotcnt-|#1-orgate-Ain) ++(0,-0.75)
+    \logicOp {#1-norgate} {Out} {}
+    %%
+    (#1-muxbotcnt) ++(1.5,0)
+    coordinate (#1-muxbotmid)
+    %%
+    (#1-orgate-Out)
+    \varcornerrightdown {(#1-muxbotmid|-#1-mux-in5)}
+    -- (#1-mux-in5)
+    %%
+    (#1-norgate-Out)
+    \varcornerrightup {(#1-muxbotmid|-#1-mux-in6)}
+    -- (#1-mux-in6)
+    %%
+    (#1-notgate-Out)
+    \aroundcornertillrightdown
+    {($(#1-mux-in5)-(#1-mux-in6)$)} {(#1-muxbotmid|-#1-mux-in5)}
+    {(#1-mux-in4)} {(1,0)}
+    -- (#1-mux-in4)
+    %%
+    (#1-nandgate-Out)
+    \aroundcornertillrightup
+    {($(#1-mux-in5)-(#1-mux-in6)$)} {(#1-muxbotmid|-#1-mux-in6)}
+    {(#1-mux-in7)} {(1,0)}
+    -- (#1-mux-in7)
+    %%
+    (#1-orgate-Out) ++(0,3)
+    \logicOp {#1-andgate} {Out} {}
+    %%
+    (#1-notgate-Out) ++(0,3)
+    \logicOp {#1-xorgate} {Out} {}
+    %%
+    (#1-andgate-Out)
+    \varcornerrightdown {(#1-muxbotmid|-#1-mux-in3)}
+    -- (#1-mux-in3)
+    %%
+    (#1-xorgate-Out)
+    \aroundcornertillrightdown
+    {($(#1-mux-in5)-(#1-mux-in6)$)} {(#1-muxbotmid|-#1-mux-in3)}
+    {(#1-mux-in2)} {(1,0)}
+    -- (#1-mux-in2)
+    %%
+    (#1-flad-Sum)
+    \aroundcornertillrightdown
+    {($(#1-mux-in0)-(#1-mux-in3)$)} {(#1-muxbotmid|-#1-mux-in3)}
+    {(#1-mux-in0)} {(1,0)}
+    -- (#1-mux-in0)
+    %%
+    (#1-ainit-Mux)
+    \varcornerdownright {(#1-msff-D|-#1-msffRstvrt) ++(0,-0.5)}
+    coordinate (#1-ainitMuxbend)
+    -- (#1-ainitMuxbend-|#1-msffRstvrt)
+    %%
+    (#1-ainit-Op)
+    \aroundcornerdownright
+    {($(#1-ainit-Op)-(#1-ainit-Mux)$)} {(#1-ainitMuxbend)}
+    \constcornerright {++(6,-1)}
+    \constcornerfromdown {(#1-mux-sl0)}
+    coordinate (#1-tmp)
+    -- (#1-tmp-|#1-mux-sl0)
+    %%
+    % A input
+    %%
+    (#1-xorgate-Ain)
+    -- ++(-2,0)
+    coordinate (#1-Ainbrvrt)
+    %%
+    (#1-andgate-Ain) -- (#1-andgate-Ain-|#1-Ainbrvrt)
+    (#1-orgate-Ain)  --  (#1-orgate-Ain-|#1-Ainbrvrt)
+    (#1-notgate-Ain) -- (#1-notgate-Ain-|#1-Ainbrvrt)
+    (#1-norgate-Ain) -- (#1-norgate-Ain-|#1-Ainbrvrt)
+    %%
+    (#1-nandgate-Ain)
+    \constcornerleft {(#1-nandgate-Ain-|#1-Ainbrvrt)}
+    -- (#1-flad-A-|#1-Ainbrvrt)
+    -- (#1-flad-A)
+    %%
+    % B input
+    %%
+    (#1-xorgate-Bin)
+    -- ++(-3,0)
+    coordinate (#1-Binbrvrt)
+    %%
+    (#1-andgate-Bin) -- (#1-andgate-Bin-|#1-Binbrvrt)
+    (#1-orgate-Bin)  --  (#1-orgate-Bin-|#1-Binbrvrt)
+    (#1-notgate-Bin) -- (#1-notgate-Bin-|#1-Binbrvrt)
+    (#1-norgate-Bin) -- (#1-norgate-Bin-|#1-Binbrvrt)
+    %%
+    (#1-nandgate-Bin)
+    -- (#1-nandgate-Bin-|#1-Binbrvrt)
+    % \constcornerleft {(nandgate-Bin-|Binbrvrt)}
+    \constcornerup {(#1-ainit-B)}
+    -- (#1-ainit-B)
+    %%
+    % Drawing Pins
+    %%
+    % Ain
+    (#1-flad-A-|#1-Ainbrvrt)
+    -- ++(-3,0)
+    coordinate (#1-Ain)
+    %%
+    % Bin
+    (#1-nandgate-Bin-|#1-Binbrvrt)
+    coordinate (#1-tmp)
+    -- (#1-tmp-|#1-Ain)
+    coordinate (#1-Bin)
+    %%
+    % Select lines
+    %%
+    (#1-mux-sl0) ++(0,-2.5)
+    coordinate (#1-muxslbr)
+    ++(0,-1)
+    coordinate (#1-Op0)
+    %%
+    (#1-mux-sl1)
+    \undercornertilldownleft
+    {($(#1-mux-sl0)-(#1-mux-sl1)$)} {(#1-muxslbr) ++(-0.5,0)}
+    {(#1-muxslbr) ++(-1,0)} {(0,1)}
+    coordinate (#1-tmp)
+    -- (#1-tmp|-#1-Op0)
+    coordinate (#1-Op1)
+    %%
+    (#1-mux-sl2)
+    \undercornertilldownleft
+    {($(#1-mux-sl0)-(#1-mux-sl1)$)} {(#1-muxslbr-|#1-mux-sl2) ++(-0.5,0)}
+    {(#1-muxslbr) ++(-2,0)} {(0,1)}
+    coordinate (#1-tmp)
+    -- (#1-tmp|-#1-Op0)
+    coordinate (#1-Op2)
+    %%
+    (#1-mux-sl0) -- (#1-Op0)
+    %%
+    % Clk lines
+    %%
+    (#1-msff-Eclk) ++(0,4)
+    coordinate (#1-eclkbr)
+    ++ (0,1)
+    coordinate (#1-Eclk)
+    %%
+    (#1-msff-Ieclk)
+    \undercornertillupright
+    {($(#1-msff-Eclk)-(#1-msff-Ieclk)$)} {(#1-eclkbr) ++(0.5,0)}
+    {(#1-eclkbr) ++(1,0)} {(0,1)}
+    coordinate (#1-tmp)
+    -- (#1-tmp|-#1-Eclk)
+    coordinate (#1-Ieclk)
+    %%
+    (#1-msff-Eclk)
+    -- (#1-Eclk)
+    %%
+    % Reset line
+    %%
+    (#1-ainit-Rst)
+    -- (#1-ainit-Rst|-#1-Eclk)
+    coordinate (#1-Rstsig)
+    %%
+    % Output lines
+    %%
+    (#1-msffQout)
+    -- ++(3.5,0)
+    %%
+    coordinate (#1-Regout)
+    %%
+    (#1-mux-out)
+    -- (#1-Regout|-#1-mux-out)
+    coordinate (#1-Aluout)
+}
 
-% \newcommand\testing[] {
-%
-% }
+\ctikzsubcircuitactivate{subctkaluOneBit}
+
+% Name Anchor Adder Aluinit Msff Mux
+\newcommand\aluOneBit[6] {
+    \subctkaluOneBit {#1} {#2}
+
+    (#1-flad.center)       node[]{#3}
+    (#1-ainit.center)      node[]{#4}
+    (#1-msff.center)       node[]{#5}
+    (#1-mux.narrow center) node[]{#6}
+}
+
+% xor and not or nor nand
+\newcommand\aluNameLogicOp[7] {
+    (#1-xorgate.center)  node[]{#2}
+    (#1-andgate.center)  node[]{#3}
+    (#1-notgate.center)  node[]{#4}
+    (#1-orgate.center)   node[]{#5}
+    (#1-norgate.center)  node[]{#6}
+    (#1-nandgate.center) node[]{#7}
+}
 
 \begin{document}
 
@@ -793,237 +1039,22 @@ draw only bottom pins = {5, 6}, }
 
             \draw [line join = round]
 
-            (0,0)
+            (0,0) -- ++(0,3)
 
-            \fullAdder{flad}{Cin} {\texttt{\fulladdername}}
-            (flad-Cout)
-            \constcornerhoz {++(0.75,1)} -- ++(0.25,0)
+            \aluOneBit {freak} {Regout}
+            {\texttt{ADDER}}
+            {\texttt{ALU INIT}}
+            {\texttt{MS FLIPFLOP}}
+            {\texttt{MUX}}
 
-            \aluInit{ainit}{Cin} {\texttt{ALU INIT}}
-            (ainit-Cout)
-            \constcornerhoz {++(0.75,-1)} -- ++(0.25,0)
+            \aluNameLogicOp {freak}
+            {\texttt{XOR}}
+            {\texttt{AND}}
+            {\texttt{NOT}}
+            {\texttt{OR}}
+            {\texttt{NOR}}
+            {\texttt{NAND}}
 
-            \msFlipFlop{msff}{D} {\texttt{MS FLIPFLOP}}
-
-            (ainit-Bout) ++(0,2)
-            coordinate (ainitBoutheight)
-
-            (ainit-Bout)
-            \constcornerright {++(0.75,1)}
-
-            \constcornerup {(ainitBoutheight)}
-            \constcornerfromleft {(flad-pB)}
-            coordinate (fladleftvrt)
-            \constcornerdown {(flad-B)}
-            -- (flad-B)
-
-            (msff-Q) -- (msff-pQ) -- ++(0.5,0)
-            coordinate (msffQout)
-            -- (ainitBoutheight-|msffQout)
-            \constcornerup {++($(flad-B)-(flad-Cin)$) ++(-1,0)}
-
-            \aroundcornerleftdown {($(flad-B)-(flad-Cin)$)} {(fladleftvrt)}
-            \aroundcornertilldownright {($(flad-B)-(flad-Cin)$)} {(flad-pB)}
-            {(flad-Cin)} {(1,0)}
-            -- (flad-Cin)
-
-            (msff-Rst)
-            \constcornerdown {++(1,-0.75)}
-            \constcornerright {++(2,-1)}
-            coordinate (msffRstvrt)
-            \constcornerdown {++(-1,-3)}
-            -- ++(-0.5,0)
-
-            coordinate (tmp)
-            \muxEight {mux} {pand01} {\texttt{MUX}}
-            (tmp)
-            -- (mux-and01)
-
-            ($(mux-in5)!0.5!(mux-in6)$)
-            coordinate (muxbotmid)
-            (muxbotmid-|ainit-Mux) ++(-1,0)
-            coordinate (muxbotcnt)
-
-            (muxbotcnt) ++(0,0.75)
-            \logicOp {orgate} {Out} {\texttt{OR}}
-
-            (muxbotcnt) ++(0,-2)
-            \logicOp {nandgate} {Out} {\texttt{NAND}}
-
-            (muxbotcnt-|orgate-Ain) ++(0,2)
-            \logicOp {notgate} {Out} {\texttt{NOT}}
-
-            (muxbotcnt-|orgate-Ain) ++(0,-0.75)
-            \logicOp {norgate} {Out} {\texttt{NOR}}
-
-            % (notgate-Out) -- (notgate-Out-|muxbotcnt)
-            % (orgate-Out) -- (orgate-Out-|muxbotcnt)
-            % (norgate-Out) -- (norgate-Out-|muxbotcnt)
-            % (nandgate-Out) -- (nandgate-Out-|muxbotcnt)
-
-            (muxbotcnt) ++(1.5,0)
-            coordinate (muxbotmid)
-
-            (orgate-Out)
-            \varcornerrightdown {(muxbotmid|-mux-in5)}
-            -- (mux-in5)
-
-            (norgate-Out)
-            \varcornerrightup {(muxbotmid|-mux-in6)}
-            -- (mux-in6)
-
-            (notgate-Out)
-            \aroundcornertillrightdown
-            {($(mux-in5)-(mux-in6)$)} {(muxbotmid|-mux-in5)}
-            {(mux-in4)} {(1,0)}
-            -- (mux-in4)
-
-            (nandgate-Out)
-            \aroundcornertillrightup
-            {($(mux-in5)-(mux-in6)$)} {(muxbotmid|-mux-in6)}
-            {(mux-in7)} {(1,0)}
-            -- (mux-in7)
-
-            (orgate-Out) ++(0,3)
-            \logicOp {andgate} {Out} {\texttt{AND}}
-
-            (notgate-Out) ++(0,3)
-            \logicOp {xorgate} {Out} {\texttt{XOR}}
-
-            (andgate-Out)
-            \varcornerrightdown {(muxbotmid|-mux-in3)}
-            -- (mux-in3)
-
-            (xorgate-Out)
-            \aroundcornertillrightdown
-            {($(mux-in5)-(mux-in6)$)} {(muxbotmid|-mux-in3)}
-            {(mux-in2)} {(1,0)}
-            -- (mux-in2)
-
-            (flad-Sum)
-            \aroundcornertillrightdown
-            {($(mux-in0)-(mux-in3)$)} {(muxbotmid|-mux-in3)}
-            {(mux-in0)} {(1,0)}
-            -- (mux-in0)
-
-            (ainit-Mux)
-            \varcornerdownright {(msff-D|-msffRstvrt) ++(0,-0.5)}
-            coordinate (ainitMuxbend)
-            -- (ainitMuxbend-|msffRstvrt)
-
-            (ainit-Op)
-            \aroundcornerdownright
-            {($(ainit-Op)-(ainit-Mux)$)} {(ainitMuxbend)}
-            \constcornerright {++(6,-1)}
-            \constcornerfromdown {(mux-sl0)}
-            coordinate (tmp)
-            -- (tmp-|mux-sl0)
-
-            % A input
-
-            (xorgate-Ain)
-            -- ++(-2,0)
-            coordinate (Ainbrvrt)
-
-            (andgate-Ain) -- (andgate-Ain-|Ainbrvrt)
-            (orgate-Ain)  --  (orgate-Ain-|Ainbrvrt)
-            (notgate-Ain) -- (notgate-Ain-|Ainbrvrt)
-            (norgate-Ain) -- (norgate-Ain-|Ainbrvrt)
-
-            (nandgate-Ain)
-            \constcornerleft {(nandgate-Ain-|Ainbrvrt)}
-            -- (flad-A-|Ainbrvrt)
-            -- (flad-A)
-
-            % B input
-
-            (xorgate-Bin)
-            -- ++(-3,0)
-            coordinate (Binbrvrt)
-
-            (andgate-Bin) -- (andgate-Bin-|Binbrvrt)
-            (orgate-Bin)  --  (orgate-Bin-|Binbrvrt)
-            (notgate-Bin) -- (notgate-Bin-|Binbrvrt)
-            (norgate-Bin) -- (norgate-Bin-|Binbrvrt)
-
-            (nandgate-Bin)
-            -- (nandgate-Bin-|Binbrvrt)
-            % \constcornerleft {(nandgate-Bin-|Binbrvrt)}
-            \constcornerup {(ainit-B)}
-            -- (ainit-B)
-
-            % Drawing Pins
-
-            % Ain
-            (flad-A-|Ainbrvrt)
-            -- ++(-3,0)
-            coordinate (Ain)
-
-            % Bin
-            (nandgate-Bin-|Binbrvrt)
-            coordinate (tmp)
-            -- (tmp-|Ain)
-            coordinate (Bin)
-
-            % Select lines
-
-            (mux-sl0) ++(0,-2.5)
-            coordinate (muxslbr)
-            ++(0,-1)
-            coordinate (Sl0)
-
-            (mux-sl1)
-            \undercornertilldownleft
-            {($(mux-sl0)-(mux-sl1)$)} {(muxslbr) ++(-0.5,0)}
-            {(muxslbr) ++(-1,0)} {(0,1)}
-            coordinate (tmp)
-            -- (tmp|-Sl0)
-            coordinate (Sl1)
-
-            (mux-sl2)
-            \undercornertilldownleft
-            {($(mux-sl0)-(mux-sl1)$)} {(muxslbr-|mux-sl2) ++(-0.5,0)}
-            {(muxslbr) ++(-2,0)} {(0,1)}
-            coordinate (tmp)
-            -- (tmp|-Sl0)
-            coordinate (Sl2)
-
-            (mux-sl0) -- (Sl0)
-
-            % Clk lines
-
-            (msff-Eclk) ++(0,4)
-            coordinate (eclkbr)
-            ++ (0,1)
-            coordinate (Eclk)
-
-            (msff-Ieclk)
-            \undercornertillupright
-            {($(msff-Eclk)-(msff-Ieclk)$)} {(eclkbr) ++(0.5,0)}
-            {(eclkbr) ++(1,0)} {(0,1)}
-            coordinate (tmp)
-            -- (tmp|-Eclk)
-            coordinate (Ieclk)
-
-            (msff-Eclk)
-            -- (Eclk)
-
-            % Reset line
-
-            (ainit-Rst)
-            -- (ainit-Rst|-Eclk)
-            coordinate (Rstsig)
-
-            % Output lines
-
-            (msffQout)
-            -- ++(3.5,0)
-
-            coordinate (Regout)
-
-            (mux-out)
-            -- (Regout|-mux-out)
-            coordinate (Aluout)
 
             ;
 
