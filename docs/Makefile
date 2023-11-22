@@ -4,7 +4,7 @@
 default: viewpdf
 
 alu.pdf: alu.tex
-	pdflatex alu.tex
+	pdflatex --halt-on-error alu.tex
 	cp alu.pdf ~/src/
 
 viewpdf: alu.pdf
