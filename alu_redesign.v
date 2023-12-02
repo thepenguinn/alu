@@ -99,8 +99,99 @@ module ring_oscillator(input logic en,
 
 endmodule
 
-// mux16 demux16
-//
+module edge_detector(input logic clk,
+    output logic eclk);
+
+    wire notclk;
+
+    nor #30 (notclk, clk, clk);
+    and #3 (eclk, notclk, clk);
+
+endmodule
+
+module sr_latch(input logic set, reset,
+    output logic q, qbar);
+
+    nor #3 (q, qbar, reset);
+    nor #3 (qbar, q, set);
+
+endmodule
+
+module d_latch(input logic data, clk,
+    output logic q, qbar);
+
+    /*
+     * With active low clk
+     * */
+
+    wire notdata;
+    wire set, reset;
+
+    sr_latch srl (
+        .set(set),
+        .reset(reset),
+        .q(q),
+        .qbar(qbar)
+    );
+
+    nor #3 (notdata, data, data);
+
+    nor #3 (reset, data, clk);
+    nor #3 (set, notdata, clk);
+
+endmodule
+
+module d_latch_sr(input logic data, rst, clk,
+    output logic q, qbar);
+
+    /*
+     * With active low clk and active low data
+     * */
+
+    wire acdata;
+
+    d_latch dl (
+        .data(acdata),
+        .clk(clk),
+        .q(q),
+        .qbar(qbar)
+    );
+
+    nor #3 (acdata, data, rst);
+
+endmodule
+
+module ms_flipflop(input logic data, rst, eclk, ieclk,
+    output logic q, qbar);
+
+    /*
+     * With synchronous reset, active low clk, active low data
+     * */
+
+    wire sdata;
+
+    d_latch_sr master (
+        .data(data),
+        .clk(eclk),
+        .q(sdata),
+        .rst(rst)
+    );
+
+    d_latch slave (
+        .data(sdata),
+        .clk(ieclk),
+        .q(q),
+        .qbar(qbar)
+    );
+
+endmodule
+
+module couter(input logic clk, rst,
+    output logic [3:0] count);
+
+
+
+endmodule
 
 module nor5input(input logic in0, in1, in2, in3, in4,
     output logic out);

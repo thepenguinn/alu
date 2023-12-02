@@ -1,33 +1,40 @@
 module testbench();
 
-    reg in;
-    reg [3:0] sl;
+    reg eclk, ieclk, rst, data;
+    wire q, qbar;
 
-    wire [15:0] out;
-
-    demux16 billie (
-        .in(in),
-        .sl(sl),
-        .out(out)
+    ms_flipflop billie (
+        .eclk(eclk),
+        .ieclk(ieclk),
+        .data(data),
+        .rst(rst),
+        .q(q),
+        .qbar(qbar)
     );
 
-    integer i;
 
     initial begin
 
-        in = 1'b1;
+        eclk = 1'b1;
+        ieclk = 1'b1;
+        data = 1'b0;
+        rst = 1'b1;
 
-        #100 $display ("%b", in);
+        #100;
+        eclk = 1'b0;
+        #100;
+        eclk = 1'b1;
 
-        for (i = 0; i < 16; i++) begin
-            sl = i;
+        // #100;
+        // ieclk = 1'b1;
+        // #100;
+        // ieclk = 1'b0;
 
-            #100;
 
-            $display ("%b", out);
-        end
+        $display("%b %b", q, qbar);
 
     end
+
 
 
 endmodule
