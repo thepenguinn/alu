@@ -2,6 +2,7 @@ a.out
 hai.v
 testbench_tmp.v
 alu
+alu_redesign
 alutester
 *.o
 alutester_tb_file.v

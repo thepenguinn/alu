@@ -1,5 +1,9 @@
 # make file
 #
+#
+
+redesign: alu_redesign
+	vvp alu_redesign
 
 run: alu
 	vvp alu
@@ -18,6 +22,9 @@ testbench/sim.o: testbench/sim.c testbench/sim.h
 
 testbench/draw.o: testbench/draw.c testbench/draw.h
 	gcc -o testbench/draw.o -c testbench/draw.c
+
+alu_redesign: alu_redesign.v testbench_redesign.v
+	iverilog -o alu_redesign -g2012 testbench_redesign.v alu_redesign.v
 
 alu: alu.v testbench.v
 	iverilog -o alu -g2012 testbench.v alu.v
