@@ -100,12 +100,12 @@ module ring_oscillator(input logic en,
 endmodule
 
 module edge_detector(input logic clk,
-    output logic eclk);
+    output logic reclk);
 
     wire notclk;
 
     nor #30 (notclk, clk, clk);
-    and #3 (eclk, notclk, clk);
+    and #3 (reclk, notclk, clk);
 
 endmodule
 
@@ -161,34 +161,109 @@ module d_latch_sr(input logic data, rst, clk,
 
 endmodule
 
-module ms_flipflop(input logic data, rst, eclk, ieclk,
+module ms_flipflop(input logic data, rst, reclk, feclk,
     output logic q, qbar);
 
     /*
-     * With synchronous reset, active low clk, active low data
+     * With synchronous reset, active low data
      * */
 
     wire sdata;
 
+    wire ireclk, ifeclk;
+
+    nor #3 (ireclk, reclk, reclk);
+    nor #3 (ifeclk, feclk, feclk);
+
     d_latch_sr master (
         .data(data),
-        .clk(eclk),
+        .clk(ireclk),
         .q(sdata),
         .rst(rst)
     );
 
     d_latch slave (
         .data(sdata),
-        .clk(ieclk),
+        .clk(ifeclk),
         .q(q),
         .qbar(qbar)
     );
 
 endmodule
 
-module couter(input logic clk, rst,
+module counter(input logic reclk, feclk, rst,
     output logic [3:0] count);
 
+    wire feclk1, feclk2, feclk3;
+
+    wire acfeclk1, acfeclk2, acfeclk3;
+    wire mux11, mux12, mux21, mux22, mux31, mux32;
+    wire notrst;
+    wire qbar1, qbar2, qbar3;
+
+    nor #3 (notrst, rst, rst);
+
+    ms_flipflop msff00 (
+        .data(count[0]),
+        .rst(rst),
+        .reclk(reclk),
+        .feclk(feclk),
+        .q(count[0]),
+        .qbar(qbar1)
+    );
+
+    edge_detector ed01 (
+        .clk(qbar1),
+        .reclk(feclk1)
+    );
+
+    nor #3 (mux11, rst, feclk1);
+    nor #3 (mux12, notrst, feclk);
+    nor #3 (acfeclk1, mux11, mux12);
+
+    ms_flipflop msff01 (
+        .data(count[1]),
+        .rst(rst),
+        .reclk(reclk),
+        .feclk(acfeclk1),
+        .q(count[1]),
+        .qbar(qbar2)
+    );
+
+    edge_detector ed02 (
+        .clk(qbar2),
+        .reclk(feclk2)
+    );
+
+    nor #3 (mux21, rst, feclk2);
+    nor #3 (mux22, notrst, feclk);
+    nor #3 (acfeclk2, mux21, mux22);
+
+    ms_flipflop msff02 (
+        .data(count[2]),
+        .rst(rst),
+        .reclk(reclk),
+        .feclk(acfeclk2),
+        .q(count[2]),
+        .qbar(qbar3)
+    );
+
+    edge_detector ed03 (
+        .clk(qbar3),
+        .reclk(feclk3)
+    );
+
+    nor #3 (mux31, rst, feclk3);
+    nor #3 (mux32, notrst, feclk);
+    nor #3 (acfeclk3, mux31, mux32);
+
+    ms_flipflop msff03 (
+        .data(count[3]),
+        .rst(rst),
+        .reclk(reclk),
+        .feclk(acfeclk3),
+        .q(count[3])
+    );
 
 
 endmodule
