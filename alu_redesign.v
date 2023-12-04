@@ -141,6 +141,38 @@ module d_latch(input logic data, clk,
 
 endmodule
 
+module d_latch_ar(input logic data, clk, rst,
+    output logic q, qbar);
+
+    /*
+     * With active high clk, async rst,
+     * make sure to never let data and clk high
+     * when rst is high
+     * */
+
+    wire notdata;
+    wire set, reset;
+    wire acreset, notacreset;
+    wire acclk;
+
+    sr_latch srl (
+        .set(set),
+        .reset(acreset),
+        .q(q),
+        .qbar(qbar)
+    );
+
+    nor #3 (acclk, clk, clk);
+    nor #3 (notdata, data, data);
+
+    nor #3 (reset, data, acclk);
+    nor #3 (set, notdata, acclk);
+
+    nor #3 (notacreset, reset, rst);
+    nor #3 (acreset, notacreset, notacreset);
+
+endmodule
+
 module d_latch_sr(input logic data, rst, clk,
     output logic q, qbar);
 
@@ -361,6 +393,10 @@ endmodule
 module demux16(input logic in, input logic [3:0] sl,
     output logic [15:0] out);
 
+    /*
+     * Active low in
+     * */
+
     wire sl00, sl01, sl02, sl03; // original select lines
     wire sl10, sl11, sl12, sl13; // inverted select lines
 
@@ -374,28 +410,63 @@ module demux16(input logic in, input logic [3:0] sl,
     nor #3 (sl12, sl02, sl02);
     nor #3 (sl13, sl03, sl03);
 
-    wire notin;
-
-    nor #3 (notin, in, in);
-
     wire nor00, nor01, nor02, nor03, nor04, nor05, nor06, nor07,
         nor08, nor09, nor10, nor11, nor12, nor13, nor14, nor15;
 
-    nor5input nor500 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl00), .in4(notin), .out(out[00]));
-    nor5input nor501 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl10), .in4(notin), .out(out[01]));
-    nor5input nor502 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl00), .in4(notin), .out(out[02]));
-    nor5input nor503 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl10), .in4(notin), .out(out[03]));
-    nor5input nor504 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl00), .in4(notin), .out(out[04]));
-    nor5input nor505 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl10), .in4(notin), .out(out[05]));
-    nor5input nor506 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl00), .in4(notin), .out(out[06]));
-    nor5input nor507 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl10), .in4(notin), .out(out[07]));
-    nor5input nor508 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl00), .in4(notin), .out(out[08]));
-    nor5input nor509 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl10), .in4(notin), .out(out[09]));
-    nor5input nor510 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl00), .in4(notin), .out(out[10]));
-    nor5input nor511 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl10), .in4(notin), .out(out[11]));
-    nor5input nor512 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl00), .in4(notin), .out(out[12]));
-    nor5input nor513 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl10), .in4(notin), .out(out[13]));
-    nor5input nor514 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl00), .in4(notin), .out(out[14]));
-    nor5input nor515 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(notin), .out(out[15]));
+    nor5input nor500 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl00), .in4(in), .out(out[00]));
+    nor5input nor501 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl10), .in4(in), .out(out[01]));
+    nor5input nor502 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl00), .in4(in), .out(out[02]));
+    nor5input nor503 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl10), .in4(in), .out(out[03]));
+    nor5input nor504 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl00), .in4(in), .out(out[04]));
+    nor5input nor505 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl10), .in4(in), .out(out[05]));
+    nor5input nor506 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl00), .in4(in), .out(out[06]));
+    nor5input nor507 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl10), .in4(in), .out(out[07]));
+    nor5input nor508 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl00), .in4(in), .out(out[08]));
+    nor5input nor509 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl10), .in4(in), .out(out[09]));
+    nor5input nor510 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl00), .in4(in), .out(out[10]));
+    nor5input nor511 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl10), .in4(in), .out(out[11]));
+    nor5input nor512 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl00), .in4(in), .out(out[12]));
+    nor5input nor513 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl10), .in4(in), .out(out[13]));
+    nor5input nor514 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl00), .in4(in), .out(out[14]));
+    nor5input nor515 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(in), .out(out[15]));
+
+endmodule
+
+module memoryunit(input logic data, reclk, rst, input logic [3:0] sl,
+    output logic [15:0] out);
+
+    wire [15:0] dmout;
+    wire notdata;
+
+    demux16 demux(
+        .in(reclk),
+        .sl(sl),
+        .out(dmout)
+    );
+
+    // always @(dmout) begin
+
+    //     $display ("%b %b %b", reclk, dmout, sl);
+
+    // end
+
+    nor #3 (notdata, data, data);
+
+    d_latch_ar dlsr00 (.data(notdata), .rst(rst), .clk(dmout[00]), .q(out[00]));
+    d_latch_ar dlsr01 (.data(notdata), .rst(rst), .clk(dmout[01]), .q(out[01]));
+    d_latch_ar dlsr02 (.data(notdata), .rst(rst), .clk(dmout[02]), .q(out[02]));
+    d_latch_ar dlsr03 (.data(notdata), .rst(rst), .clk(dmout[03]), .q(out[03]));
+    d_latch_ar dlsr04 (.data(notdata), .rst(rst), .clk(dmout[04]), .q(out[04]));
+    d_latch_ar dlsr05 (.data(notdata), .rst(rst), .clk(dmout[05]), .q(out[05]));
+    d_latch_ar dlsr06 (.data(notdata), .rst(rst), .clk(dmout[06]), .q(out[06]));
+    d_latch_ar dlsr07 (.data(notdata), .rst(rst), .clk(dmout[07]), .q(out[07]));
+    d_latch_ar dlsr08 (.data(notdata), .rst(rst), .clk(dmout[08]), .q(out[08]));
+    d_latch_ar dlsr09 (.data(notdata), .rst(rst), .clk(dmout[09]), .q(out[09]));
+    d_latch_ar dlsr10 (.data(notdata), .rst(rst), .clk(dmout[10]), .q(out[10]));
+    d_latch_ar dlsr11 (.data(notdata), .rst(rst), .clk(dmout[11]), .q(out[11]));
+    d_latch_ar dlsr12 (.data(notdata), .rst(rst), .clk(dmout[12]), .q(out[12]));
+    d_latch_ar dlsr13 (.data(notdata), .rst(rst), .clk(dmout[13]), .q(out[13]));
+    d_latch_ar dlsr14 (.data(notdata), .rst(rst), .clk(dmout[14]), .q(out[14]));
+    d_latch_ar dlsr15 (.data(notdata), .rst(rst), .clk(dmout[15]), .q(out[15]));
 
 endmodule

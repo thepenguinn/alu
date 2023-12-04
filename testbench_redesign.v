@@ -7,6 +7,10 @@ module testbench();
     reg en;
     wire out;
 
+    reg data;
+
+    wire [15:0] muout;
+
     ring_oscillator ro (
         .en(en),
         .out(out)
@@ -31,6 +35,14 @@ module testbench();
         .count(count)
     );
 
+    memoryunit mu (
+        .reclk(reclk),
+        .sl(count),
+        .rst(rst),
+        .out(muout),
+        .data(data)
+    );
+
     initial begin
 
         en = 1'b0;
@@ -40,20 +52,20 @@ module testbench();
 
         rst = 1'b1;
 
-        #3000;
+        #2999;
         rst = 1'b0;
+
+        data = 1'b0;
 
     end
 
     integer j = 0;
 
     always @(negedge out) begin
-        if (j >= 26)
+        if (j >= 36)
             $finish;
 
-
-        #100;
-        $display("%b, %b %t", out, count, $time);
+        $display("%b %b %b %t", out, count, muout, $time);
 
         j++;
     end
