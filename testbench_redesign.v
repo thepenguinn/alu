@@ -1,74 +1,56 @@
 module testbench();
 
-    reg rst;
-    wire reclk, feclk;
-    wire [3:0] count;
-    wire notout;
-    reg en;
-    wire out;
+    reg ain, bin, rst, reclk, feclk;
+    reg [2:0] op;
+    wire aluout, regout;
 
-    reg data;
-
-    wire [15:0] muout;
-
-    ring_oscillator ro (
-        .en(en),
-        .out(out)
-    );
-
-    nor #3 (notout, out, out);
-
-    edge_detector ed0 (
-        .clk(out),
-        .reclk(reclk)
-    );
-
-    edge_detector ed1 (
-        .clk(notout),
-        .reclk(feclk)
-    );
-
-    counter cc (
+    alu billie (
+        .ain(ain),
+        .bin(bin),
+        .op(op),
+        .rst(rst),
         .reclk(reclk),
         .feclk(feclk),
-        .rst(rst),
-        .count(count)
-    );
-
-    memoryunit mu (
-        .reclk(reclk),
-        .sl(count),
-        .rst(rst),
-        .out(muout),
-        .data(data)
+        .aluout(aluout),
+        .regout(regout)
     );
 
     initial begin
 
-        en = 1'b0;
-        #1000
-        en = 1'b1;
-
-
-        rst = 1'b1;
-
-        #2999;
+        reclk = 1'b0;
+        feclk = 1'b0;
         rst = 1'b0;
 
-        data = 1'b0;
+        op = 3'b000;
+        ain = 1'b1;
+        bin = 1'b1;
+
+        #30;
+        rst = 1'b1;
+        reclk = 1'b1;
+        #100;
+        reclk = 1'b0;
+        #100;
+
+        feclk = 1'b1;
+        #100;
+        feclk = 1'b0;
+        #100;
+        rst = 1'b0;
+
+        #100;
+        reclk = 1'b1;
+        #100;
+        reclk = 1'b0;
+        #100;
+
+        feclk = 1'b1;
+        #100;
+        feclk = 1'b0;
+        #100;
+
+        #1000 $display ("%b %b", aluout, regout);
 
     end
-
-    integer j = 0;
-
-    always @(negedge out) begin
-        if (j >= 36)
-            $finish;
-
-        $display("%b %b %b %t", out, count, muout, $time);
-
-        j++;
-    end
-
 
 endmodule
