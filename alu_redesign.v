@@ -462,38 +462,38 @@ module shiftreg(input logic sin, rst, reclk, feclk,
 
     nor #3 (acsin, sin, sin);
 
-    ms_flipflop msff00 (.data(qbout[14]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[00])                  );
-    ms_flipflop msff01 (.data(qbout[13]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[01]), .qbar(qbout[14]));
-    ms_flipflop msff02 (.data(qbout[12]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[02]), .qbar(qbout[13]));
-    ms_flipflop msff03 (.data(qbout[11]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[03]), .qbar(qbout[12]));
-    ms_flipflop msff04 (.data(qbout[10]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[04]), .qbar(qbout[11]));
-    ms_flipflop msff05 (.data(qbout[09]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[05]), .qbar(qbout[10]));
-    ms_flipflop msff06 (.data(qbout[08]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[06]), .qbar(qbout[09]));
-    ms_flipflop msff07 (.data(qbout[07]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[07]), .qbar(qbout[08]));
-    ms_flipflop msff08 (.data(qbout[06]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[08]), .qbar(qbout[07]));
-    ms_flipflop msff09 (.data(qbout[05]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[09]), .qbar(qbout[06]));
-    ms_flipflop msff10 (.data(qbout[04]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[10]), .qbar(qbout[05]));
-    ms_flipflop msff11 (.data(qbout[03]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[11]), .qbar(qbout[04]));
-    ms_flipflop msff12 (.data(qbout[02]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[12]), .qbar(qbout[03]));
-    ms_flipflop msff13 (.data(qbout[01]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[13]), .qbar(qbout[02]));
-    ms_flipflop msff14 (.data(qbout[00]), .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[14]), .qbar(qbout[01]));
-    ms_flipflop msff15 (.data(acsin),     .rst(rst), .reclk(reclk),
-                        .feclk(feclk), .q(pout[15]), .qbar(qbout[00]));
+    ms_flipflop msff00 ( .data(qbout[14]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[00])                   );
+    ms_flipflop msff01 ( .data(qbout[13]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[01]), .qbar(qbout[14]) );
+    ms_flipflop msff02 ( .data(qbout[12]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[02]), .qbar(qbout[13]) );
+    ms_flipflop msff03 ( .data(qbout[11]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[03]), .qbar(qbout[12]) );
+    ms_flipflop msff04 ( .data(qbout[10]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[04]), .qbar(qbout[11]) );
+    ms_flipflop msff05 ( .data(qbout[09]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[05]), .qbar(qbout[10]) );
+    ms_flipflop msff06 ( .data(qbout[08]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[06]), .qbar(qbout[09]) );
+    ms_flipflop msff07 ( .data(qbout[07]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[07]), .qbar(qbout[08]) );
+    ms_flipflop msff08 ( .data(qbout[06]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[08]), .qbar(qbout[07]) );
+    ms_flipflop msff09 ( .data(qbout[05]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[09]), .qbar(qbout[06]) );
+    ms_flipflop msff10 ( .data(qbout[04]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[10]), .qbar(qbout[05]) );
+    ms_flipflop msff11 ( .data(qbout[03]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[11]), .qbar(qbout[04]) );
+    ms_flipflop msff12 ( .data(qbout[02]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[12]), .qbar(qbout[03]) );
+    ms_flipflop msff13 ( .data(qbout[01]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[13]), .qbar(qbout[02]) );
+    ms_flipflop msff14 ( .data(qbout[00]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[14]), .qbar(qbout[01]) );
+    ms_flipflop msff15 ( .data(acsin),     .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[15]), .qbar(qbout[00]) );
 
 endmodule
 
