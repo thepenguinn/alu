@@ -21,7 +21,7 @@ module testbench();
         feclk = 1'b0;
         rst = 1'b0;
 
-        op = 3'b000;
+        op = 3'b011;
         ain = 1'b1;
         bin = 1'b1;
 

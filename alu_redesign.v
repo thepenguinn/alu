@@ -117,7 +117,28 @@ module sr_latch(input logic set, reset,
 
 endmodule
 
-module d_latch(input logic data, clk,
+module sr_flipflop(input logic set, reset, clk,
+    output logic q, qbar);
+
+    /*
+     * With active low clk
+     * */
+
+    wire srlset, srlreset;
+
+    sr_latch srl (
+        .set(srlset),
+        .reset(srlreset),
+        .q(q),
+        .qbar(qbar)
+    );
+
+    nor #3 (srlreset, set, clk);
+    nor #3 (srlset, reset, clk);
+
+endmodule
+
+module d_flipflop(input logic data, clk,
     output logic q, qbar);
 
     /*
@@ -125,23 +146,20 @@ module d_latch(input logic data, clk,
      * */
 
     wire notdata;
-    wire set, reset;
 
-    sr_latch srl (
-        .set(set),
-        .reset(reset),
+    sr_flipflop srff (
+        .set(data),
+        .reset(notdata),
+        .clk(clk),
         .q(q),
         .qbar(qbar)
     );
 
     nor #3 (notdata, data, data);
 
-    nor #3 (reset, data, clk);
-    nor #3 (set, notdata, clk);
-
 endmodule
 
-module d_latch_ar(input logic data, clk, rst,
+module d_flipflop_ar(input logic data, clk, rst,
     output logic q, qbar);
 
     /*
@@ -173,7 +191,7 @@ module d_latch_ar(input logic data, clk, rst,
 
 endmodule
 
-module d_latch_sr(input logic data, rst, clk,
+module d_flipflop_sr(input logic data, rst, clk,
     output logic q, qbar);
 
     /*
@@ -182,7 +200,7 @@ module d_latch_sr(input logic data, rst, clk,
 
     wire acdata;
 
-    d_latch dl (
+    d_flipflop dl (
         .data(acdata),
         .clk(clk),
         .q(q),
@@ -197,25 +215,28 @@ module ms_flipflop(input logic data, rst, reclk, feclk,
     output logic q, qbar);
 
     /*
-     * With synchronous reset, active low data
+     * With synchronous reset, active low data,
+     * active high reclk, and feclk
      * */
 
-    wire sdata;
+    wire sdata, notsdata;
 
     wire ireclk, ifeclk;
 
     nor #3 (ireclk, reclk, reclk);
     nor #3 (ifeclk, feclk, feclk);
 
-    d_latch_sr master (
+    d_flipflop_sr master (
         .data(data),
         .clk(ireclk),
         .q(sdata),
+        .qbar(notsdata),
         .rst(rst)
     );
 
-    d_latch slave (
-        .data(sdata),
+    sr_flipflop slave (
+        .set(sdata),
+        .reset(notsdata),
         .clk(ifeclk),
         .q(q),
         .qbar(qbar)
@@ -432,7 +453,7 @@ module demux16(input logic in, input logic [3:0] sl,
 
 endmodule
 
-module memoryunit(input logic data, reclk, rst, input logic [3:0] sl,
+module memoryunit_mux(input logic data, reclk, rst, input logic [3:0] sl,
     output logic [15:0] out);
 
     wire [15:0] dmout;
@@ -446,22 +467,22 @@ module memoryunit(input logic data, reclk, rst, input logic [3:0] sl,
 
     nor #3 (notdata, data, data);
 
-    d_latch_ar dlsr00 (.data(notdata), .rst(rst), .clk(dmout[00]), .q(out[00]));
-    d_latch_ar dlsr01 (.data(notdata), .rst(rst), .clk(dmout[01]), .q(out[01]));
-    d_latch_ar dlsr02 (.data(notdata), .rst(rst), .clk(dmout[02]), .q(out[02]));
-    d_latch_ar dlsr03 (.data(notdata), .rst(rst), .clk(dmout[03]), .q(out[03]));
-    d_latch_ar dlsr04 (.data(notdata), .rst(rst), .clk(dmout[04]), .q(out[04]));
-    d_latch_ar dlsr05 (.data(notdata), .rst(rst), .clk(dmout[05]), .q(out[05]));
-    d_latch_ar dlsr06 (.data(notdata), .rst(rst), .clk(dmout[06]), .q(out[06]));
-    d_latch_ar dlsr07 (.data(notdata), .rst(rst), .clk(dmout[07]), .q(out[07]));
-    d_latch_ar dlsr08 (.data(notdata), .rst(rst), .clk(dmout[08]), .q(out[08]));
-    d_latch_ar dlsr09 (.data(notdata), .rst(rst), .clk(dmout[09]), .q(out[09]));
-    d_latch_ar dlsr10 (.data(notdata), .rst(rst), .clk(dmout[10]), .q(out[10]));
-    d_latch_ar dlsr11 (.data(notdata), .rst(rst), .clk(dmout[11]), .q(out[11]));
-    d_latch_ar dlsr12 (.data(notdata), .rst(rst), .clk(dmout[12]), .q(out[12]));
-    d_latch_ar dlsr13 (.data(notdata), .rst(rst), .clk(dmout[13]), .q(out[13]));
-    d_latch_ar dlsr14 (.data(notdata), .rst(rst), .clk(dmout[14]), .q(out[14]));
-    d_latch_ar dlsr15 (.data(notdata), .rst(rst), .clk(dmout[15]), .q(out[15]));
+    d_flipflop_ar dlsr00 (.data(notdata), .rst(rst), .clk(dmout[00]), .q(out[00]));
+    d_flipflop_ar dlsr01 (.data(notdata), .rst(rst), .clk(dmout[01]), .q(out[01]));
+    d_flipflop_ar dlsr02 (.data(notdata), .rst(rst), .clk(dmout[02]), .q(out[02]));
+    d_flipflop_ar dlsr03 (.data(notdata), .rst(rst), .clk(dmout[03]), .q(out[03]));
+    d_flipflop_ar dlsr04 (.data(notdata), .rst(rst), .clk(dmout[04]), .q(out[04]));
+    d_flipflop_ar dlsr05 (.data(notdata), .rst(rst), .clk(dmout[05]), .q(out[05]));
+    d_flipflop_ar dlsr06 (.data(notdata), .rst(rst), .clk(dmout[06]), .q(out[06]));
+    d_flipflop_ar dlsr07 (.data(notdata), .rst(rst), .clk(dmout[07]), .q(out[07]));
+    d_flipflop_ar dlsr08 (.data(notdata), .rst(rst), .clk(dmout[08]), .q(out[08]));
+    d_flipflop_ar dlsr09 (.data(notdata), .rst(rst), .clk(dmout[09]), .q(out[09]));
+    d_flipflop_ar dlsr10 (.data(notdata), .rst(rst), .clk(dmout[10]), .q(out[10]));
+    d_flipflop_ar dlsr11 (.data(notdata), .rst(rst), .clk(dmout[11]), .q(out[11]));
+    d_flipflop_ar dlsr12 (.data(notdata), .rst(rst), .clk(dmout[12]), .q(out[12]));
+    d_flipflop_ar dlsr13 (.data(notdata), .rst(rst), .clk(dmout[13]), .q(out[13]));
+    d_flipflop_ar dlsr14 (.data(notdata), .rst(rst), .clk(dmout[14]), .q(out[14]));
+    d_flipflop_ar dlsr15 (.data(notdata), .rst(rst), .clk(dmout[15]), .q(out[15]));
 
 endmodule
 
