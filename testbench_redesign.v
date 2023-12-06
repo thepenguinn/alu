@@ -1,56 +1,59 @@
 module testbench();
 
-    reg ain, bin, rst, reclk, feclk;
-    reg [2:0] op;
-    wire aluout, regout;
+    reg sin, rst, reclk, feclk;
+    wire [15:0] pout;
 
-    alu billie (
-        .ain(ain),
-        .bin(bin),
-        .op(op),
+    shiftreg billie (
+        .sin(sin),
         .rst(rst),
         .reclk(reclk),
         .feclk(feclk),
-        .aluout(aluout),
-        .regout(regout)
+        .pout(pout)
     );
+
+    integer i;
 
     initial begin
 
-        reclk = 1'b0;
-        feclk = 1'b0;
-        rst = 1'b0;
+        for (i = 0; i < 18; i++) begin
 
-        op = 3'b011;
-        ain = 1'b1;
-        bin = 1'b1;
+            reclk = 1'b1;
+            #100;
+            reclk = 1'b0;
+            #100;
 
-        #30;
-        rst = 1'b1;
-        reclk = 1'b1;
-        #100;
-        reclk = 1'b0;
-        #100;
+            feclk = 1'b1;
+            #100;
+            feclk = 1'b0;
+            #100;
 
-        feclk = 1'b1;
-        #100;
-        feclk = 1'b0;
-        #100;
-        rst = 1'b0;
-
-        #100;
-        reclk = 1'b1;
-        #100;
-        reclk = 1'b0;
-        #100;
-
-        feclk = 1'b1;
-        #100;
-        feclk = 1'b0;
-        #100;
-
-        #1000 $display ("%b %b", aluout, regout);
+        end
 
     end
+
+    initial begin
+
+        sin = 1'b1;
+
+        $display("%b", pout);
+
+        rst = 1'b1;
+        #400;
+        rst = 1'b0;
+
+        $display("%b", pout);
+
+        #400;
+        $display("%b", pout);
+
+        #400;
+        $display("%b", pout);
+
+
+    end
+
+
+
+
 
 endmodule
