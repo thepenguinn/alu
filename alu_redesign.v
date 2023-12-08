@@ -663,3 +663,137 @@ module alu( input logic [2:0] op,
     nand_gate gnand  ( .a(ain), .b(bin), .y(muxin[6]) );
 
 endmodule
+
+module clk_gen(input logic clk,
+    output logic feclk, notdfeclk, notdreclk, notreclk);
+
+    wire notclk;
+    wire reclk;
+
+    nor #3 (notclk, clk, clk);
+
+    edge_detector ed0 (
+        .clk(clk),
+        .reclk(reclk)
+    );
+
+    edge_detector ed1 (
+        .clk(notclk),
+        .reclk(feclk)
+    );
+
+    wire ds0;
+
+    nor #3  (notreclk, reclk, reclk);
+
+    nor #15 (ds0, notreclk, notreclk);
+    nor #15 (notdreclk, ds0, ds0);
+
+    nor #30 (notdfeclk, feclk, feclk);
+
+endmodule
+
+module rst_gen(input logic on, notreclk, notdfeclk,
+    output logic fsrq, rstsig);
+
+    wire noton, feon;
+    wire ssrset, srreset;
+    wire ssrlqbar, fsrqbar;
+
+    nor #3 (noton, on, on);
+
+    edge_detector ed0 (
+        .clk(noton),
+        .reclk(feon)
+    );
+
+    sr_latch fsrl (
+        .set(feon),
+        .reset(srreset),
+        .q(fsrq),
+        .qbar(fsrqbar)
+    );
+
+    nor #3 (ssrset, fsrqbar, notreclk);
+
+    sr_latch ssrl (
+        .set(ssrset),
+        .reset(srreset),
+        .q(rstsig),
+        .qbar(ssrqbar)
+    );
+
+    wire resetfl, rflnoron;
+
+    nor #3 (resetfl, notdfeclk, ssrqbar);
+    nor #3 (rflnoron, resetfl, on);
+    nor #3 (srreset, rflnoron, rflnoron);
+
+endmodule
+
+module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, notdreclk,
+    output logic reclk);
+
+    wire fsrset, fsrqbar;
+
+    sr_latch fsrl (
+        .set(fsrset),
+        .reset(rgfsrq),
+        .q(fsrqbar)
+    );
+
+    wire muxnorq, notmuxnorq;
+
+    nor #3 (muxnorq, muxlast, rgfsrq);
+    nor #3 (notmuxnorq, muxnorq, muxnorq);
+
+    nor #3 (fsrset, notmuxnorq, notreclk);
+
+    wire ssrset, ssrq;
+
+    sr_latch ssrl (
+        .set(ssrset),
+        .reset(rgfsrq),
+        .q(ssrq)
+    );
+
+    nor #3 (ssrset, fsrqbar, notfeclk);
+
+    nor #3 (reclk, ssrq, notdreclk);
+
+endmodule
+
+module init(input logic clk, on, muxlast,
+    output logic reclk, feclk, rstsig);
+
+
+    wire notdfeclk, notdreclk, noreclk;
+    wire rgfsrq;
+
+    clk_gen cg (
+        .clk(clk),
+        .feclk(feclk),
+        .notdfeclk(notdfeclk),
+        .notdreclk(notdreclk),
+        .notreclk(notreclk)
+    );
+
+    rst_gen rg (
+        .on(on),
+        .notreclk(notreclk),
+        .notdfeclk(notdfeclk),
+        .fsrq(rgfsrq),
+        .rstsig(rstsig)
+    );
+
+    halt_unit hu (
+        .muxlast(muxlast),
+        .rgfsrq(rgfsrq),
+        /* since we don't have notfeclk, notdfeclk will be just fine */
+        .notfeclk(notdfeclk),
+        .notreclk(notreclk),
+        .notdreclk(notdreclk),
+        .reclk(reclk)
+    );
+
+endmodule

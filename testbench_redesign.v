@@ -1,59 +1,31 @@
 module testbench();
 
-    reg sin, rst, reclk, feclk;
-    wire [15:0] pout;
+    reg clk, muxlast, on;
+    wire reclk, feclk, rstsig;
 
-    shiftreg billie (
-        .sin(sin),
-        .rst(rst),
+    init billie (
+        .clk(clk),
+        .muxlast(muxlast),
+        .on(on),
         .reclk(reclk),
         .feclk(feclk),
-        .pout(pout)
+        .rstsig(rstsig)
     );
 
-    integer i;
-
     initial begin
 
-        for (i = 0; i < 18; i++) begin
+        clk = 1'b0;
+        muxlast = 1'b1;
+        on = 1'b0;
 
-            reclk = 1'b1;
-            #100;
-            reclk = 1'b0;
-            #100;
+        #50;
+        on = 1'b1;
+        #50;
+        on = 1'b0;
 
-            feclk = 1'b1;
-            #100;
-            feclk = 1'b0;
-            #100;
-
-        end
+        #300;
+        $display("%b", rstsig);
 
     end
-
-    initial begin
-
-        sin = 1'b1;
-
-        $display("%b", pout);
-
-        rst = 1'b1;
-        #400;
-        rst = 1'b0;
-
-        $display("%b", pout);
-
-        #400;
-        $display("%b", pout);
-
-        #400;
-        $display("%b", pout);
-
-
-    end
-
-
-
-
 
 endmodule
