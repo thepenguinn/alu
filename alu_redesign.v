@@ -322,7 +322,7 @@ module counter(input logic reclk, feclk, rst,
 endmodule
 
 module nor5input(input logic in0, in1, in2, in3, in4,
-    output logic out);
+    output logic out, f4high);
 
     wire nor01, nor23;
     wire or01, or23;
@@ -339,6 +339,8 @@ module nor5input(input logic in0, in1, in2, in3, in4,
     nor #3 (or0123, nor0123, nor0123);
 
     nor #3 (out, or0123, in4);
+
+    assign f4high = or0123;
 
 endmodule
 
@@ -359,7 +361,7 @@ module nor4input(input logic in0, in1, in2, in3,
 endmodule
 
 module mux16(input logic [15:0] in, input logic [3:0] sl,
-    output logic out);
+    output logic out, muxlast);
 
     wire sl00, sl01, sl02, sl03; // original select lines
     wire sl10, sl11, sl12, sl13; // inverted select lines
@@ -392,7 +394,8 @@ module mux16(input logic [15:0] in, input logic [3:0] sl,
     nor5input nor512 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl00), .in4(in[12]), .out(nor12));
     nor5input nor513 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl10), .in4(in[13]), .out(nor13));
     nor5input nor514 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl00), .in4(in[14]), .out(nor14));
-    nor5input nor515 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(in[15]), .out(nor15));
+    nor5input nor515 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(in[15]), .out(nor15),
+        .f4high(muxlast));
 
     wire fnor0, fnor1, fnor2, fnor3;
     wire for0, for1, for2, for3;
