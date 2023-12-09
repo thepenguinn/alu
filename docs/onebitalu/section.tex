@@ -1,0 +1,78 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+
+\ifSubfilesClassLoaded{
+    \input{tikzset}
+    \input{subctikz}
+    \tikzexternalize[prefix=figcache/]
+} {
+    \input{1-bit-alu/tikzset}
+    \input{1-bit-alu/subctikz}
+}
+
+\section{1 bit ALU}
+
+\begin{figure}[!h]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{tikzpicture}[american]
+
+            \draw [line join = round]
+
+            \aluOneBit {ALU} {Ain}
+            {\texttt{ADDER}}
+            {\texttt{ALU INIT}}
+            {\texttt{MS FLIPFLOP}}
+            {\texttt{MUX}}
+
+            \aluNameLogicOp {ALU}
+            {\texttt{XOR}}
+            {\texttt{AND}}
+            {\texttt{NOT}}
+            {\texttt{OR}}
+            {\texttt{NOR}}
+            {\texttt{NAND}}
+
+            (ALU-Ain) node[ocirc] {}
+            (ALU-Ain) node[left = 4pt] {Ain}
+
+            (ALU-Bin) node[ocirc] {}
+            (ALU-Bin) node[left = 4pt] {Bin}
+
+            (ALU-Regout) node[ocirc] {}
+            (ALU-Regout) node[right = 4pt] {Regout}
+
+            (ALU-Aluout) node[ocirc] {}
+            (ALU-Aluout) node[right = 4pt] {Aluout}
+
+            % OP
+
+            (ALU-Op0) node[ocirc] {}
+            (ALU-Op0) node[below = 4pt] {Op0}
+
+            (ALU-Op1) node[ocirc] {}
+            (ALU-Op1) node[below = 4pt] {Op1}
+
+            (ALU-Op2) node[ocirc] {}
+            (ALU-Op2) node[below = 4pt] {Op2}
+
+            % CLK
+
+            (ALU-Eclk) node[ocirc] {}
+            (ALU-Eclk) node[above = 4pt] {Eclk}
+
+            (ALU-Ieclk) node[ocirc] {}
+            (ALU-Ieclk) node[above = 4pt] {Ieclk}
+
+            (ALU-Rstsig) node[ocirc] {}
+            (ALU-Rstsig) node[above = 4pt] {Rstsig}
+
+
+            ;
+
+        \end{tikzpicture}
+    }
+\end{figure}
+
+\end{document}

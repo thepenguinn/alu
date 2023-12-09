@@ -1,0 +1,539 @@
+\def\cornerhypo{0.15}
+\def\cornerbase{0.5cm}
+\def\cV{|-}
+\def\cH{-|}
+
+% to get rid of lines not properly joining after setting
+% a coordinate at some other position and continue drawing
+\newcommand\slightleft[0] {
+    -- +(-0.005,0)
+}
+
+\newcommand\slightright[0] {
+    -- +(0.005,0)
+}
+
+\newcommand\slightup[0] {
+    -- +(0,0.005)
+}
+
+\newcommand\slightdown[0] {
+    -- +(0,-0.005)
+}
+
+\newcommand\markconstcorner[2] {
+    coordinate (LCJTMP)
+    #2 coordinate (finaltmp)
+
+    (LCJTMP#1finaltmp) coordinate (LCVTMP)
+    ($(LCVTMP)!\cornerbase!0:(finaltmp)$) coordinate (SCBTMP)
+    ($(LCVTMP)!\cornerbase!0:(LCJTMP)$) coordinate (FCBTMP)
+
+}
+
+\newcommand\constcorner[2] {
+    \markconstcorner {#1} {#2}
+
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\constcornerright[1] {
+    \slightright
+    \constcorner {\cH} {#1}
+}
+
+\newcommand\constcornerleft[1] {
+    \slightleft
+    \constcorner {\cH} {#1}
+}
+
+\newcommand\constcornerup [1] {
+    \slightup
+    \constcorner {\cV} {#1}
+}
+
+\newcommand\constcornerdown [1] {
+    \slightdown
+    \constcorner {\cV} {#1}
+}
+
+%%
+\newcommand\constcornerhoz [1] {
+    \constcorner {\cH} {#1}
+}
+
+\newcommand\constcornervrt [1] {
+    \constcorner {\cV} {#1}
+}
+
+\newcommand\markconstcornerfrom[2] {
+
+    \markconstcorner {#1} {#2}
+
+    (LCVTMP) coordinate (fsttmp)
+    ($(LCVTMP)!\cornerbase!180:(FCBTMP)$) coordinate (LCVTMP)
+    (fsttmp) coordinate (FCBTMP)
+
+    (SCBTMP) ++($(LCVTMP)-(FCBTMP)$) coordinate (SCBTMP)
+}
+
+\newcommand\constcornerfrom[2] {
+
+    \markconstcornerfrom {#1} {#2}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\constcornerfromright[1] {
+    \slightright
+    \constcornerfrom {\cH} {#1}
+}
+
+\newcommand\constcornerfromleft[1] {
+    \slightleft
+    \constcornerfrom {\cH} {#1}
+}
+
+\newcommand\constcornerfromup [1] {
+    \slightup
+    \constcornerfrom {\cV} {#1}
+}
+
+\newcommand\constcornerfromdown [1] {
+    \slightdown
+    \constcornerfrom {\cV} {#1}
+}
+
+\newcommand\markvarcornerpos[2] {
+    coordinate (LCJTMP)
+    #2 coordinate (SCBTMP)
+
+    (LCJTMP#1SCBTMP) coordinate (LCVTMP)
+    ($(SCBTMP)!0.1cm!-45:(LCVTMP)$) coordinate (cornedgtmp)
+    (intersection of LCJTMP--LCVTMP and SCBTMP--cornedgtmp)
+    coordinate (FCBTMP)
+}
+
+\newcommand\markvarcornerneg[2] {
+    coordinate (LCJTMP)
+    #2 coordinate (SCBTMP)
+
+    (LCJTMP#1SCBTMP) coordinate (LCVTMP)
+    ($(SCBTMP)!0.1cm!+45:(LCVTMP)$) coordinate (cornedgtmp)
+    (intersection of LCJTMP--LCVTMP and SCBTMP--cornedgtmp)
+    coordinate (FCBTMP)
+}
+
+\newcommand\varcornerpos[2] {
+
+    \markvarcornerpos {#1} {#2}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\varcornerneg[2] {
+
+    \markvarcornerneg {#1} {#2}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+
+}
+
+\newcommand\varcornerupright[1] {
+    \slightup
+    \varcornerneg {\cV} {#1}
+}
+\newcommand\varcornerdownleft[1] {
+    \slightdown
+    \varcornerneg {\cV} {#1}
+}
+
+\newcommand\varcornerupleft[1] {
+    \slightup
+    \varcornerpos {\cV} {#1}
+}
+\newcommand\varcornerdownright[1] {
+    \slightdown
+    \varcornerpos {\cV} {#1}
+}
+
+\newcommand\varcornerrightdown[1] {
+    \slightright
+    \varcornerneg {\cH} {#1}
+}
+\newcommand\varcornerleftup[1] {
+    \slightleft
+    \varcornerneg {\cH} {#1}
+}
+
+\newcommand\varcornerrightup[1] {
+    \slightright
+    \varcornerpos {\cH} {#1}
+}
+\newcommand\varcornerleftdown[1] {
+    \slightleft
+    \varcornerpos {\cH} {#1}
+}
+
+%%
+\newcommand\varcornervrtneg[1] {
+    \varcornerneg {\cV} {#1}
+}
+
+\newcommand\varcornervrtpos[1] {
+    \varcornerpos {\cV} {#1}
+}
+
+\newcommand\varcornerhozneg[1] {
+    \varcornerneg {\cH} {#1}
+}
+
+\newcommand\varcornerhozpos[1] {
+    \varcornerpos {\cH} {#1}
+}
+
+% AROUND CORNER
+
+\newcommand\markaroundcornerpos[3] {
+    \markvarcornerpos {#2} {#3}
+
+    ($(SCBTMP)!#1!90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1!90:(LCVTMP)$) coordinate (nexsidetmp)
+    ($(bevltmp)!0.1cm!90:(SCBTMP)$) coordinate (bevlpartmp)
+
+    (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
+
+    (intersection of nexsidetmp--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (SCBTMP)
+
+    (intersection of LCJTMP--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (FCBTMP)
+
+}
+
+\newcommand\markaroundcornerneg[3] {
+    \markvarcornerneg {#2} {#3}
+
+    ($(SCBTMP)!#1!-90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1!-90:(LCVTMP)$) coordinate (nexsidetmp)
+    ($(bevltmp)!0.1cm!-90:(SCBTMP)$) coordinate (bevlpartmp)
+
+    (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
+
+    (intersection of nexsidetmp--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (SCBTMP)
+
+    (intersection of LCJTMP--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (FCBTMP)
+
+}
+
+\newcommand\aroundcornerpos[3] {
+
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markaroundcornerpos {\n{MAGTMP}} {#2} {#3}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\aroundcornerneg[3] {
+
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markaroundcornerneg {\n{MAGTMP}} {#2} {#3}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+
+}
+
+\newcommand\aroundcornerupright[2] {
+    \slightup
+    \aroundcornerneg {#1} {\cV} {#2}
+}
+\newcommand\aroundcornerdownleft[2] {
+    \slightdown
+    \aroundcornerneg {#1} {\cV} {#2}
+}
+
+\newcommand\aroundcornerupleft[2] {
+    \slightup
+    \aroundcornerpos {#1} {\cV} {#2}
+}
+\newcommand\aroundcornerdownright[2] {
+    \slightdown
+    \aroundcornerpos {#1} {\cV} {#2}
+}
+
+\newcommand\aroundcornerrightdown[2] {
+    \slightright
+    \aroundcornerneg {#1} {\cH} {#2}
+}
+\newcommand\aroundcornerleftup[2] {
+    \slightleft
+    \aroundcornerneg {#1} {\cH} {#2}
+}
+
+\newcommand\aroundcornerrightup[2] {
+    \slightright
+    \aroundcornerpos {#1} {\cH} {#2}
+}
+\newcommand\aroundcornerleftdown[2] {
+    \slightleft
+    \aroundcornerpos {#1} {\cH} {#2}
+}
+
+% AROUND CORNER TILL
+% gap vrt/hoz pivotpoint tillpoint vectorfromtillpoint
+
+\newcommand\markaroundcornertillpos[5] {
+
+    \markaroundcornerpos {#1} {#2} {#3}
+    (LCJTMP)
+    #4 coordinate (TILLTMP)
+    +#5 coordinate (TILLPARTMP)
+
+    (intersection of TILLTMP--TILLPARTMP and FCBTMP--SCBTMP)
+    coordinate (SCBTMP)
+    (FCBTMP#2SCBTMP) coordinate (LCVTMP)
+
+}
+
+\newcommand\markaroundcornertillneg[5] {
+
+    \markaroundcornerneg {#1} {#2} {#3}
+    (LCJTMP)
+    #4 coordinate (TILLTMP)
+    +#5 coordinate (TILLPARTMP)
+
+    (intersection of TILLTMP--TILLPARTMP and FCBTMP--SCBTMP)
+    coordinate (SCBTMP)
+    (FCBTMP#2SCBTMP) coordinate (LCVTMP)
+
+}
+
+\newcommand\aroundcornertillpos[5] {
+
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markaroundcornertillpos {\n{MAGTMP}} {#2} {#3} {#4} {#5}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\aroundcornertillneg[5] {
+
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markaroundcornertillneg {\n{MAGTMP}} {#2} {#3} {#4} {#5}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+
+}
+
+\newcommand\aroundcornertillupright[4] {
+    \slightup
+    \aroundcornertillneg {#1} {\cV} {#2} {#3} {#4}
+}
+\newcommand\aroundcornertilldownleft[4] {
+    \slightdown
+    \aroundcornertillneg {#1} {\cV} {#2} {#3} {#4}
+}
+
+\newcommand\aroundcornertillupleft[4] {
+    \slightup
+    \aroundcornertillpos {#1} {\cV} {#2} {#3} {#4}
+}
+\newcommand\aroundcornertilldownright[4] {
+    \slightdown
+    \aroundcornertillpos {#1} {\cV} {#2} {#3} {#4}
+}
+
+\newcommand\aroundcornertillrightdown[4] {
+    \slightright
+    \aroundcornertillneg {#1} {\cH} {#2} {#3} {#4}
+}
+\newcommand\aroundcornertillleftup[4] {
+    \slightleft
+    \aroundcornertillneg {#1} {\cH} {#2} {#3} {#4}
+}
+
+\newcommand\aroundcornertillrightup[4] {
+    \slightright
+    \aroundcornertillpos {#1} {\cH} {#2} {#3} {#4}
+}
+\newcommand\aroundcornertillleftdown[4] {
+    \slightleft
+    \aroundcornertillpos {#1} {\cH} {#2} {#3} {#4}
+}
+
+% UNDER CORNER
+
+\newcommand\markundercornerpos[3] {
+    \markvarcornerpos {#2} {#3}
+
+    ($(SCBTMP)!#1!-90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1!-90:(LCVTMP)$) coordinate (nexsidetmp)
+    ($(bevltmp)!0.1cm!-90:(SCBTMP)$) coordinate (bevlpartmp)
+
+    (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
+
+    (intersection of nexsidetmp--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (SCBTMP)
+
+    (intersection of LCJTMP--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (FCBTMP)
+
+}
+
+\newcommand\markundercornerneg[3] {
+    \markvarcornerneg {#2} {#3}
+
+    ($(SCBTMP)!#1!90:(FCBTMP)$) coordinate (bevltmp)
+    ($(SCBTMP)!#1!90:(LCVTMP)$) coordinate (nexsidetmp)
+    ($(bevltmp)!0.1cm!90:(SCBTMP)$) coordinate (bevlpartmp)
+
+    (LCJTMP#2nexsidetmp) coordinate (LCVTMP)
+
+    (intersection of nexsidetmp--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (SCBTMP)
+
+    (intersection of LCJTMP--LCVTMP and bevltmp--bevlpartmp)
+    coordinate (FCBTMP)
+
+}
+
+\newcommand\undercornerpos[3] {
+
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markundercornerpos {\n{MAGTMP}} {#2} {#3}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\undercornerneg[3] {
+
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markundercornerneg {\n{MAGTMP}} {#2} {#3}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+
+}
+
+\newcommand\undercornerupright[2] {
+    \slightup
+    \undercornerneg {#1} {\cV} {#2}
+}
+\newcommand\undercornerdownleft[2] {
+    \slightdown
+    \undercornerneg {#1} {\cV} {#2}
+}
+
+\newcommand\undercornerupleft[2] {
+    \slightup
+    \undercornerpos {#1} {\cV} {#2}
+}
+\newcommand\undercornerdownright[2] {
+    \slightdown
+    \undercornerpos {#1} {\cV} {#2}
+}
+
+\newcommand\undercornerrightdown[2] {
+    \slightright
+    \undercornerneg {#1} {\cH} {#2}
+}
+\newcommand\undercornerleftup[2] {
+    \slightleft
+    \undercornerneg {#1} {\cH} {#2}
+}
+
+\newcommand\undercornerrightup[2] {
+    \slightright
+    \undercornerpos {#1} {\cH} {#2}
+}
+\newcommand\undercornerleftdown[2] {
+    \slightleft
+    \undercornerpos {#1} {\cH} {#2}
+}
+
+% UNDER CORNER TILL
+
+\newcommand\markundercornertillpos[5] {
+
+    \markundercornerpos {#1} {#2} {#3}
+    (LCJTMP)
+    #4 coordinate (TILLTMP)
+    +#5 coordinate (TILLPARTMP)
+
+    (intersection of TILLTMP--TILLPARTMP and FCBTMP--SCBTMP)
+    coordinate (SCBTMP)
+    (FCBTMP#2SCBTMP) coordinate (LCVTMP)
+
+}
+
+\newcommand\markundercornertillneg[5] {
+
+    \markundercornerneg {#1} {#2} {#3}
+    (LCJTMP)
+    #4 coordinate (TILLTMP)
+    +#5 coordinate (TILLPARTMP)
+
+    (intersection of TILLTMP--TILLPARTMP and FCBTMP--SCBTMP)
+    coordinate (SCBTMP)
+    (FCBTMP#2SCBTMP) coordinate (LCVTMP)
+
+}
+
+\newcommand\undercornertillpos[5] {
+
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markundercornertillpos {\n{MAGTMP}} {#2} {#3} {#4} {#5}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+}
+
+\newcommand\undercornertillneg[5] {
+
+    let \p{MAGCORDTMP} = #1,
+    \n{MAGTMP} = {veclen(\x{MAGCORDTMP}, \y{MAGCORDTMP})}
+    in
+    \markundercornertillneg {\n{MAGTMP}} {#2} {#3} {#4} {#5}
+    (LCJTMP) -- (FCBTMP) -- (SCBTMP)
+
+}
+
+\newcommand\undercornertillupright[4] {
+    \slightup
+    \undercornertillneg {#1} {\cV} {#2} {#3} {#4}
+}
+\newcommand\undercornertilldownleft[4] {
+    \slightdown
+    \undercornertillneg {#1} {\cV} {#2} {#3} {#4}
+}
+
+\newcommand\undercornertillupleft[4] {
+    \slightup
+    \undercornertillpos {#1} {\cV} {#2} {#3} {#4}
+}
+\newcommand\undercornertilldownright[4] {
+    \slightdown
+    \undercornertillpos {#1} {\cV} {#2} {#3} {#4}
+}
+
+\newcommand\undercornertillrightdown[4] {
+    \slightright
+    \undercornertillneg {#1} {\cH} {#2} {#3} {#4}
+}
+\newcommand\undercornertillleftup[4] {
+    \slightleft
+    \undercornertillneg {#1} {\cH} {#2} {#3} {#4}
+}
+
+\newcommand\undercornertillrightup[4] {
+    \slightright
+    \undercornertillpos {#1} {\cH} {#2} {#3} {#4}
+}
+\newcommand\undercornertillleftdown[4] {
+    \slightleft
+    \undercornertillpos {#1} {\cH} {#2} {#3} {#4}
+}

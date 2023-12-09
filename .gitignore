@@ -10,7 +10,9 @@ alutester_vvp_file
 testbench/another.c
 testbench/test.c
 testbench/true.c
+figcache/
 *.aux
+*.auxlock
 *.log
 *.pdf
 *.tstp

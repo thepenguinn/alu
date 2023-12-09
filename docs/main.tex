@@ -1,0 +1,15 @@
+\documentclass[a4paper, 10pt]{article}
+
+\input{preamble}
+
+\tikzset{external/system call={pdflatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
+% \tikzset{external/force remake=true}
+% \tikzexternalize[prefix=fig/]
+
+\begin{document}
+
+\subfile{1-bit-alu/section.tex}
+
+\subfile{counter/section.tex}
+
+\end{document}
