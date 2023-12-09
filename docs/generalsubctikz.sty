@@ -1,0 +1,19 @@
+\ctikzsubcircuitdef{subctkmsFlipFlop} {
+    D, Rst, Eclk, Ieclk, Q, Qbar,
+    bD, bRst, bEclk, bIeclk, bQ, bQbar%
+} {
+    node (#1) [msFlipFlop, anchor = lpin 1]{}%
+    \markcoordinate {#1} {D}     {lpin 2}
+    \markcoordinate {#1} {Rst}   {bpin 2}
+    \markcoordinate {#1} {Eclk}  {tpin 1}
+    \markcoordinate {#1} {Ieclk} {tpin 2}
+    \markcoordinate {#1} {Q}     {rpin 2}
+    \markcoordinate {#1} {Qbar}  {rpin 1}%
+}
+
+\ctikzsubcircuitactivate{subctkmsFlipFlop}
+
+\newcommand\msFlipFlop[3] {
+    \subctkmsFlipFlop{#1} {#2}
+    (#1.center) node[]{#3}
+}

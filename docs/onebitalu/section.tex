@@ -1,14 +1,14 @@
-\documentclass[../main]{subfiles}
+\documentclass[main]{subfiles}
 
 \begin{document}
 
 \ifSubfilesClassLoaded{
-    \input{tikzset}
-    \input{subctikz}
-    \tikzexternalize[prefix=figcache/]
+    \input{onebitalu/tikzset}
+    \input{onebitalu/subctikz}
+    \tikzexternalize[prefix=onebitalu/figcache/]
 } {
-    \input{1-bit-alu/tikzset}
-    \input{1-bit-alu/subctikz}
+    \input{onebitalu/tikzset}
+    \input{onebitalu/subctikz}
 }
 
 \section{1 bit ALU}
