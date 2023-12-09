@@ -742,7 +742,7 @@ module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, notdreclk,
     sr_latch fsrl (
         .set(fsrset),
         .reset(rgfsrq),
-        .q(fsrqbar)
+        .qbar(fsrqbar)
     );
 
     wire muxnorq, notmuxnorq;
@@ -798,5 +798,68 @@ module init(input logic clk, on, muxlast,
         .notdreclk(notdreclk),
         .reclk(reclk)
     );
+
+endmodule
+
+module alu16(input logic clk, on,
+    input logic [15:0] ina, inb,
+    input logic [2:0] op,
+    output logic [16:0] out,
+    output logic [3:0] count);
+
+    wire muxlast, reclk, feclk, rstsig;
+
+    init in (
+        .clk(clk),
+        .on(on),
+        .muxlast(muxlast),
+        .reclk(reclk),
+        .feclk(feclk),
+        .rstsig(rstsig)
+    );
+
+    counter cc (
+        .reclk(reclk),
+        .feclk(feclk),
+        .rst(rstsig),
+        .count(count)
+    );
+
+    wire muxaout, muxbout;
+
+    mux16 muxa (
+        .in(ina),
+        .sl(count),
+        .out(muxaout)
+    );
+
+    mux16 muxb (
+        .in(inb),
+        .sl(count),
+        .out(muxbout),
+        .muxlast(muxlast)
+    );
+
+    wire aluout;
+
+    alu alu (
+        .reclk(reclk),
+        .feclk(feclk),
+        .rst(rstsig),
+        .op(op),
+        .ain(muxaout),
+        .bin(muxbout),
+        .aluout(aluout),
+        .regout(out[16])
+    );
+
+    shiftreg sreg (
+        .rst(rstsig),
+        .reclk(reclk),
+        .feclk(feclk),
+        .sin(aluout),
+        .pout(out[15:0])
+    );
+
 
 endmodule
