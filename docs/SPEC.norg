@@ -1,0 +1,52 @@
+@document.meta
+title: SPEC
+description: Spec for alu docs
+authors: [
+    Daniel
+]
+categories: docs
+created: 2023-12-09T07:00:54+0530
+updated: 2023-12-09T07:15:05+0530
+version: 1.1.1
+@end
+
+* DOCS
+
+** Sections
+
+*** Introduction
+
+    Introduces what we are trying to design and implement
+
+*** An overview
+
+    Gives an overview of the entire circuit we might need to make inorder
+    to accomplish the above mentioned functions
+
+*** Specification
+
+    Discusses the specification of each of the sub compontents of the circuit
+
+*** Design and Implementation of some basic components
+
+    Design and Implementation of some basic components
+
+*** Design of timing of the circuit
+
+*** 1 bit Alu
+
+    Design and implementation
+
+*** Memory Unit
+
+    Design and implementation
+
+*** Counter
+
+    Design and implementation
+
+*** Initializer
+
+    Design and implementation
+
+*** Conclusion ?
