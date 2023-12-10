@@ -2,22 +2,69 @@
 
 
 \ifSubfilesClassLoaded{
-    \tikzexternalize[prefix=figcache/]
-} {}
+    \input{tikzset}
+    \input{subctikz}
+    % \tikzexternalize[prefix=figcache/]
+    % \tikzset{external/force remake=true}
+} {
+    % \input{counter/tikzset}
+    % \input{counter/subctikz}
+}
+
+% reclk feclk rst count
 
 \begin{document}
-\section {Hello from COUTER}
+\section {Hello from the COUNTER}
 
 \begin{figure}[!h]
-    \begin{tikzpicture}[american]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{tikzpicture}[american]
 
-        \draw (0,0)
+            \draw [line join = round]
+            (0,0)
+            \counterFour {counter} {reclk}
+            {\texttt{MS FLIPFLOP}}
+            {\texttt{MS FLIPFLOP}}
+            {\texttt{MS FLIPFLOP}}
+            {\texttt{MS FLIPFLOP}}
 
-        \edgeDetector {hai} {clk} {\texttt{ED}}
+            \labelcounterFour {counter}
+            {\texttt{ED}}
+            {\texttt{ED}}
+            {\texttt{ED}}
+            {\texttt{MX}}
+            {\texttt{MX}}
+            {\texttt{MX}}
 
-        ;
+            (counter-feclk) node[ocirc] {}
+            (counter-feclk) node[left = 4pt] {Feclk}
 
-    \end{tikzpicture}
+            (counter-reclk) node[ocirc] {}
+            (counter-reclk) node[left = 4pt] {Reclk}
+
+            (counter-rst) node[ocirc] {}
+            (counter-rst) node[left = 4pt] {Rstsig}
+
+            %% OUTPUT
+
+            (counter-q0) node[ocirc] {}
+            (counter-q0) node[right = 4pt] {$Q_{0}$}
+
+            (counter-q1) node[ocirc] {}
+            (counter-q1) node[right = 4pt] {$Q_{1}$}
+
+            (counter-q2) node[ocirc] {}
+            (counter-q2) node[right = 4pt] {$Q_{2}$}
+
+            (counter-q3) node[ocirc] {}
+            (counter-q3) node[right = 4pt] {$Q_{3}$}
+
+            ;
+
+        \end{tikzpicture}
+    }
+    \caption{A 4 bit counter}
 \end{figure}
 
 \end{document}

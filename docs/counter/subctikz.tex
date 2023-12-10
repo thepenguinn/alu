@@ -1,0 +1,290 @@
+\ctikzsubcircuitdef{subctkmuxTwo} {
+    in0, in1, sl, out,
+    bin0, bin1, bsl, bout,
+    pin0, pin1, psl, pout%
+} {
+    node (#1) [mux02, anchor = lpin 1] {}%
+    \markcoordinate {#1}   {in0} {lpin 1}
+    \markcoordinate {#1}   {in1} {lpin 2}
+    \markcoordinate {#1}   {sl}  {bpin 1}
+    \markcoordinate {#1}   {out} {rpin 1}
+}
+
+\ctikzsubcircuitactivate{subctkmuxTwo}
+
+\newcommand\muxTwo[3] {
+    \subctkmuxTwo{#1} {#2}
+    (#1.narrow center) node[]{#3}
+}
+
+\ctikzsubcircuitdef{subctkcounterFour} {
+    q0, q1, q2, q3, reclk, feclk, rst%
+} {
+    %%
+    \msFlipFlop {#1-msff00} {d} {}
+    %%
+    (#1-msff00-reclk) ++(0,0.75)
+    coordinate (#1-msffreclkheight)
+    %%
+    (#1-msff00-q) ++(0.25,0)
+    coordinate (#1-msff00qout)
+    %%
+    (#1-msff00-q) -- (#1-msff00qout)
+    %%
+    \edgeDetector {#1-ed00} {clk} {}
+    %%
+    ($(#1-msff00-bq)!0.50!(#1-ed00-bclk)$)
+    coordinate (#1-msff00qout)
+    %%
+    (#1-ed00-reclk)
+    \muxTwo {#1-mux00} {in1} {}
+    %%
+    (#1-mux00-out) ++(2,0)
+    coordinate (#1-mux00out)
+    %%
+    (#1-msff00-d-|#1-mux00out)
+    \msFlipFlop {#1-msff01} {d} {}
+    %%
+    (#1-mux00-out) ++(0.75,0)
+    coordinate (#1-mux00out)
+    %%
+    %% Drawing the next two msffs
+    %%
+    (#1-msff01-d) ++($(#1-msff01-d)-(#1-msff00-d)$)
+    \msFlipFlop {#1-msff02} {d} {}
+    %%
+    (#1-msff02-d) ++($(#1-msff01-d)-(#1-msff00-d)$)
+    \msFlipFlop {#1-msff03} {d} {}
+    %%
+    %% Drawing the other eds and muxs
+    %%
+    (#1-msff01-q) -- ++($(#1-ed00-clk)-(#1-msff00-q)$)
+    %%
+    \edgeDetector {#1-ed01} {clk} {}
+    %%
+    ($(#1-msff01-bq)!0.50!(#1-ed01-bclk)$)
+    coordinate (#1-msff01qout)
+    %%
+    (#1-ed01-reclk)
+    \muxTwo {#1-mux01} {in1} {}
+    %%
+    (#1-mux01-out) ++($(#1-mux00out)-(#1-mux00-out)$)
+    coordinate (#1-mux01out)
+    %%
+    %%
+    %%
+    (#1-msff02-q) -- ++($(#1-ed00-clk)-(#1-msff00-q)$)
+    %%
+    \edgeDetector {#1-ed02} {clk} {}
+    %%
+    ($(#1-msff02-bq)!0.50!(#1-ed02-bclk)$)
+    coordinate (#1-msff02qout)
+    %%
+    (#1-ed02-reclk)
+    \muxTwo {#1-mux02} {in1} {}
+    %%
+    (#1-mux02-out) ++($(#1-mux00out)-(#1-mux00-out)$)
+    coordinate (#1-mux02out)
+    %%
+    %% Drawing reclk to each msffs
+    %%
+    (#1-mux00-out)
+    \constcornerright {(#1-mux00out) ++(0,1)}
+    \constcornerup {(#1-mux00out|-#1-msffreclkheight) ++(1,0)}
+    \constcornerright {(#1-msff01-reclk)}
+    -- (#1-msff01-reclk)
+    %%
+    (#1-mux01-out)
+    \constcornerright {(#1-mux01out) ++(0,1)}
+    \constcornerup {(#1-mux01out|-#1-msffreclkheight) ++(1,0)}
+    \constcornerright {(#1-msff02-reclk)}
+    -- (#1-msff02-reclk)
+    %%
+    (#1-mux02-out)
+    \constcornerright {(#1-mux02out) ++(0,1)}
+    \constcornerup {(#1-mux02out|-#1-msffreclkheight) ++(1,0)}
+    \constcornerright {(#1-msff03-reclk)}
+    -- (#1-msff03-reclk)
+    %%
+    %% Drawing in0 to all muxs
+    %%
+    (#1-msffreclkheight) ++(0,0.5)
+    coordinate (#1-msffreclktomuxheight)
+    %%
+    (#1-mux00-in0) ++(-0.75,0)
+    coordinate (#1-mux00in0right)
+    coordinate (#1-tmp)
+    (#1-tmp|-#1-msffreclktomuxheight)
+    \constcornerdown {(#1-mux00-in0)}
+    -- (#1-mux00-in0)
+    %%
+    (#1-mux01-in0) ++($(#1-mux00in0right)-(#1-mux00-in0)$)
+    coordinate (#1-tmp)
+    (#1-tmp|-#1-msffreclktomuxheight)
+    \constcornerdown {(#1-mux01-in0)}
+    -- (#1-mux01-in0)
+    %%
+    %% Drawing the last one
+    %%
+    (#1-mux02-in0) ++($(#1-mux00in0right)-(#1-mux00-in0)$)
+    coordinate (#1-tmp)
+    %%
+    (#1-msff00-reclk)
+    -- (#1-msffreclktomuxheight)
+    \constcornerright {(#1-tmp|-#1-msffreclktomuxheight) ++(0,-1)}
+    %%
+    \constcornerdown {(#1-mux02-in0)}
+    -- (#1-mux02-in0)
+    %%
+    %% Drawing the feclk to all msffs
+    %%
+    (#1-msff00-feclk|-#1-msffreclktomuxheight)
+    ++(0,0.5)
+    coordinate (#1-msfffeclkheight)
+    %%
+    (#1-msff01-feclk|-#1-msfffeclkheight)
+    -- (#1-msff01-feclk)
+    %%
+    (#1-msff02-feclk|-#1-msfffeclkheight)
+    -- (#1-msff02-feclk)
+    %%
+    %% last one
+    %%
+    (#1-msff00-feclk) -- (#1-msfffeclkheight)
+    \constcornerright {(#1-msff03-feclk)}
+    -- (#1-msff03-feclk)
+    %%
+    %% Drawing q to d
+    %%
+    (#1-msff00qout) ++(0,-1.75)
+    coordinate (#1-msffqtodheight)
+    %%
+    (#1-msff00-d) ++(-0.75,0)
+    coordinate (#1-msff00din)
+    %%
+    (#1-msff03-q) ++(0.75,0)
+    coordinate (#1-msff03qout)
+    %%
+    %%
+    %%
+    (#1-msff00-d)
+    \constcornerleft {(#1-msff00-d) ++($(#1-msff00din)-(#1-msff00-d)$) ++(0,-1)}
+    \constcornerdown {(#1-msff00qout|-#1-msffqtodheight)}
+    -- (#1-msff00qout|-#1-msffqtodheight)
+    -- (#1-msff00qout)
+    %%
+    (#1-msff01-d)
+    \constcornerleft {(#1-msff01-d) ++($(#1-msff00din)-(#1-msff00-d)$) ++(0,-1)}
+    \constcornerdown {(#1-msff01qout|-#1-msffqtodheight)}
+    -- (#1-msff01qout|-#1-msffqtodheight)
+    -- (#1-msff01qout)
+    %%
+    (#1-msff02-d)
+    \constcornerleft {(#1-msff02-d) ++($(#1-msff00din)-(#1-msff00-d)$) ++(0,-1)}
+    \constcornerdown {(#1-msff02qout|-#1-msffqtodheight)}
+    -- (#1-msff02qout|-#1-msffqtodheight)
+    -- (#1-msff02qout)
+    %%
+    (#1-msff03-d)
+    \constcornerleft {(#1-msff03-d) ++($(#1-msff00din)-(#1-msff00-d)$) ++(0,-1)}
+    \constcornerdown {(#1-msff03qout|-#1-msffqtodheight)}
+    -- (#1-msff03qout|-#1-msffqtodheight)
+    \constcornerup {(#1-msff03-q)}
+    -- (#1-msff03-q)
+    %%
+    %% Drawing rst lines
+    %%
+    (#1-msffqtodheight) ++(0,-0.75)
+    coordinate (#1-counterrstheight)
+    %%
+    (#1-mux00-sl)
+    -- (#1-mux00-sl|-#1-counterrstheight)
+    (#1-msff01-rst)
+    -- (#1-msff01-rst|-#1-counterrstheight)
+    %%
+    (#1-mux01-sl)
+    -- (#1-mux01-sl|-#1-counterrstheight)
+    (#1-msff02-rst)
+    -- (#1-msff02-rst|-#1-counterrstheight)
+    %%
+    (#1-mux02-sl)
+    -- (#1-mux02-sl|-#1-counterrstheight)
+    %%
+    (#1-msff00-rst)
+    -- (#1-msff00-rst|-#1-counterrstheight)
+    \constcornerright {(#1-msff03-rst)}
+    -- (#1-msff03-rst)
+    %%
+    %% Count output
+    %%
+    (#1-msff03qout|-#1-counterrstheight)
+    ++(2,-0.75)
+    coordinate (#1-q3)
+    %%
+    ++(0,-0.5)
+    coordinate (#1-q2)
+    %%
+    ++(0,-0.5)
+    coordinate (#1-q1)
+    %%
+    ++(0,-0.5)
+    coordinate (#1-q0)
+    %%
+    %% Drawing
+    %%
+    (#1-msff00qout|-#1-msffqtodheight)
+    \constcornerdown {(#1-q0)}
+    -- (#1-q0)
+    %%
+    (#1-msff01qout|-#1-msffqtodheight)
+    \constcornerdown {(#1-q1)}
+    -- (#1-q1)
+    %%
+    (#1-msff02qout|-#1-msffqtodheight)
+    \constcornerdown {(#1-q2)}
+    -- (#1-q2)
+    %%
+    (#1-msff03qout|-#1-msffqtodheight)
+    \constcornerdown {(#1-q3)}
+    -- (#1-q3)
+    %%
+    %% Drawing reclk feclk
+    %%
+    (#1-msff00-feclk|-#1-msfffeclkheight)
+    -- ++(-3,0)
+    coordinate (#1-feclk)
+    %%
+    ++(0,-1)
+    coordinate (#1-reclk)
+    ++(1.5,0)
+    coordinate (#1-tmp)
+    %%
+    (#1-msff00-reclk|-#1-msffreclktomuxheight)
+    \varcornerleftdown {(#1-tmp)}
+    -- (#1-reclk)
+    %%
+    %% Drawing rst
+    %%
+    (#1-msff00-rst|-#1-counterrstheight)
+    -- (#1-feclk|-#1-counterrstheight)
+    coordinate (#1-rst)
+}
+
+\ctikzsubcircuitactivate{subctkcounterFour}
+
+\newcommand\counterFour[6] {
+    \subctkcounterFour{#1} {#2}
+    (#1-msff00.center) node[]{#3}
+    (#1-msff01.center) node[]{#4}
+    (#1-msff02.center) node[]{#5}
+    (#1-msff03.center) node[]{#6}
+}
+
+\newcommand\labelcounterFour[7] {
+    (#1-ed00.center)  node[] {#2}
+    (#1-ed01.center)  node[] {#3}
+    (#1-ed02.center)  node[] {#4}
+    (#1-mux00.center) node[] {#5}
+    (#1-mux01.center) node[] {#6}
+    (#1-mux02.center) node[] {#7}
+}
