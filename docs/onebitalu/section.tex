@@ -1,15 +1,15 @@
-\documentclass[main]{subfiles}
-
-\begin{document}
+\documentclass[../main]{subfiles}
 
 \ifSubfilesClassLoaded{
-    \input{onebitalu/tikzset}
-    \input{onebitalu/subctikz}
-    \tikzexternalize[prefix=onebitalu/figcache/]
+    \input{tikzset}
+    \input{subctikz}
+    \tikzexternalize[prefix=figcache/]
 } {
     \input{onebitalu/tikzset}
     \input{onebitalu/subctikz}
 }
+
+\begin{document}
 
 \section{1 bit ALU}
 

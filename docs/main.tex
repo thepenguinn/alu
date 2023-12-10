@@ -2,7 +2,16 @@
 
 \input{preamble}
 
-\tikzset{external/system call={pdflatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
+\ifSubfilesClassLoaded{
+} {
+    \input{onebitalu/tikzset}
+    \input{onebitalu/subctikz}
+}
+
+
+% \tikzexternalize[prefix=figcache/]
+
+% \tikzset{external/system call={pdflatex \tikzexternalcheckshellescape -shell-escape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
 % \tikzset{external/force remake=true}
 % \tikzexternalize[prefix=fig/]
 

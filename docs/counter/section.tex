@@ -1,16 +1,23 @@
-\documentclass[main]{subfiles}
+\documentclass[../main]{subfiles}
 
-\begin{document}
 
 \ifSubfilesClassLoaded{
-    \tikzexternalize[prefix=couter/figcache/]
-} {
-}
+    \tikzexternalize[prefix=figcache/]
+} {}
 
+\begin{document}
 \section {Hello from COUTER}
 
-This is a serious issue.
+\begin{figure}[!h]
+    \begin{tikzpicture}[american]
 
-Something else.
+        \draw (0,0)
+
+        \edgeDetector {hai} {clk} {\texttt{ED}}
+
+        ;
+
+    \end{tikzpicture}
+\end{figure}
 
 \end{document}
