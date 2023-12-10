@@ -3,18 +3,20 @@
 
 TEXFILES = ../main.tex ../generalcommands.sty ../generaltikzset.sty ../cornercommands.sty ../preamble.tex ../generalsubctikz.sty
 
-COUNTER = section.tex
+COUNTER = section.tex tikzset.tex subctikz.tex
 
-section: section.pdf
+section: viewpdf
+
+viewpdf: section.pdf
+	viewpdf section.pdf
 
 .SUFFIXES: .tex .pdf
 
 .tex.pdf:
 	pdflatex -shell-escape -halt-on-error $<
-	viewpdf $(addsuffix .pdf, $(basename $<))
 	touch  $(addsuffix .pdf, $(basename $<))
 
 
-counter/section.pdf: $(TEXFILES) $(COUNTER)
+section.pdf: $(TEXFILES) $(COUNTER)
 
-.PHONY: section
+.PHONY: section viewpdf

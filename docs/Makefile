@@ -7,15 +7,17 @@ TEXFILES = main.tex generalcommands.sty generaltikzset.sty cornercommands.sty pr
 
 ONEBITALU = onebitalu/section.tex onebitalu/tikzset.tex onebitalu/subctikz.tex
 
-COUNTER = counter/section.tex
+COUNTER = counter/section.tex counter/tikzset.tex counter/subctikz.tex
 
-main: main.pdf
+main: viewpdf
+
+viewpdf: main.pdf
+	viewpdf main.pdf
 
 .SUFFIXES: .tex .pdf
 
 .tex.pdf:
 	pdflatex -shell-escape -halt-on-error $<
-	viewpdf $(addsuffix .pdf, $(basename $<))
 	touch  $(addsuffix .pdf, $(basename $<))
 
 
@@ -23,4 +25,4 @@ main.pdf: $(TEXFILES) $(ONEBITALU) $(COUNTER)
 # onebitalu/section.pdf: $(TEXFILES) $(ONEBITALU)
 # counter/section.pdf: $(TEXFILES) $(COUNTER)
 
-.PHONY: main
+.PHONY: main viewpdf

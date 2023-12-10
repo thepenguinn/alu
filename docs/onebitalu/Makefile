@@ -5,16 +5,18 @@ TEXFILES = ../main.tex ../generalcommands.sty ../generaltikzset.sty ../cornercom
 
 ONEBITALU = section.tex tikzset.tex subctikz.tex
 
-section: section.pdf
+section: viewpdf
+
+viewpdf: section.pdf
+	viewpdf section.pdf
 
 .SUFFIXES: .tex .pdf
 
 .tex.pdf:
 	pdflatex -shell-escape -halt-on-error $<
-	viewpdf $(addsuffix .pdf, $(basename $<))
 	touch  $(addsuffix .pdf, $(basename $<))
 
 
 section.pdf: $(TEXFILES) $(ONEBITALU)
 
-.PHONY: section
+.PHONY: section viewpdf
