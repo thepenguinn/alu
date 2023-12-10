@@ -90,7 +90,7 @@
     (#1-ainit-Cout)
     \constcornerhoz {++(0.75,-1)} -- ++(0.25,0)
     %%
-    \msFlipFlop{#1-msff}{D} {}
+    \msFlipFlop{#1-msff}{d} {}
     %%
     (#1-ainit-Bout) ++(0,2)
     coordinate (#1-ainitBoutheight)
@@ -104,7 +104,7 @@
     \constcornerdown {(#1-flad-B)}
     -- (#1-flad-B)
     %%
-    (#1-msff-Q) -- (#1-msff-pQ) -- ++(0.5,0)
+    (#1-msff-q) -- (#1-msff-pq) -- ++(0.5,0)
     coordinate (#1-msffQout)
     -- (#1-ainitBoutheight-|#1-msffQout)
     \constcornerup {++($(#1-flad-B)-(#1-flad-Cin)$) ++(-1,0)}
@@ -114,7 +114,7 @@
     {(#1-flad-Cin)} {(1,0)}
     -- (#1-flad-Cin)
     %%
-    (#1-msff-Rst)
+    (#1-msff-rst)
     \constcornerdown {++(1,-0.75)}
     \constcornerright {++(2,-1)}
     coordinate (#1-msffRstvrt)
@@ -189,7 +189,7 @@
     -- (#1-mux-in0)
     %%
     (#1-ainit-Mux)
-    \varcornerdownright {(#1-msff-D|-#1-msffRstvrt) ++(0,-0.5)}
+    \varcornerdownright {(#1-msff-d|-#1-msffRstvrt) ++(0,-0.5)}
     coordinate (#1-ainitMuxbend)
     -- (#1-ainitMuxbend-|#1-msffRstvrt)
     %%
@@ -274,20 +274,20 @@
     %%
     % Clk lines
     %%
-    (#1-msff-Eclk) ++(0,4)
+    (#1-msff-reclk) ++(0,4)
     coordinate (#1-eclkbr)
     ++ (0,1)
     coordinate (#1-Eclk)
     %%
-    (#1-msff-Ieclk)
+    (#1-msff-feclk)
     \undercornertillupright
-    {($(#1-msff-Eclk)-(#1-msff-Ieclk)$)} {(#1-eclkbr) ++(0.5,0)}
+    {($(#1-msff-reclk)-(#1-msff-feclk)$)} {(#1-eclkbr) ++(0.5,0)}
     {(#1-eclkbr) ++(1,0)} {(0,1)}
     coordinate (#1-tmp)
     -- (#1-tmp|-#1-Eclk)
     coordinate (#1-Ieclk)
     %%
-    (#1-msff-Eclk)
+    (#1-msff-reclk)
     -- (#1-Eclk)
     %%
     % Reset line
