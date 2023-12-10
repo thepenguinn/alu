@@ -17,3 +17,19 @@
     \subctkmsFlipFlop{#1} {#2}
     (#1.center) node[]{#3}
 }
+
+\ctikzsubcircuitdef{subctkedgeDetector} {
+    clk, reclk,
+    bclk, breclk%
+} {
+    node (#1) [edgeDetector, anchor = lpin 1]{}%
+    \markcoordinate {#1} {clk}     {lpin 1}
+    \markcoordinate {#1} {reclk}   {rpin 1}
+}
+
+\ctikzsubcircuitactivate{subctkedgeDetector}
+
+\newcommand\edgeDetector[3] {
+    \subctkedgeDetector{#1} {#2}
+    (#1.center) node[]{#3}
+}
