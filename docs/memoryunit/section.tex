@@ -1,0 +1,68 @@
+\documentclass[../main]{subfiles}
+
+\ifSubfilesClassLoaded{
+    \input{tikzset}
+    \input{subctikz}
+    % \tikzexternalize[prefix=figcache/]
+    % \tikzset{external/force remake=true}
+} {
+    % \input{counter/tikzset}
+    % \input{counter/subctikz}
+}
+
+\begin{document}
+
+\section{Memory Unit}
+
+ \begin{figure}[!h]
+
+     \centering
+     \resizebox{\textwidth}{!} {
+         \begin{tikzpicture}[american]
+
+             \draw
+             (0,0)
+             \shiftRegister {sreg} {reclk} {\texttt{MS FLIPFLOP}}
+
+             %% Output
+
+             (sreg-q00) node[ocirc] {} (sreg-q00) node[right = 4pt] {$Q_{00}$}
+             (sreg-q01) node[ocirc] {} (sreg-q01) node[right = 4pt] {$Q_{01}$}
+             (sreg-q02) node[ocirc] {} (sreg-q02) node[right = 4pt] {$Q_{02}$}
+             (sreg-q03) node[ocirc] {} (sreg-q03) node[right = 4pt] {$Q_{03}$}
+             (sreg-q04) node[ocirc] {} (sreg-q04) node[right = 4pt] {$Q_{04}$}
+             (sreg-q05) node[ocirc] {} (sreg-q05) node[right = 4pt] {$Q_{05}$}
+             (sreg-q06) node[ocirc] {} (sreg-q06) node[right = 4pt] {$Q_{06}$}
+             (sreg-q07) node[ocirc] {} (sreg-q07) node[right = 4pt] {$Q_{07}$}
+             (sreg-q08) node[ocirc] {} (sreg-q08) node[right = 4pt] {$Q_{08}$}
+             (sreg-q09) node[ocirc] {} (sreg-q09) node[right = 4pt] {$Q_{09}$}
+             (sreg-q10) node[ocirc] {} (sreg-q10) node[right = 4pt] {$Q_{10}$}
+             (sreg-q11) node[ocirc] {} (sreg-q11) node[right = 4pt] {$Q_{11}$}
+             (sreg-q12) node[ocirc] {} (sreg-q12) node[right = 4pt] {$Q_{12}$}
+             (sreg-q13) node[ocirc] {} (sreg-q13) node[right = 4pt] {$Q_{13}$}
+             (sreg-q14) node[ocirc] {} (sreg-q14) node[right = 4pt] {$Q_{14}$}
+             (sreg-q15) node[ocirc] {} (sreg-q15) node[right = 4pt] {$Q_{15}$}
+
+             % Inputs
+
+             (sreg-reclk) node[ocirc] {}
+             (sreg-reclk) node[left = 4pt] {$Reclk$}
+
+             (sreg-feclk) node[ocirc] {}
+             (sreg-feclk) node[left = 4pt] {$Feclk$}
+
+             (sreg-rst) node[ocirc] {}
+             (sreg-rst) node[left = 4pt] {$Rst$}
+
+             (sreg-sin) node[ocirc] {}
+             (sreg-sin) node[left = 4pt] {$S_{in}$}
+
+             ;
+
+         \end{tikzpicture}
+     }
+     \caption{A 16 bit shift register}
+
+ \end{figure}
+
+\end{document}
