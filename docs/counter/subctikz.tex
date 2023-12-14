@@ -23,13 +23,13 @@
     %%
     \msFlipFlop {#1-msff00} {d} {}
     %%
-    (#1-msff00-reclk) ++(0,1.25)
-    coordinate (#1-msffreclkheight)
+    (#1-msff00-reclk) ++(0,1)
+    coordinate (#1-msfffeclkheight)
     %%
-    (#1-msff00-q) ++(0.5,0)
+    (#1-msff00-q) ++(1.5,0)
     coordinate (#1-msff00qout)
     %%
-    (#1-msff00-q) -- (#1-msff00qout)
+    (#1-msff00-qbar) -- (#1-msff00-qbar-|#1-msff00qout)
     %%
     \edgeDetector {#1-ed00} {clk} {}
     %%
@@ -58,7 +58,7 @@
     %%
     %% Drawing the other eds and muxs
     %%
-    (#1-msff01-q) -- ++($(#1-ed00-clk)-(#1-msff00-q)$)
+    (#1-msff01-qbar) -- ++($(#1-ed00-clk)-(#1-msff00-qbar)$)
     %%
     \edgeDetector {#1-ed01} {clk} {}
     %%
@@ -73,7 +73,7 @@
     %%
     %%
     %%
-    (#1-msff02-q) -- ++($(#1-ed00-clk)-(#1-msff00-q)$)
+    (#1-msff02-qbar) -- ++($(#1-ed00-clk)-(#1-msff00-qbar)$)
     %%
     \edgeDetector {#1-ed02} {clk} {}
     %%
@@ -90,37 +90,43 @@
     %%
     (#1-mux00-out)
     \constcornerright {(#1-mux00out) ++(0,1)}
-    \constcornerup {(#1-mux00out|-#1-msffreclkheight) ++(1,0)}
-    \constcornerright {(#1-msff01-reclk)}
-    -- (#1-msff01-reclk)
+    \constcornerup {(#1-mux00out|-#1-msfffeclkheight) ++(1,0)}
+    \constcornerright {(#1-msff01-feclk)}
+    -- (#1-msff01-feclk)
     %%
     (#1-mux01-out)
     \constcornerright {(#1-mux01out) ++(0,1)}
-    \constcornerup {(#1-mux01out|-#1-msffreclkheight) ++(1,0)}
-    \constcornerright {(#1-msff02-reclk)}
-    -- (#1-msff02-reclk)
+    \constcornerup {(#1-mux01out|-#1-msfffeclkheight) ++(1,0)}
+    \constcornerright {(#1-msff02-feclk)}
+    -- (#1-msff02-feclk)
     %%
     (#1-mux02-out)
     \constcornerright {(#1-mux02out) ++(0,1)}
-    \constcornerup {(#1-mux02out|-#1-msffreclkheight) ++(1,0)}
-    \constcornerright {(#1-msff03-reclk)}
-    -- (#1-msff03-reclk)
+    \constcornerup {(#1-mux02out|-#1-msfffeclkheight) ++(1,0)}
+    \constcornerright {(#1-msff03-feclk)}
+    -- (#1-msff03-feclk)
+    %%
+    %% Markings for msfffeclktomuxheight and msffreclkheight
+    %%
+    (#1-msfffeclkheight) ++(0,0.75)
+    coordinate (#1-msffreclkheight)
+    %%
+    (#1-msff00-reclk|-#1-msffreclkheight)
+    ++(0,0.75)
+    coordinate (#1-msfffeclktomuxheight)
     %%
     %% Drawing in0 to all muxs
-    %%
-    (#1-msffreclkheight) ++(0,0.5)
-    coordinate (#1-msffreclktomuxheight)
     %%
     (#1-mux00-in0) ++(-0.75,0)
     coordinate (#1-mux00in0right)
     coordinate (#1-tmp)
-    (#1-tmp|-#1-msffreclktomuxheight)
+    (#1-tmp|-#1-msfffeclktomuxheight)
     \constcornerdown {(#1-mux00-in0)}
     -- (#1-mux00-in0)
     %%
     (#1-mux01-in0) ++($(#1-mux00in0right)-(#1-mux00-in0)$)
     coordinate (#1-tmp)
-    (#1-tmp|-#1-msffreclktomuxheight)
+    (#1-tmp|-#1-msfffeclktomuxheight)
     \constcornerdown {(#1-mux01-in0)}
     -- (#1-mux01-in0)
     %%
@@ -129,30 +135,26 @@
     (#1-mux02-in0) ++($(#1-mux00in0right)-(#1-mux00-in0)$)
     coordinate (#1-tmp)
     %%
-    (#1-msff00-reclk)
-    -- (#1-msffreclktomuxheight)
-    \constcornerright {(#1-tmp|-#1-msffreclktomuxheight) ++(0,-1)}
+    (#1-msff00-feclk)
+    -- (#1-msff00-feclk|-#1-msfffeclktomuxheight)
+    \constcornerright {(#1-tmp|-#1-msfffeclktomuxheight) ++(0,-1)}
     %%
     \constcornerdown {(#1-mux02-in0)}
     -- (#1-mux02-in0)
     %%
     %% Drawing the feclk to all msffs
     %%
-    (#1-msff00-feclk|-#1-msffreclktomuxheight)
-    ++(0,0.5)
-    coordinate (#1-msfffeclkheight)
+    (#1-msff01-reclk|-#1-msffreclkheight)
+    -- (#1-msff01-reclk)
     %%
-    (#1-msff01-feclk|-#1-msfffeclkheight)
-    -- (#1-msff01-feclk)
-    %%
-    (#1-msff02-feclk|-#1-msfffeclkheight)
-    -- (#1-msff02-feclk)
+    (#1-msff02-reclk|-#1-msffreclkheight)
+    -- (#1-msff02-reclk)
     %%
     %% last one
     %%
-    (#1-msff00-feclk) -- (#1-msfffeclkheight)
-    \constcornerright {(#1-msff03-feclk)}
-    -- (#1-msff03-feclk)
+    (#1-msff00-reclk) -- (#1-msffreclkheight)
+    \constcornerright {(#1-msff03-reclk)}
+    -- (#1-msff03-reclk)
     %%
     %% Drawing q to d
     %%
@@ -162,7 +164,7 @@
     (#1-msff00-d) ++(-0.75,0)
     coordinate (#1-msff00din)
     %%
-    (#1-msff03-q) ++(0.75,0)
+    (#1-msff03-q) ++($(#1-ed00-clk)-(#1-msff00-qbar)$)
     coordinate (#1-msff03qout)
     %%
     %%
@@ -171,19 +173,23 @@
     \constcornerleft {(#1-msff00-d) ++($(#1-msff00din)-(#1-msff00-d)$) ++(0,-1)}
     \constcornerdown {(#1-msff00qout|-#1-msffqtodheight)}
     -- (#1-msff00qout|-#1-msffqtodheight)
-    -- (#1-msff00qout)
+    \constcornerup {(#1-msff00-q)}
+    -- (#1-msff00-q)
     %%
     (#1-msff01-d)
     \constcornerleft {(#1-msff01-d) ++($(#1-msff00din)-(#1-msff00-d)$) ++(0,-1)}
     \constcornerdown {(#1-msff01qout|-#1-msffqtodheight)}
     -- (#1-msff01qout|-#1-msffqtodheight)
-    -- (#1-msff01qout)
+    \constcornerup {(#1-msff01-q)}
+    -- (#1-msff01-q)
     %%
     (#1-msff02-d)
     \constcornerleft {(#1-msff02-d) ++($(#1-msff00din)-(#1-msff00-d)$) ++(0,-1)}
     \constcornerdown {(#1-msff02qout|-#1-msffqtodheight)}
     -- (#1-msff02qout|-#1-msffqtodheight)
-    -- (#1-msff02qout)
+    \constcornerup {(#1-msff02-q)}
+    -- (#1-msff02-q)
+    %%
     %%
     (#1-msff03-d)
     \constcornerleft {(#1-msff03-d) ++($(#1-msff00din)-(#1-msff00-d)$) ++(0,-1)}
@@ -221,13 +227,13 @@
     ++(2,-0.75)
     coordinate (#1-q3)
     %%
-    ++(0,-0.5)
+    ++(0,-1)
     coordinate (#1-q2)
     %%
-    ++(0,-0.5)
+    ++($(#1-q2)-(#1-q3)$)
     coordinate (#1-q1)
     %%
-    ++(0,-0.5)
+    ++($(#1-q2)-(#1-q3)$)
     coordinate (#1-q0)
     %%
     %% Drawing
@@ -250,7 +256,7 @@
     %%
     %% Drawing reclk feclk
     %%
-    (#1-msff00-feclk|-#1-msfffeclkheight)
+    (#1-msff00-feclk|-#1-msfffeclktomuxheight)
     -- ++(-3,0)
     coordinate (#1-feclk)
     %%
@@ -259,7 +265,7 @@
     ++(1.5,0)
     coordinate (#1-tmp)
     %%
-    (#1-msff00-reclk|-#1-msffreclktomuxheight)
+    (#1-msff00-reclk|-#1-msffreclkheight)
     \varcornerleftdown {(#1-tmp)}
     -- (#1-reclk)
     %%
