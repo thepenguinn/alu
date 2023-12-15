@@ -20,13 +20,13 @@
 
             \draw [line join = round]
 
-            \aluOneBit {ALU} {Ain}
+            \aluOneBit {alu} {ain}
             {\texttt{ADDER}}
-            {\texttt{ALU INIT}}
+            {\texttt{alu INIT}}
             {\texttt{MS FLIPFLOP}}
             {\texttt{MUX}}
 
-            \aluNameLogicOp {ALU}
+            \aluNameLogicOp {alu}
             {\texttt{XOR}}
             {\texttt{AND}}
             {\texttt{NOT}}
@@ -34,39 +34,39 @@
             {\texttt{NOR}}
             {\texttt{NAND}}
 
-            (ALU-Ain) node[ocirc] {}
-            (ALU-Ain) node[left = 4pt] {$A_{in}$}
+            (alu-ain) node[ocirc] {}
+            (alu-ain) node[left = 4pt] {$A_{in}$}
 
-            (ALU-Bin) node[ocirc] {}
-            (ALU-Bin) node[left = 4pt] {$B_{in}$}
+            (alu-bin) node[ocirc] {}
+            (alu-bin) node[left = 4pt] {$B_{in}$}
 
-            (ALU-Regout) node[ocirc] {}
-            (ALU-Regout) node[right = 4pt] {$Regout$}
+            (alu-regout) node[ocirc] {}
+            (alu-regout) node[right = 4pt] {$Regout$}
 
-            (ALU-Aluout) node[ocirc] {}
-            (ALU-Aluout) node[right = 4pt] {$Aluout$}
+            (alu-aluout) node[ocirc] {}
+            (alu-aluout) node[right = 4pt] {$Aluout$}
 
             % OP
 
-            (ALU-Op0) node[ocirc] {}
-            (ALU-Op0) node[below = 4pt] {$Op_{0}$}
+            (alu-op0) node[ocirc] {}
+            (alu-op0) node[below = 4pt] {$Op_{0}$}
 
-            (ALU-Op1) node[ocirc] {}
-            (ALU-Op1) node[below = 4pt] {$Op_{1}$}
+            (alu-op1) node[ocirc] {}
+            (alu-op1) node[below = 4pt] {$Op_{1}$}
 
-            (ALU-Op2) node[ocirc] {}
-            (ALU-Op2) node[below = 4pt] {$Op_{2}$}
+            (alu-op2) node[ocirc] {}
+            (alu-op2) node[below = 4pt] {$Op_{2}$}
 
             % CLK
 
-            (ALU-Eclk) node[ocirc] {}
-            (ALU-Eclk) node[above = 4pt] {$Reclk$}
+            (alu-reclk) node[ocirc] {}
+            (alu-reclk) node[above = 4pt] {$Reclk$}
 
-            (ALU-Ieclk) node[ocirc] {}
-            (ALU-Ieclk) node[above = 4pt] {$Feclk$}
+            (alu-feclk) node[ocirc] {}
+            (alu-feclk) node[above = 4pt] {$Feclk$}
 
-            (ALU-Rstsig) node[ocirc] {}
-            (ALU-Rstsig) node[above = 4pt] {$Rst$}
+            (alu-rst) node[ocirc] {}
+            (alu-rst) node[above = 4pt] {$Rst$}
 
             ;
 
