@@ -1,0 +1,94 @@
+\documentclass[../main]{subfiles}
+
+\ifSubfilesClassLoaded{
+    \input{tikzset}
+    \input{subctikz}
+    \input{../onebitalu/tikzset}
+    \input{../onebitalu/subctikz}
+    % \tikzexternalize[prefix=figcache/]
+} {
+}
+
+\begin{document}
+
+\section{Basic Circuits}
+
+\subsection{Multiplexers}
+
+\begin{figure} [!ht]
+    \centering
+    \resizebox{\textwidth}{!} {
+        \begin{tikzpicture}
+
+            \draw [thick]
+            (0,0)
+            \muxSixteen {mux} {out}
+
+            \labelmuxSixteenFl {mux}
+            {\texttt{FL 07}}
+            {\texttt{FL 06}}
+            {\texttt{FL 05}}
+            {\texttt{FL 04}}
+            {\texttt{FL 03}}
+            {\texttt{FL 02}}
+            {\texttt{FL 01}}
+            {\texttt{FL 00}}
+
+            \labelmuxSixteenSl {mux}
+            {\texttt{SECOND LAYER}}
+
+            (mux-in00) node [ocirc] {}
+            (mux-in01) node [ocirc] {}
+            (mux-in02) node [ocirc] {}
+            (mux-in03) node [ocirc] {}
+            (mux-in04) node [ocirc] {}
+            (mux-in05) node [ocirc] {}
+            (mux-in06) node [ocirc] {}
+            (mux-in07) node [ocirc] {}
+            (mux-in08) node [ocirc] {}
+            (mux-in09) node [ocirc] {}
+            (mux-in10) node [ocirc] {}
+            (mux-in11) node [ocirc] {}
+            (mux-in12) node [ocirc] {}
+            (mux-in13) node [ocirc] {}
+            (mux-in14) node [ocirc] {}
+            (mux-in15) node [ocirc] {}
+
+            (mux-in00) node [above = 4pt] {$In_{00}$}
+            (mux-in01) node [above = 4pt] {$In_{01}$}
+            (mux-in02) node [above = 4pt] {$In_{02}$}
+            (mux-in03) node [above = 4pt] {$In_{03}$}
+            (mux-in04) node [above = 4pt] {$In_{04}$}
+            (mux-in05) node [above = 4pt] {$In_{05}$}
+            (mux-in06) node [above = 4pt] {$In_{06}$}
+            (mux-in07) node [above = 4pt] {$In_{07}$}
+            (mux-in08) node [above = 4pt] {$In_{08}$}
+            (mux-in09) node [above = 4pt] {$In_{09}$}
+            (mux-in10) node [above = 4pt] {$In_{10}$}
+            (mux-in11) node [above = 4pt] {$In_{11}$}
+            (mux-in12) node [above = 4pt] {$In_{12}$}
+            (mux-in13) node [above = 4pt] {$In_{13}$}
+            (mux-in14) node [above = 4pt] {$In_{14}$}
+            (mux-in15) node [above = 4pt] {$In_{15}$}
+
+            (mux-sl0) node [ocirc] {}
+            (mux-sl1) node [ocirc] {}
+            (mux-sl2) node [ocirc] {}
+            (mux-sl3) node [ocirc] {}
+
+            (mux-sl0) node [left = 4pt] {$Sl_{0}$}
+            (mux-sl1) node [left = 4pt] {$Sl_{1}$}
+            (mux-sl2) node [left = 4pt] {$Sl_{2}$}
+            (mux-sl3) node [left = 4pt] {$Sl_{3}$}
+
+            (mux-out) node [ocirc] {}
+            (mux-out) node [below = 4pt] {$Out$}
+
+            ;
+
+        \end{tikzpicture}
+    }
+    \caption{A 16 to 1 MUX}
+\end{figure}
+
+\end{document}

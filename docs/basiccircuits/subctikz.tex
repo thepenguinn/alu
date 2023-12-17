@@ -1,0 +1,454 @@
+\ctikzsubcircuitdef{subctkmuxFirstLayer} {
+    in0, in1, out0, out1,
+    lsl0, lsl1, lsl2, lsl3,
+    rsl0, rsl1, rsl2, rsl3,
+    blsl0, blsl1, blsl2, blsl3,
+    bin0, bin1, bout0, bout1%
+} {
+    node (#1) [muxFirstLayer]{}%
+    \markcoordinate {#1} {lsl0}  {lpin 5}
+    \markcoordinate {#1} {lsl1}  {lpin 4}
+    \markcoordinate {#1} {lsl2}  {lpin 3}
+    \markcoordinate {#1} {lsl3}  {lpin 2}
+    %%%
+    (#1.rpin 5) coordinate (#1-rsl0)
+    (#1.rpin 4) coordinate (#1-rsl1)
+    (#1.rpin 3) coordinate (#1-rsl2)
+    (#1.rpin 2) coordinate (#1-rsl3)
+    %%%
+    \markcoordinate {#1} {in0}   {tpin 1}
+    \markcoordinate {#1} {in1}   {tpin 2}
+    \markcoordinate {#1} {out0}  {bpin 1}
+    \markcoordinate {#1} {out1}  {bpin 2}
+}
+
+\ctikzsubcircuitactivate{subctkmuxFirstLayer}
+
+\newcommand\muxFirstLayer[3] {
+    \subctkmuxFirstLayer{#1} {#2}
+    (#1.center) node[]{#3}
+}
+
+\ctikzsubcircuitdef{subctkmuxSecondLayer} {
+    in00, in01, in02, in03, in04, in05, in06, in07,
+    in08, in09, in10, in11, in12, in13, in14, in15,
+    topfstmid, topsecmid,
+    muxlast, out,
+    bin00, bin01, bin02, bin03, bin04, bin05, bin06, bin07,
+    bin08, bin09, bin10, bin11, bin12, bin13, bin14, bin15,
+    bout%
+} {
+    node (#1) [muxSecondLayer]{}%
+    \markcoordinate {#1} {in00}   {lpin 4}
+    \markcoordinate {#1} {in01}   {lpin 3}
+    \markcoordinate {#1} {in02}   {lpin 2}
+    \markcoordinate {#1} {in03}   {lpin 1}
+    %%%
+    \markcoordinate {#1} {in04}   {tpin 1}
+    \markcoordinate {#1} {in05}   {tpin 2}
+    \markcoordinate {#1} {in06}   {tpin 3}
+    \markcoordinate {#1} {in07}   {tpin 4}
+    %%%
+    \markcoordinate {#1} {in08}   {tpin 5}
+    \markcoordinate {#1} {in09}   {tpin 6}
+    \markcoordinate {#1} {in10}   {tpin 7}
+    \markcoordinate {#1} {in11}   {tpin 8}
+    %%%
+    \markcoordinate {#1} {in12}   {rpin 1}
+    \markcoordinate {#1} {in13}   {rpin 2}
+    \markcoordinate {#1} {in14}   {rpin 3}
+    \markcoordinate {#1} {in15}   {rpin 4}
+    %%%
+    \markcoordinate {#1} {out}     {bpin 2}
+    %%%
+    (#1.bpin 1) coordinate (#1-muxlast)
+    %%%
+    ($(#1-in05)!0.50!(#1-in06)$)
+    coordinate (#1-topfstmid)
+    ($(#1-in09)!0.50!(#1-in10)$)
+    coordinate (#1-topsecmid)
+    %%%
+    ($(#1-in01)!0.50!(#1-in02)$)
+    coordinate (#1-leftmid)
+    ($(#1-in13)!0.50!(#1-in14)$)
+    coordinate (#1-rightmid)
+}
+
+\ctikzsubcircuitactivate{subctkmuxSecondLayer}
+
+\newcommand\muxSecondLayer[3] {
+    \subctkmuxSecondLayer{#1} {#2}
+    (#1.center) node[]{#3}
+}
+
+\ctikzsubcircuitdef{subctkmuxSixteen} {
+    in00, in01, in02, in03, in04, in05, in06, in07,
+    in08, in09, in10, in11, in12, in13, in14, in15,
+    sl0, sl1, sl2, sl3,
+    muxlast, out%
+} {
+    \muxFirstLayer {#1-fl07} {in0} {}
+    (#1-fl07-in1)
+    ++(2,0)
+    \muxFirstLayer {#1-fl06} {in0} {}
+    %%
+    %% Drawing rest of the mux first layer
+    %%
+    (#1-fl06-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$)
+    \muxFirstLayer {#1-fl05} {in0} {}
+    (#1-fl05-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$)
+    \muxFirstLayer {#1-fl04} {in0} {}
+    (#1-fl04-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$) ++(2,0)
+    \muxFirstLayer {#1-fl03} {in0} {}
+    (#1-fl03-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$)
+    \muxFirstLayer {#1-fl02} {in0} {}
+    (#1-fl02-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$)
+    \muxFirstLayer {#1-fl01} {in0} {}
+    (#1-fl01-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$)
+    \muxFirstLayer {#1-fl00} {in0} {}
+    %%
+    %% Marking second 4 fls to second layer lines
+    %%
+    ($(#1-fl05-out1)!0.50!(#1-fl04-out0)$)
+    ++(0,-1.5)
+    coordinate (#1-muxfl42midvrt)
+    ++(0,-0.5)
+    coordinate (#1-muxfl42midheight)
+    %%
+    ++(0,-5)
+    \muxSecondLayer {#1-sl} {topfstmid} {}
+    %%
+    %% Drawing that layer
+    %%
+    (#1-fl05-out1)
+    \varcornerdownright {(#1-muxfl42midheight-|#1-sl-in05)}
+    -- (#1-sl-in05)
+    %%
+    (#1-fl04-out0)
+    \varcornerdownleft {(#1-muxfl42midheight-|#1-sl-in06)}
+    -- (#1-sl-in06)
+    %%
+    (#1-fl05-out0)
+    \aroundcornertilldownright {($(#1-sl-in05)-(#1-sl-in04)$)}
+    {(#1-muxfl42midheight-|#1-sl-in05)}
+    {(#1-sl-in04)} {(0,1)}
+    -- (#1-sl-in04)
+    %%
+    (#1-fl04-out1)
+    \aroundcornertilldownleft {($(#1-sl-in06)-(#1-sl-in07)$)}
+    {(#1-muxfl42midheight-|#1-sl-in06)}
+    {(#1-sl-in07)} {(0,1)}
+    -- (#1-sl-in07)
+    %%
+    %% Marking third 4 fls to second layer lines
+    %%
+    ($(#1-fl03-out1)!0.50!(#1-fl02-out0)$)
+    ++(0,-1.5)
+    coordinate (#1-muxfl34midvrt)
+    ++(0,-0.5)
+    coordinate (#1-muxfl34midheight)
+    %%
+    (#1-muxfl34midheight)
+    ++($(#1-sl-in10)-(#1-sl-topsecmid)$)
+    coordinate (#1-fl02out0)
+    ++($(#1-sl-in11)-(#1-sl-in10)$)
+    coordinate (#1-fl02out1)
+    %%
+    (#1-muxfl34midheight)
+    ++($(#1-sl-in09)-(#1-sl-topsecmid)$)
+    coordinate (#1-fl03out1)
+    ++($(#1-sl-in08)-(#1-sl-in09)$)
+    coordinate (#1-fl03out0)
+    %%
+    (#1-sl-in11)
+    ++(0,1)
+    coordinate (#1-muxfl3botfromslheight)
+    %%
+    %% Ofcourse, black magic
+    \getmagnitude {#1} {($(#1-sl-in11)-(#1-sl-in08)$)}
+    ++(0,\n{#1-magtmp})
+    coordinate (#1-muxfl3topfromslheight)
+    %%
+    %%%
+    %%
+    (#1-fl02-out1)
+    \aroundcornertilldownleft {($(#1-fl02out0)-(#1-fl02out1)$)}
+    {(#1-fl02out0)}
+    {(#1-fl02out1)} {(0,1)}
+    %%
+    \aroundcornertilldownleft {($(#1-fl03out0)-(#1-fl02out1)$)}
+    {(#1-muxfl3topfromslheight-|#1-fl03out0) ++(-\cornerbase,0)}
+    {(#1-muxfl3botfromslheight)} {(1,0)}
+    \constcornerleft {(#1-sl-in11)}
+    -- (#1-sl-in11)
+    %%
+    %%%
+    %%
+    (#1-fl02-out0)
+    \varcornerdownleft {(#1-fl02out0)}
+    %%
+    \aroundcornerdownleft {($(#1-fl03out0)-(#1-fl02out0)$)}
+    {(#1-muxfl3topfromslheight-|#1-fl03out0) ++(-\cornerbase,0)}
+    %%
+    \aroundcornertillleftdown {($(#1-fl02out0)-(#1-fl02out1)$)}
+    {(#1-muxfl3botfromslheight-|#1-sl-in11) ++(0,-\cornerbase)}
+    {(#1-sl-in10)} {(0,1)}
+    %%
+    -- (#1-sl-in10)
+    %%
+    %%%
+    %%
+    (#1-fl03-out1)
+    \varcornerdownright {(#1-fl03out1)}
+    %%
+    \aroundcornerdownleft {($(#1-fl03out0)-(#1-fl03out1)$)}
+    {(#1-muxfl3topfromslheight-|#1-fl03out0) ++(-\cornerbase,0)}
+    %%
+    \aroundcornertillleftdown {($(#1-fl03out1)-(#1-fl02out1)$)}
+    {(#1-muxfl3botfromslheight-|#1-sl-in11) ++(0,-\cornerbase)}
+    {(#1-sl-in09)} {(0,1)}
+    %%
+    -- (#1-sl-in09)
+    %%
+    %%%
+    %%
+    (#1-fl03-out0)
+    \aroundcornertilldownright {($(#1-fl03out1)-(#1-fl03out0)$)}
+    {(#1-fl03out1)}
+    {(#1-fl03out0)} {(0,1)}
+    %%
+    \constcornerdown {(#1-fl03out0|-#1-muxfl3topfromslheight) ++(-1,0)}
+    %%
+    \aroundcornertillleftdown {($(#1-fl03out0)-(#1-fl02out1)$)}
+    {(#1-muxfl3botfromslheight-|#1-sl-in11) ++(0,-\cornerbase)}
+    {(#1-sl-in08)} {(0,1)}
+    %%
+    -- (#1-sl-in08)
+    %%
+    %%%
+    %%
+    %% Last fl
+    %%
+    ($(#1-fl01-out1)!0.50!(#1-fl00-out0)$)
+    ++(0,-1.5)
+    coordinate (#1-muxfl44midvrt)
+    ++(0,-0.5)
+    coordinate (#1-muxfl44midheight)
+    %%
+    (#1-muxfl44midheight)
+    \getmagnitude{#1} {($(#1-sl-rightmid)-(#1-sl-in14)$)}
+    ++(\n{#1-magtmp},0)
+    coordinate (#1-fl00out0)
+    \getmagnitude{#1} {($(#1-sl-in15)-(#1-sl-in14)$)}
+    ++(\n{#1-magtmp},0)
+    coordinate (#1-fl00out1)
+    %%
+    (#1-muxfl44midheight)
+    \getmagnitude{#1} {($(#1-sl-rightmid)-(#1-sl-in13)$)}
+    ++(-\n{#1-magtmp},0)
+    coordinate (#1-fl01out1)
+    \getmagnitude{#1} {($(#1-sl-in13)-(#1-sl-in12)$)}
+    ++(-\n{#1-magtmp},0)
+    coordinate (#1-fl01out0)
+    %%
+    %% Drawing last fl to sl lines
+    %%
+    (#1-fl01-out1)
+    \varcornerdownright {(#1-fl01out1)}
+    \aroundcornerdownleft {($(#1-fl01out0)-(#1-fl01out1)$)}
+    {(#1-fl01out0|-#1-sl-in12) ++(-\cornerbase,0)}
+    -- (#1-sl-in13)
+    %%
+    %%%
+    %%
+    (#1-fl00-out0)
+    \varcornerdownleft {(#1-fl00out0)}
+    \aroundcornerdownleft {($(#1-fl01out0)-(#1-fl00out0)$)}
+    {(#1-fl01out0|-#1-sl-in12) ++(-\cornerbase,0)}
+    -- (#1-sl-in14)
+    %%
+    %%%
+    %%
+    (#1-fl00-out1)
+    \aroundcornertilldownleft {($(#1-fl00out0)-(#1-fl00out1)$)}
+    {(#1-fl00out0)}
+    {(#1-fl00out1)} {(0,1)}
+    \aroundcornerdownleft {($(#1-fl01out0)-(#1-fl00out1)$)}
+    {(#1-fl01out0|-#1-sl-in12) ++(-\cornerbase,0)}
+    -- (#1-sl-in15)
+    %%
+    %%%
+    %%
+    (#1-fl01-out0)
+    \aroundcornertilldownright {($(#1-fl01out1)-(#1-fl01out0)$)}
+    {(#1-fl01out1)}
+    {(#1-fl01out0)} {(0,1)}
+    \constcornerdown {(#1-fl01out0|-#1-sl-in12)}
+    -- (#1-sl-in12)
+    %%
+    %% Markings for First 4 fls
+    %%
+    ($(#1-fl07-out1)!0.50!(#1-fl06-out0)$)
+    ++(0,-1.5)
+    coordinate (#1-muxfl14midvrt)
+    ++(0,-0.5)
+    coordinate (#1-muxfl14midheight)
+    %%
+    (#1-muxfl14midheight)
+    \getmagnitude{#1} {($(#1-sl-leftmid)-(#1-sl-in02)$)}
+    ++(\n{#1-magtmp},0)
+    coordinate (#1-fl06out0)
+    \getmagnitude{#1} {($(#1-sl-in02)-(#1-sl-in03)$)}
+    ++(\n{#1-magtmp},0)
+    coordinate (#1-fl06out1)
+    %%
+    (#1-muxfl14midheight)
+    \getmagnitude{#1} {($(#1-sl-leftmid)-(#1-sl-in01)$)}
+    ++(-\n{#1-magtmp},0)
+    coordinate (#1-fl07out1)
+    \getmagnitude{#1} {($(#1-sl-in01)-(#1-sl-in00)$)}
+    ++(-\n{#1-magtmp},0)
+    coordinate (#1-fl07out0)
+    %%
+    %% Drawing the lines
+    %%
+    (#1-fl07-out1)
+    \varcornerdownright {(#1-fl07out1)}
+    \aroundcornerdownright {($(#1-fl06out1)-(#1-fl07out1)$)}
+    {(#1-fl06out1|-#1-sl-in03) ++(\cornerbase,0)}
+    -- (#1-sl-in01)
+    %%
+    %%%
+    %%
+    (#1-fl06-out0)
+    \varcornerdownleft {(#1-fl06out0)}
+    \aroundcornerdownright {($(#1-fl06out1)-(#1-fl06out0)$)}
+    {(#1-fl06out1|-#1-sl-in03) ++(\cornerbase,0)}
+    -- (#1-sl-in02)
+    %%
+    %%%
+    %%
+    (#1-fl06-out1)
+    \aroundcornertilldownleft {($(#1-fl06out0)-(#1-fl06out1)$)}
+    {(#1-fl06out0)}
+    {(#1-fl06out1)} {(0,1)}
+    %%
+    \constcornerdown {(#1-sl-in03)}
+    -- (#1-sl-in03)
+    %%
+    %%%
+    %%
+    (#1-fl07-out0)
+    \aroundcornertilldownright {($(#1-fl07out1)-(#1-fl07out0)$)}
+    {(#1-fl07out1)}
+    {(#1-fl07out0)} {(0,1)}
+    %%
+    \aroundcornerdownright {($(#1-fl06out1)-(#1-fl07out0)$)}
+    {(#1-fl06out1|-#1-sl-in03) ++(\cornerbase,0)}
+    -- (#1-sl-in00)
+    %%
+    %% Drawing select lines
+    %%
+    %% First
+    %%
+    (#1-fl07-rsl0) -- (#1-fl06-lsl0)
+    (#1-fl06-rsl0) -- (#1-fl05-lsl0)
+    (#1-fl05-rsl0) -- (#1-fl04-lsl0)
+    (#1-fl04-rsl0) -- (#1-fl03-lsl0)
+    (#1-fl03-rsl0) -- (#1-fl02-lsl0)
+    (#1-fl02-rsl0) -- (#1-fl01-lsl0)
+    (#1-fl01-rsl0) -- (#1-fl00-lsl0)
+    %%
+    %% Second
+    %%
+    (#1-fl07-rsl1) -- (#1-fl06-lsl1)
+    (#1-fl06-rsl1) -- (#1-fl05-lsl1)
+    (#1-fl05-rsl1) -- (#1-fl04-lsl1)
+    (#1-fl04-rsl1) -- (#1-fl03-lsl1)
+    (#1-fl03-rsl1) -- (#1-fl02-lsl1)
+    (#1-fl02-rsl1) -- (#1-fl01-lsl1)
+    (#1-fl01-rsl1) -- (#1-fl00-lsl1)
+    %%
+    %% Third
+    %%
+    (#1-fl07-rsl2) -- (#1-fl06-lsl2)
+    (#1-fl06-rsl2) -- (#1-fl05-lsl2)
+    (#1-fl05-rsl2) -- (#1-fl04-lsl2)
+    (#1-fl04-rsl2) -- (#1-fl03-lsl2)
+    (#1-fl03-rsl2) -- (#1-fl02-lsl2)
+    (#1-fl02-rsl2) -- (#1-fl01-lsl2)
+    (#1-fl01-rsl2) -- (#1-fl00-lsl2)
+    %%
+    %% Fourth
+    %%
+    (#1-fl07-rsl3) -- (#1-fl06-lsl3)
+    (#1-fl06-rsl3) -- (#1-fl05-lsl3)
+    (#1-fl05-rsl3) -- (#1-fl04-lsl3)
+    (#1-fl04-rsl3) -- (#1-fl03-lsl3)
+    (#1-fl03-rsl3) -- (#1-fl02-lsl3)
+    (#1-fl02-rsl3) -- (#1-fl01-lsl3)
+    (#1-fl01-rsl3) -- (#1-fl00-lsl3)
+    %%
+    %% Drawing select terminals
+    %%
+    (#1-fl07-lsl0) -- ++(-3,0) coordinate (#1-sl0)
+    (#1-fl07-lsl1) -- (#1-fl07-lsl1-|#1-sl0) coordinate (#1-sl1)
+    (#1-fl07-lsl2) -- (#1-fl07-lsl2-|#1-sl0) coordinate (#1-sl2)
+    (#1-fl07-lsl3) -- (#1-fl07-lsl3-|#1-sl0) coordinate (#1-sl3)
+    %%
+    %% Drawing inputs
+    %%
+    (#1-fl00-in0) -- ++(0,1) coordinate (#1-in01)
+    (#1-fl00-in1) -- (#1-in01-|#1-fl00-in1) coordinate (#1-in00)
+    %%
+    (#1-fl00-in0) -- (#1-in00-|#1-fl00-in0) coordinate (#1-in01)
+    (#1-fl01-in0) -- (#1-in00-|#1-fl01-in0) coordinate (#1-in03)
+    (#1-fl02-in0) -- (#1-in00-|#1-fl02-in0) coordinate (#1-in05)
+    (#1-fl03-in0) -- (#1-in00-|#1-fl03-in0) coordinate (#1-in07)
+    (#1-fl04-in0) -- (#1-in00-|#1-fl04-in0) coordinate (#1-in09)
+    (#1-fl05-in0) -- (#1-in00-|#1-fl05-in0) coordinate (#1-in11)
+    (#1-fl06-in0) -- (#1-in00-|#1-fl06-in0) coordinate (#1-in13)
+    (#1-fl07-in0) -- (#1-in00-|#1-fl07-in0) coordinate (#1-in15)
+    %%
+    (#1-fl00-in1) -- (#1-in00-|#1-fl00-in1) coordinate (#1-in00)
+    (#1-fl01-in1) -- (#1-in00-|#1-fl01-in1) coordinate (#1-in02)
+    (#1-fl02-in1) -- (#1-in00-|#1-fl02-in1) coordinate (#1-in04)
+    (#1-fl03-in1) -- (#1-in00-|#1-fl03-in1) coordinate (#1-in06)
+    (#1-fl04-in1) -- (#1-in00-|#1-fl04-in1) coordinate (#1-in08)
+    (#1-fl05-in1) -- (#1-in00-|#1-fl05-in1) coordinate (#1-in10)
+    (#1-fl06-in1) -- (#1-in00-|#1-fl06-in1) coordinate (#1-in12)
+    (#1-fl07-in1) -- (#1-in00-|#1-fl07-in1) coordinate (#1-in14)
+    %%
+    %% Drawing outputs
+    %%
+    (#1-sl-out)
+    -- ++(0,-1)
+    coordinate (#1-out)
+    %%
+    (#1-sl-muxlast)
+    coordinate (#1-muxlast)
+    %%
+    %% Drawing Muxlast is not always needed therefore
+    %% create a newcommand to do it
+}
+
+\ctikzsubcircuitactivate{subctkmuxSixteen}
+
+\newcommand\muxSixteen[2] {
+    \subctkmuxSixteen{#1} {#2}
+}
+
+\newcommand\labelmuxSixteenFl[9] {
+    (#1-fl07.center) node [] {#2}
+    (#1-fl06.center) node [] {#3}
+    (#1-fl05.center) node [] {#4}
+    (#1-fl04.center) node [] {#5}
+    (#1-fl03.center) node [] {#6}
+    (#1-fl02.center) node [] {#7}
+    (#1-fl01.center) node [] {#8}
+    (#1-fl00.center) node [] {#9}
+}
+
+\newcommand\labelmuxSixteenSl[2] {
+    (#1-sl.center) node [] {#2}
+}
