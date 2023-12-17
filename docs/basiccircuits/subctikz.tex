@@ -85,6 +85,9 @@
     in00, in01, in02, in03, in04, in05, in06, in07,
     in08, in09, in10, in11, in12, in13, in14, in15,
     sl0, sl1, sl2, sl3,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
     muxlast, out%
 } {
     \muxFirstLayer {#1-fl07} {in0} {}
@@ -430,6 +433,10 @@
     %%
     %% Drawing Muxlast is not always needed therefore
     %% create a newcommand to do it
+    \markgeocoordinate {#1}
+    {(#1-in00)} {(#1-out)}
+    {(#1-sl0)} {(#1-fl00-rsl0)}
+    %%
 }
 
 \ctikzsubcircuitactivate{subctkmuxSixteen}
