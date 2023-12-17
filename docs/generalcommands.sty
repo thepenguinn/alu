@@ -7,3 +7,9 @@
     coordinate (#1-p#2)
 
 }
+
+\newcommand\getmagnitude[2] {
+    let \p{#1-tmpcoord} = #2,
+    \n{#1-magtmp} = {veclen(\x{#1-tmpcoord}, \y{#1-tmpcoord})}
+    in
+}
