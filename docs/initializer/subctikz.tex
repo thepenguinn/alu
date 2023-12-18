@@ -114,19 +114,34 @@
     \constcornerright {(#1-hu-rgfsrq)}
     -- (#1-hu-rgfsrq)
     %%
-    %% Drawing outputs
+    %% Marking things for drawing outputs
+    %%
+    (#1-cg-feclk-|#1-hu-reclk)
+    ++ (3.5,0)
+    coordinate (#1-feclkheight)
+    ++ (0,-1)
+    coordinate (#1-reclkheight)
+    ++ (0,-0.5)
+    coordinate (#1-rstsigheight)
+    %%
+    %% Drawing the ouputs
+    %%
+    (#1-cg-feclk)
+    -- (#1-feclkheight)
+    -- ++(3,0)
+    coordinate (#1-feclk)
     %%
     (#1-hu-reclk)
-    -- ++(2,0)
+    \varcornerrightup {(#1-reclkheight)}
+    -- (#1-reclkheight-|#1-feclk)
     coordinate (#1-reclk)
     %%
     (#1-rg-rstsig)
-    -- (#1-rg-rstsig-|#1-reclk)
+    \aroundcornertillrightup {($(#1-rg-rstsig-|#1-hu-reclk)-(#1-hu-reclk)$)}
+    {(#1-reclkheight)}
+    {(#1-rstsigheight)} {(1,0)}
+    -- (#1-rstsigheight-|#1-feclk)
     coordinate (#1-rstsig)
-    %%
-    (#1-cg-feclk)
-    -- (#1-cg-feclk-|#1-reclk)
-    coordinate (#1-feclk)
     %%
     %% Drawing inputs
     %%
