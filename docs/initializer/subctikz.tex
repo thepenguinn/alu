@@ -55,7 +55,7 @@
     (#1.center) node[]{#3}
 }
 
-\ctikzsubcircuitdef{subctkInit} {
+\ctikzsubcircuitdef{subctkinitCircuit} {
     clk, on, muxlast, feclk, reclk, rstsig%
 } {
     \clkGen {#1-cg} {clk} {}
@@ -140,13 +140,19 @@
     (#1-hu-muxlast)
     -- ++(0,-3)
     coordinate (#1-muxlast)
+    %%
+    \markgeocoordinate {#1}
+    {(#1-cg.north)} {(#1-muxlast)}
+    {(#1-clk)} {(#1-rstsig)}
 }
 
-\ctikzsubcircuitactivate{subctkInit}
+\ctikzsubcircuitactivate{subctkinitCircuit}
 
-\newcommand\Init[5]{
-    \subctkInit {#1} {#2}
-    (#1-cg.center) node[] {#3}
-    (#1-rg.center) node[] {#4}
-    (#1-hu.center) node[] {#5}
+\newcommand\initCircuit[2]{
+    \subctkinitCircuit {#1} {#2}
+}
+\newcommand\labelinitCircuit[4] {
+    (#1-cg.center) node[] {#2}
+    (#1-rg.center) node[] {#3}
+    (#1-hu.center) node[] {#4}
 }
