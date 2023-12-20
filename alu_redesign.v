@@ -100,12 +100,16 @@ module ring_oscillator(input logic en,
 endmodule
 
 module edge_detector(input logic clk,
-    output logic reclk);
+    output logic feclk);
+
+    /*
+     * Falling edge detector
+     * */
 
     wire notclk;
 
     nor #30 (notclk, clk, clk);
-    and #3 (reclk, notclk, clk);
+    nor #3 (feclk, notclk, clk);
 
 endmodule
 
@@ -252,7 +256,6 @@ module counter(input logic reclk, feclk, rst,
     wire acfeclk1, acfeclk2, acfeclk3;
     wire mux11, mux12, mux21, mux22, mux31, mux32;
     wire notrst;
-    wire qbar1, qbar2, qbar3;
 
     nor #3 (notrst, rst, rst);
 
@@ -261,13 +264,12 @@ module counter(input logic reclk, feclk, rst,
         .rst(rst),
         .reclk(reclk),
         .feclk(feclk),
-        .q(count[0]),
-        .qbar(qbar1)
+        .q(count[0])
     );
 
     edge_detector ed01 (
-        .clk(qbar1),
-        .reclk(feclk1)
+        .clk(count[0]),
+        .feclk(feclk1)
     );
 
     nor #3 (mux11, rst, feclk1);
@@ -279,13 +281,12 @@ module counter(input logic reclk, feclk, rst,
         .rst(rst),
         .reclk(reclk),
         .feclk(acfeclk1),
-        .q(count[1]),
-        .qbar(qbar2)
+        .q(count[1])
     );
 
     edge_detector ed02 (
-        .clk(qbar2),
-        .reclk(feclk2)
+        .clk(count[1]),
+        .feclk(feclk2)
     );
 
     nor #3 (mux21, rst, feclk2);
@@ -297,13 +298,12 @@ module counter(input logic reclk, feclk, rst,
         .rst(rst),
         .reclk(reclk),
         .feclk(acfeclk2),
-        .q(count[2]),
-        .qbar(qbar3)
+        .q(count[2])
     );
 
     edge_detector ed03 (
-        .clk(qbar3),
-        .reclk(feclk3)
+        .clk(count[2]),
+        .feclk(feclk3)
     );
 
     nor #3 (mux31, rst, feclk3);
@@ -677,12 +677,12 @@ module clk_gen(input logic clk,
 
     edge_detector ed0 (
         .clk(clk),
-        .reclk(reclk)
+        .feclk(feclk)
     );
 
     edge_detector ed1 (
         .clk(notclk),
-        .reclk(feclk)
+        .feclk(reclk)
     );
 
     wire ds0;
@@ -699,15 +699,13 @@ endmodule
 module rst_gen(input logic on, notreclk, notdfeclk,
     output logic fsrq, rstsig);
 
-    wire noton, feon;
+    wire feon;
     wire ssrset, srreset;
     wire ssrlqbar, fsrqbar;
 
-    nor #3 (noton, on, on);
-
     edge_detector ed0 (
-        .clk(noton),
-        .reclk(feon)
+        .clk(on),
+        .feclk(feon)
     );
 
     sr_latch fsrl (
