@@ -20,25 +20,26 @@
     #3 coordinate (#1-geocoordtmpbot)
     #4 coordinate (#1-geocoordtmpleft)
     #5 coordinate (#1-geocoordtmpright)
-    %%
+
     ($(#1-geocoordtmptop)!0.50!(#1-geocoordtmptop|-#1-geocoordtmpbot)$)
     coordinate (#1-geocoordtmp)
     (#1-geocoordtmp-|#1-geocoordtmpleft)
     coordinate (#1-west)
     (#1-geocoordtmp-|#1-geocoordtmpright)
     coordinate (#1-east)
-    %%
+
     ($(#1-geocoordtmpleft)!0.50!(#1-geocoordtmpleft-|#1-geocoordtmpright)$)
     coordinate (#1-geocoordtmp)
     (#1-geocoordtmp|-#1-geocoordtmptop)
     coordinate (#1-north)
     (#1-geocoordtmp|-#1-geocoordtmpbot)
     coordinate (#1-south)
-    %%
+
     (#1-north-|#1-east) coordinate (#1-northeast)
     (#1-south-|#1-east) coordinate (#1-southeast)
     (#1-north-|#1-west) coordinate (#1-northwest)
     (#1-south-|#1-west) coordinate (#1-southwest)
-    %%
+
     (#1-north|-#1-east) coordinate (#1-center)
+
 }

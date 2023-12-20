@@ -9,6 +9,10 @@
     \markcoordinate {#1} {feclk} {tpin 2}
     \markcoordinate {#1} {q}     {rpin 1}
     \markcoordinate {#1} {qbar}  {rpin 2}%
+    (#1-bd) node[circleinv, anchor = apex] {}
+    (#1-breclk) node[circleinv, anchor = bottom] {}
+    (#1-bfeclk) node[circleinv, anchor = bottom] {}
+    (#1-bqbar) node[circleinv, anchor = left] {}
 }
 
 \ctikzsubcircuitactivate{subctkmsFlipFlop}
@@ -25,6 +29,7 @@
     node (#1) [edgeDetector, anchor = lpin 1]{}%
     \markcoordinate {#1} {clk}     {lpin 1}
     \markcoordinate {#1} {reclk}   {rpin 1}
+    (#1-breclk) node[circleinv, anchor = left] {}
 }
 
 \ctikzsubcircuitactivate{subctkedgeDetector}

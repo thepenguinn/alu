@@ -84,6 +84,15 @@
             (mux-out) node [ocirc] {}
             (mux-out) node [below = 4pt] {$Out$}
 
+            (mux-muxlast) node [circleinv, anchor = top] {}
+
+            (mux-muxlast)
+            -- (mux-muxlast|-mux-out)
+
+            coordinate (muxlast)
+            (muxlast) node [ocirc] {}
+            (muxlast) node [below = 4pt] {$Muxlast$}
+
             ;
 
         \end{tikzpicture}

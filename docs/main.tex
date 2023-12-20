@@ -12,6 +12,10 @@
     \input{memoryunit/subctikz}
     \input{initializer/tikzset}
     \input{initializer/subctikz}
+    \input{basiccircuits/tikzset}
+    \input{basiccircuits/subctikz}
+    \input{finalschematics/tikzset}
+    \input{finalschematics/subctikz}
 }
 
 
@@ -23,12 +27,16 @@
 
 \begin{document}
 
-\subfile{onebitalu/section.tex}
+\subfileinclude{onebitalu/section.tex}
 
-\subfile{counter/section.tex}
+\subfileinclude{counter/section.tex}
 
-\subfile{memoryunit/section.tex}
+\subfileinclude{memoryunit/section.tex}
 
-\subfile{initializer/section.tex}
+\subfileinclude{initializer/section.tex}
+
+\subfileinclude{basiccircuits/section.tex}
+
+\subfileinclude{finalschematics/section.tex}
 
 \end{document}

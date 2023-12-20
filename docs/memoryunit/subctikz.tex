@@ -1,5 +1,8 @@
 \ctikzsubcircuitdef{subctkshiftRegister} {
     sin, reclk, feclk, rst,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
     q00, q01, q02, q03, q04, q05, q06, q07, q08, q09, q10, q11, q12, q13, q14, q15%
 } {
     \msFlipFlop {#1-msff15} {d} {}
@@ -470,27 +473,33 @@
     (#1-msff00-q) -- (#1-msff00-q-|#1-sregqvrt)
     coordinate (#1-q00)
     %%
+    \markgeocoordinate {#1}
+    {(#1-msffl1feclkheight)} {(#1-rst)}
+    {(#1-rst)} {(#1-q00)}
 }
 
 \ctikzsubcircuitactivate{subctkshiftRegister}
 
-\newcommand\shiftRegister[3] {
+\newcommand\shiftRegister[2] {
     \subctkshiftRegister {#1} {#2}
+}
 
-    (#1-msff00.center) node[] {#3}
-    (#1-msff01.center) node[] {#3}
-    (#1-msff02.center) node[] {#3}
-    (#1-msff03.center) node[] {#3}
-    (#1-msff04.center) node[] {#3}
-    (#1-msff05.center) node[] {#3}
-    (#1-msff06.center) node[] {#3}
-    (#1-msff07.center) node[] {#3}
-    (#1-msff08.center) node[] {#3}
-    (#1-msff09.center) node[] {#3}
-    (#1-msff10.center) node[] {#3}
-    (#1-msff11.center) node[] {#3}
-    (#1-msff12.center) node[] {#3}
-    (#1-msff13.center) node[] {#3}
-    (#1-msff14.center) node[] {#3}
-    (#1-msff15.center) node[] {#3}
+\newcommand\labelshiftRegister [2] {
+
+    (#1-msff00.center) node[] {#2}
+    (#1-msff01.center) node[] {#2}
+    (#1-msff02.center) node[] {#2}
+    (#1-msff03.center) node[] {#2}
+    (#1-msff04.center) node[] {#2}
+    (#1-msff05.center) node[] {#2}
+    (#1-msff06.center) node[] {#2}
+    (#1-msff07.center) node[] {#2}
+    (#1-msff08.center) node[] {#2}
+    (#1-msff09.center) node[] {#2}
+    (#1-msff10.center) node[] {#2}
+    (#1-msff11.center) node[] {#2}
+    (#1-msff12.center) node[] {#2}
+    (#1-msff13.center) node[] {#2}
+    (#1-msff14.center) node[] {#2}
+    (#1-msff15.center) node[] {#2}
 }

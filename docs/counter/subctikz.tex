@@ -18,6 +18,9 @@
 }
 
 \ctikzsubcircuitdef{subctkcounterFour} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
     q0, q1, q2, q3, reclk, feclk, rst%
 } {
     %%
@@ -227,7 +230,7 @@
     ++(2,-0.75)
     coordinate (#1-q3)
     %%
-    ++(0,-1)
+    ++(0,-0.5)
     coordinate (#1-q2)
     %%
     ++($(#1-q2)-(#1-q3)$)
@@ -274,19 +277,25 @@
     (#1-msff00-rst|-#1-counterrstheight)
     -- (#1-feclk|-#1-counterrstheight)
     coordinate (#1-rst)
+    \markgeocoordinate {#1}
+    {(#1-feclk)} {(#1-q0)}
+    {(#1-feclk)} {(#1-q0)}
 }
 
 \ctikzsubcircuitactivate{subctkcounterFour}
 
-\newcommand\counterFour[6] {
+\newcommand\counterFour[2] {
     \subctkcounterFour{#1} {#2}
-    (#1-msff00.center) node[]{#3}
-    (#1-msff01.center) node[]{#4}
-    (#1-msff02.center) node[]{#5}
-    (#1-msff03.center) node[]{#6}
 }
 
-\newcommand\labelcounterFour[7] {
+\newcommand\labelcounterFourMSFF[5] {
+    (#1-msff00.center) node[]{#2}
+    (#1-msff01.center) node[]{#3}
+    (#1-msff02.center) node[]{#4}
+    (#1-msff03.center) node[]{#5}
+}
+
+\newcommand\labelcounterFourEdMux[7] {
     (#1-ed00.center)  node[] {#2}
     (#1-ed01.center)  node[] {#3}
     (#1-ed02.center)  node[] {#4}

@@ -8,6 +8,7 @@
     \markcoordinate {#1} {notdreclk} {rpin 2}
     \markcoordinate {#1} {notdfeclk} {rpin 3}
     \markcoordinate {#1} {notreclk}  {rpin 4}
+    (#1-bfeclk) node [circleinv, anchor = left] {}
 }
 
 \ctikzsubcircuitdef{subctkrstGen} {
@@ -34,6 +35,8 @@
     \markcoordinate {#1} {muxlast}   {bpin 4}
     \markcoordinate {#1} {reclk}     {rpin 1}
     \markcoordinate {#1} {fsrq}      {rpin 2}
+    (#1-breclk) node [circleinv, anchor = left] {}
+    (#1-bmuxlast) node [circleinv, anchor = top] {}
 }
 
 \ctikzsubcircuitactivate{subctkclkGen}
@@ -121,7 +124,7 @@
     coordinate (#1-feclkheight)
     ++ (0,-1)
     coordinate (#1-reclkheight)
-    ++ (0,-0.5)
+    ++ (0,-1)
     coordinate (#1-rstsigheight)
     %%
     %% Drawing the ouputs
