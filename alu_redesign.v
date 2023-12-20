@@ -113,6 +113,23 @@ module edge_detector(input logic clk,
 
 endmodule
 
+module edge_detector_inv(input logic clk,
+    output logic notfeclk);
+
+    /*
+     * Falling edge detector,
+     * with inverted output
+     * */
+
+    wire notclk;
+    wire feclk;
+
+    nor #30 (notclk, clk, clk);
+    nor #3 (feclk, notclk, clk);
+    nor #3 (notfeclk, feclk, feclk);
+
+endmodule
+
 module sr_latch(input logic set, reset,
     output logic q, qbar);
 
@@ -225,14 +242,9 @@ module ms_flipflop(input logic data, rst, reclk, feclk,
 
     wire sdata, notsdata;
 
-    wire ireclk, ifeclk;
-
-    nor #3 (ireclk, reclk, reclk);
-    nor #3 (ifeclk, feclk, feclk);
-
     d_flipflop_sr master (
         .data(data),
-        .clk(ireclk),
+        .clk(reclk),
         .q(sdata),
         .qbar(notsdata),
         .rst(rst)
@@ -241,7 +253,7 @@ module ms_flipflop(input logic data, rst, reclk, feclk,
     sr_flipflop slave (
         .set(sdata),
         .reset(notsdata),
-        .clk(ifeclk),
+        .clk(feclk),
         .q(q),
         .qbar(qbar)
     );
@@ -267,9 +279,9 @@ module counter(input logic reclk, feclk, rst,
         .q(count[0])
     );
 
-    edge_detector ed01 (
+    edge_detector_inv ed01 (
         .clk(count[0]),
-        .feclk(feclk1)
+        .notfeclk(feclk1)
     );
 
     nor #3 (mux11, rst, feclk1);
@@ -284,9 +296,9 @@ module counter(input logic reclk, feclk, rst,
         .q(count[1])
     );
 
-    edge_detector ed02 (
+    edge_detector_inv ed02 (
         .clk(count[1]),
-        .feclk(feclk2)
+        .notfeclk(feclk2)
     );
 
     nor #3 (mux21, rst, feclk2);
@@ -301,9 +313,9 @@ module counter(input logic reclk, feclk, rst,
         .q(count[2])
     );
 
-    edge_detector ed03 (
+    edge_detector_inv ed03 (
         .clk(count[2]),
-        .feclk(feclk3)
+        .notfeclk(feclk3)
     );
 
     nor #3 (mux31, rst, feclk3);
@@ -668,7 +680,7 @@ module alu( input logic [2:0] op,
 endmodule
 
 module clk_gen(input logic clk,
-    output logic feclk, notdfeclk, notdreclk, notreclk);
+    output logic notfeclk, notdfeclk, dreclk, notreclk);
 
     wire notclk;
     wire reclk;
@@ -685,14 +697,17 @@ module clk_gen(input logic clk,
         .feclk(reclk)
     );
 
-    wire ds0;
+    wire dsre0, dsfe0;
 
     nor #3  (notreclk, reclk, reclk);
 
-    nor #15 (ds0, notreclk, notreclk);
-    nor #15 (notdreclk, ds0, ds0);
+    nor #15 (dsre0, reclk, reclk);
+    nor #15 (dreclk, dsre0, dsre0);
 
-    nor #30 (notdfeclk, feclk, feclk);
+    nor #3 (notfeclk, feclk, feclk);
+
+    nor #15 (dsfe0, notfeclk, notfeclk);
+    nor #15 (notdfeclk, dsfe0, dsfe0);
 
 endmodule
 
@@ -732,8 +747,8 @@ module rst_gen(input logic on, notreclk, notdfeclk,
 
 endmodule
 
-module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, notdreclk,
-    output logic reclk);
+module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, dreclk,
+    output logic notreclkout);
 
     wire fsrset, fsrqbar;
 
@@ -760,22 +775,23 @@ module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, notdreclk,
 
     nor #3 (ssrset, fsrqbar, notfeclk);
 
-    nor #3 (reclk, ssrq, notdreclk);
+    nor #3 (notreclkout, ssrq, dreclk);
 
 endmodule
 
 module init(input logic clk, on, muxlast,
-    output logic reclk, feclk, rstsig);
+    output logic notreclkout, notfeclkout, rstsig);
 
 
-    wire notdfeclk, notdreclk, noreclk;
+    wire notdfeclk, notdreclk, notreclk;
+    wire dreclk;
     wire rgfsrq;
 
     clk_gen cg (
         .clk(clk),
-        .feclk(feclk),
+        .notfeclk(notfeclkout),
         .notdfeclk(notdfeclk),
-        .notdreclk(notdreclk),
+        .dreclk(dreclk),
         .notreclk(notreclk)
     );
 
@@ -793,8 +809,8 @@ module init(input logic clk, on, muxlast,
         /* since we don't have notfeclk, notdfeclk will be just fine */
         .notfeclk(notdfeclk),
         .notreclk(notreclk),
-        .notdreclk(notdreclk),
-        .reclk(reclk)
+        .dreclk(dreclk),
+        .notreclkout(notreclkout)
     );
 
 endmodule
@@ -811,8 +827,8 @@ module alu16(input logic clk, on,
         .clk(clk),
         .on(on),
         .muxlast(muxlast),
-        .reclk(reclk),
-        .feclk(feclk),
+        .notreclkout(reclk),
+        .notfeclkout(feclk),
         .rstsig(rstsig)
     );
 
