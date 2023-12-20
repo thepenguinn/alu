@@ -36,7 +36,7 @@ module testbench;
         aluina = 16'b0111_0000_0000_0011;
         aluinb = 16'b1100_0000_0000_0011;
 
-        aluop = 3'b000;
+        aluop = 3'b011;
 
         aluon = 1'b0;
         #100;
@@ -51,11 +51,23 @@ module testbench;
 
     always @(posedge clkout) begin
         if (aluon == 1'b0) begin
-            if (i < 18) begin
+            if (i < 22) begin
                 i++;
                 #20 $display("%b %b %b", clkout, alucount, aluout);
             end else begin
-                $finish;
+
+                if (j == 0) begin
+                    i = 0;
+                    j = 1;
+                    $display("Pressing on button again");
+                    aluon = 1'b0;
+                    #100;
+                    aluon = 1'b1;
+                    #100;
+                    aluon = 1'b0;
+                end else begin
+                    $finish;
+                end
             end
         end
     end
