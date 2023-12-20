@@ -1,0 +1,26 @@
+%% \ctikzsubcircuitdef{subctkmuxSixteen} {
+%%     in0, in2, in3, in4, in5, in6, in7, sl0, sl1, sl2, out, and01,
+%%     bin0, bin2, bin3, bin4, bin5, bin6, bin7, bsl0, bsl1, bsl2, bout, band01,
+%%     pin0, pin2, pin3, pin4, pin5, pin6, pin7, psl0, psl1, psl2, pout, pand01%
+%% } {
+%%     node (#1) [mux08, anchor = lpin 1] {}%
+%%     \markcoordinate {#1}   {in0} {lpin 2}
+%%     \markcoordinate {#1}   {in2} {lpin 4}
+%%     \markcoordinate {#1}   {in3} {lpin 5}
+%%     \markcoordinate {#1}   {in4} {lpin 6}
+%%     \markcoordinate {#1}   {in5} {lpin 7}
+%%     \markcoordinate {#1}   {in6} {lpin 8}
+%%     \markcoordinate {#1}   {in7} {lpin 9}%
+%%     \markcoordinate {#1}   {sl0} {bpin 4}
+%%     \markcoordinate {#1}   {sl1} {bpin 3}
+%%     \markcoordinate {#1}   {sl2} {bpin 2}%
+%%     \markcoordinate {#1} {and01} {rpin 1}
+%%     \markcoordinate {#1}   {out} {rpin 2}
+%% }
+%%
+%% \ctikzsubcircuitactivate{subctkmuxSixteen}
+%%
+%% \newcommand\muxSixteen[3] {
+%%     \subctkmuxSixteen{#1} {#2}
+%%     (#1.narrow center) node[]{#3}
+%% }
