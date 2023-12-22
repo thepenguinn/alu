@@ -14,60 +14,110 @@
 
 \section{Memory Unit}
 
-\subsection{Shift Register}
+\subsection{A Sixteen Bit Shift Register with Serial In and Parallel Out}
 
- \begin{figure}[!ht]
+\begin{verbatim}
+    module shiftreg(input logic sin, rst, reclk, feclk,
+        output logic [15:0] pout);
 
-     \centering
-     \resizebox{0.9\textwidth}{!} {
-         \begin{tikzpicture}[american]
+        wire [14:0] qbout;
 
-             \draw
-             (0,0)
-             \shiftRegister {sreg} {reclk}
+        wire acsin;
 
-             \labelshiftRegister {sreg}
-             {\texttt{MS FLIPFLOP}}
+        nor #3 (acsin, sin, sin);
 
-             %% Output
+        ms_flipflop msff00 ( .data(qbout[14]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[00])                   );
+        ms_flipflop msff01 ( .data(qbout[13]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[01]), .qbar(qbout[14]) );
+        ms_flipflop msff02 ( .data(qbout[12]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[02]), .qbar(qbout[13]) );
+        ms_flipflop msff03 ( .data(qbout[11]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[03]), .qbar(qbout[12]) );
+        ms_flipflop msff04 ( .data(qbout[10]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[04]), .qbar(qbout[11]) );
+        ms_flipflop msff05 ( .data(qbout[09]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[05]), .qbar(qbout[10]) );
+        ms_flipflop msff06 ( .data(qbout[08]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[06]), .qbar(qbout[09]) );
+        ms_flipflop msff07 ( .data(qbout[07]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[07]), .qbar(qbout[08]) );
+        ms_flipflop msff08 ( .data(qbout[06]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[08]), .qbar(qbout[07]) );
+        ms_flipflop msff09 ( .data(qbout[05]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[09]), .qbar(qbout[06]) );
+        ms_flipflop msff10 ( .data(qbout[04]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[10]), .qbar(qbout[05]) );
+        ms_flipflop msff11 ( .data(qbout[03]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[11]), .qbar(qbout[04]) );
+        ms_flipflop msff12 ( .data(qbout[02]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[12]), .qbar(qbout[03]) );
+        ms_flipflop msff13 ( .data(qbout[01]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[13]), .qbar(qbout[02]) );
+        ms_flipflop msff14 ( .data(qbout[00]), .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[14]), .qbar(qbout[01]) );
+        ms_flipflop msff15 ( .data(acsin),     .rst(rst),    .reclk(reclk),
+                             .feclk(feclk),    .q(pout[15]), .qbar(qbout[00]) );
 
-             (sreg-q00) node[ocirc] {} (sreg-q00) node[right = 4pt] {$Q_{00}$}
-             (sreg-q01) node[ocirc] {} (sreg-q01) node[right = 4pt] {$Q_{01}$}
-             (sreg-q02) node[ocirc] {} (sreg-q02) node[right = 4pt] {$Q_{02}$}
-             (sreg-q03) node[ocirc] {} (sreg-q03) node[right = 4pt] {$Q_{03}$}
-             (sreg-q04) node[ocirc] {} (sreg-q04) node[right = 4pt] {$Q_{04}$}
-             (sreg-q05) node[ocirc] {} (sreg-q05) node[right = 4pt] {$Q_{05}$}
-             (sreg-q06) node[ocirc] {} (sreg-q06) node[right = 4pt] {$Q_{06}$}
-             (sreg-q07) node[ocirc] {} (sreg-q07) node[right = 4pt] {$Q_{07}$}
-             (sreg-q08) node[ocirc] {} (sreg-q08) node[right = 4pt] {$Q_{08}$}
-             (sreg-q09) node[ocirc] {} (sreg-q09) node[right = 4pt] {$Q_{09}$}
-             (sreg-q10) node[ocirc] {} (sreg-q10) node[right = 4pt] {$Q_{10}$}
-             (sreg-q11) node[ocirc] {} (sreg-q11) node[right = 4pt] {$Q_{11}$}
-             (sreg-q12) node[ocirc] {} (sreg-q12) node[right = 4pt] {$Q_{12}$}
-             (sreg-q13) node[ocirc] {} (sreg-q13) node[right = 4pt] {$Q_{13}$}
-             (sreg-q14) node[ocirc] {} (sreg-q14) node[right = 4pt] {$Q_{14}$}
-             (sreg-q15) node[ocirc] {} (sreg-q15) node[right = 4pt] {$Q_{15}$}
+    endmodule
+\end{verbatim}
 
-             % Inputs
+\clearpage
 
-             (sreg-reclk) node[ocirc] {}
-             (sreg-reclk) node[left = 4pt] {$Reclk$}
+\subsection{Schematic of A Sixteen Bit Shift Register with Serial In and Parallel Out}
 
-             (sreg-feclk) node[ocirc] {}
-             (sreg-feclk) node[left = 4pt] {$Feclk$}
+\begin{figure}[!ht]
 
-             (sreg-rst) node[ocirc] {}
-             (sreg-rst) node[left = 4pt] {$Rst$}
+    \centering
+    \resizebox{0.9\textwidth}{!} {
+        \begin{tikzpicture}[american]
 
-             (sreg-sin) node[ocirc] {}
-             (sreg-sin) node[left = 4pt] {$S_{in}$}
+            \draw
+            (0,0)
+            \shiftRegister {sreg} {reclk}
 
-             ;
+            \labelshiftRegister {sreg}
+            {\texttt{MS FLIPFLOP}}
 
-         \end{tikzpicture}
-     }
-     \caption{Schematic of a 16 bit Shift Register}
+            %% Output
 
- \end{figure}
+            (sreg-q00) node[ocirc] {} (sreg-q00) node[right = 4pt] {$Q_{00}$}
+            (sreg-q01) node[ocirc] {} (sreg-q01) node[right = 4pt] {$Q_{01}$}
+            (sreg-q02) node[ocirc] {} (sreg-q02) node[right = 4pt] {$Q_{02}$}
+            (sreg-q03) node[ocirc] {} (sreg-q03) node[right = 4pt] {$Q_{03}$}
+            (sreg-q04) node[ocirc] {} (sreg-q04) node[right = 4pt] {$Q_{04}$}
+            (sreg-q05) node[ocirc] {} (sreg-q05) node[right = 4pt] {$Q_{05}$}
+            (sreg-q06) node[ocirc] {} (sreg-q06) node[right = 4pt] {$Q_{06}$}
+            (sreg-q07) node[ocirc] {} (sreg-q07) node[right = 4pt] {$Q_{07}$}
+            (sreg-q08) node[ocirc] {} (sreg-q08) node[right = 4pt] {$Q_{08}$}
+            (sreg-q09) node[ocirc] {} (sreg-q09) node[right = 4pt] {$Q_{09}$}
+            (sreg-q10) node[ocirc] {} (sreg-q10) node[right = 4pt] {$Q_{10}$}
+            (sreg-q11) node[ocirc] {} (sreg-q11) node[right = 4pt] {$Q_{11}$}
+            (sreg-q12) node[ocirc] {} (sreg-q12) node[right = 4pt] {$Q_{12}$}
+            (sreg-q13) node[ocirc] {} (sreg-q13) node[right = 4pt] {$Q_{13}$}
+            (sreg-q14) node[ocirc] {} (sreg-q14) node[right = 4pt] {$Q_{14}$}
+            (sreg-q15) node[ocirc] {} (sreg-q15) node[right = 4pt] {$Q_{15}$}
+
+            % Inputs
+
+            (sreg-reclk) node[ocirc] {}
+            (sreg-reclk) node[left = 4pt] {$Reclk$}
+
+            (sreg-feclk) node[ocirc] {}
+            (sreg-feclk) node[left = 4pt] {$Feclk$}
+
+            (sreg-rst) node[ocirc] {}
+            (sreg-rst) node[left = 4pt] {$Rst$}
+
+            (sreg-sin) node[ocirc] {}
+            (sreg-sin) node[left = 4pt] {$S_{in}$}
+
+            ;
+
+        \end{tikzpicture}
+        }
+        \caption{Schematic of a 16 bit Shift Register}
+
+\end{figure}
 
 \end{document}
