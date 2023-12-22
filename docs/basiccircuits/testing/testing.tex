@@ -1,0 +1,114 @@
+\documentclass[a4paper, 10pt]{article}
+
+\usepackage[siunitx]{circuitikz}
+\usepackage[margin = 1in]{geometry}
+\usepackage{../../generalcommands}
+\usepackage{../../cornercommands}
+\usepackage{../../generaltikzset}
+\usepackage{../../generalsubctikz}
+
+\usetikzlibrary{intersections}
+\usetikzlibrary{calc}
+
+\newcommand\testing[1] {
+    \gLvlDFlipFlop {#1-dff} {clk}
+    (#1-dff-d)
+    node (#1-rstnor) [nor port, anchor = out] {}
+
+    %% Drawing rst
+
+    (#1-rstnor.in 2)
+    \constcornerleft {(#1-rstnor.in 2) ++(-1,-1)}
+    -- ++(0,-2)
+    coordinate (#1-rst)
+
+    (#1-rstnor.in 1)
+
+}
+
+
+\begin{document}
+
+\section {SR Latch}
+
+\begin{figure} [!ht]
+    \centering
+    \resizebox{0.4\textwidth}{!} {
+        \begin{tikzpicture} [american]
+
+            \draw
+            (0,0)
+            \testing {billie}
+
+            %% \gLvlSRLatch {billie} {s}
+
+            %% (billie-s) node [ocirc] {}
+            %% (billie-r) node [ocirc] {}
+            %% (billie-q) node [ocirc] {}
+            %% (billie-qbar) node [ocirc] {}
+
+            %% (billie-s) node [left = 4pt] {$S$}
+            %% (billie-r) node [left = 4pt] {$R$}
+            %% (billie-q) node [right = 4pt] {$Q$}
+            %% (billie-qbar) node [right = 4pt] {$Qbar$}
+            %(billie-q)
+            % \gLvlSRFlipFlop {hai} {clk}
+            ;
+        \end{tikzpicture}
+    }
+    \caption{SR Latch}
+\end{figure}
+
+%% \begin{figure} [!ht]
+%%     \centering
+%%     \resizebox{0.4\textwidth}{!} {
+%%         \begin{tikzpicture} [american]
+%%
+%%             \draw
+%%             (0,0)
+%%
+%%             \gLvlSRFlipFlop {billie} {s}
+%%
+%%             (billie-s) node [ocirc] {}
+%%             (billie-r) node [ocirc] {}
+%%             (billie-q) node [ocirc] {}
+%%             (billie-qbar) node [ocirc] {}
+%%
+%%             (billie-s) node [left = 4pt] {$S$}
+%%             (billie-r) node [left = 4pt] {$R$}
+%%             (billie-q) node [right = 4pt] {$Q$}
+%%             (billie-qbar) node [right = 4pt] {$Qbar$}
+%%             %(billie-q)
+%%             % \gLvlSRFlipFlop {hai} {clk}
+%%             ;
+%%         \end{tikzpicture}
+%%     }
+%%     \caption{SR FlipFlop}
+%% \end{figure}
+%%
+%% \begin{figure} [!ht]
+%%     \centering
+%%     \resizebox{0.4\textwidth}{!} {
+%%         \begin{tikzpicture} [american]
+%%
+%%             \draw
+%%             (0,0)
+%%
+%%             \gLvlDFlipFlop {billie} {s}
+%%
+%%             (billie-d) node [ocirc] {}
+%%             (billie-q) node [ocirc] {}
+%%             (billie-qbar) node [ocirc] {}
+%%
+%%             (billie-d) node [left = 4pt] {$D$}
+%%             (billie-q) node [right = 4pt] {$Q$}
+%%             (billie-qbar) node [right = 4pt] {$Qbar$}
+%%             %(billie-q)
+%%             % \gLvlSRFlipFlop {hai} {clk}
+%%             ;
+%%         \end{tikzpicture}
+%%     }
+%%     \caption{D FlipFlop}
+%% \end{figure}
+
+\end{document}
