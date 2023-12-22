@@ -14,7 +14,252 @@
 
 \section{Basic Circuits}
 
-\subsection{Multiplexers}
+\subsection {FlipFlops}
+
+\subsubsection {SR Latch}
+
+\begin{verbatim}
+    module sr_latch(input logic set, reset,
+        output logic q, qbar);
+
+        nor #3 (q, qbar, reset);
+        nor #3 (qbar, q, set);
+
+    endmodule
+\end{verbatim}
+
+\subsubsection {SR FlipFlop}
+
+\begin{verbatim}
+    module sr_flipflop(input logic set, reset, clk,
+        output logic q, qbar);
+
+        /*
+         * With active low clk
+         * */
+
+        wire srlset, srlreset;
+
+        sr_latch srl (
+            .set(srlset),
+            .reset(srlreset),
+            .q(q),
+            .qbar(qbar)
+        );
+
+        nor #3 (srlreset, set, clk);
+        nor #3 (srlset, reset, clk);
+
+    endmodule
+\end{verbatim}
+
+\subsubsection {D FlipFlop}
+
+\begin{verbatim}
+    module d_flipflop(input logic data, clk,
+        output logic q, qbar);
+
+        /*
+         * With active low clk
+         * */
+
+        wire notdata;
+
+        sr_flipflop srff (
+            .set(data),
+            .reset(notdata),
+            .clk(clk),
+            .q(q),
+            .qbar(qbar)
+        );
+
+        nor #3 (notdata, data, data);
+
+    endmodule
+\end{verbatim}
+
+\subsubsection {D FlipFlop with Synchronous Reset}
+
+\begin{verbatim}
+    module d_flipflop_sr(input logic data, rst, clk,
+        output logic q, qbar);
+
+        /*
+         * With active low clk and active low data
+         * */
+
+        wire acdata;
+
+        d_flipflop dl (
+            .data(acdata),
+            .clk(clk),
+            .q(q),
+            .qbar(qbar)
+        );
+
+        nor #3 (acdata, data, rst);
+
+    endmodule
+\end{verbatim}
+
+\subsubsection {MS FlipFlop}
+
+\begin{verbatim}
+    module ms_flipflop(input logic data, rst, reclk, feclk,
+        output logic q, qbar);
+
+        /*
+         * With synchronous reset, active low data,
+         * active low reclk, and feclk
+         * */
+
+        wire sdata, notsdata;
+
+        d_flipflop_sr master (
+            .data(data),
+            .clk(reclk),
+            .q(sdata),
+            .qbar(notsdata),
+            .rst(rst)
+        );
+
+        sr_flipflop slave (
+            .set(sdata),
+            .reset(notsdata),
+            .clk(feclk),
+            .q(q),
+            .qbar(qbar)
+        );
+
+    endmodule
+\end{verbatim}
+
+\subsection{Multiplexer}
+
+\subsubsection {Five Input NOR Gate from Two Input NOR Gate}
+
+\begin{verbatim}
+    module nor5input(input logic in0, in1, in2, in3, in4,
+        output logic out, f4high);
+
+        wire nor01, nor23;
+        wire or01, or23;
+        wire nor0123;
+        wire or0123;
+
+        nor #3 (nor01, in0, in1);
+        nor #3 (or01, nor01, nor01);
+
+        nor #3 (nor23, in2, in3);
+        nor #3 (or23, nor23, nor23);
+
+        nor #3 (nor0123, or01, or23);
+        nor #3 (or0123, nor0123, nor0123);
+
+        nor #3 (out, or0123, in4);
+
+        assign f4high = or0123;
+
+    endmodule
+\end{verbatim}
+
+\subsubsection {Four Input NOR Gate from Two Input NOR Gate}
+
+\begin{verbatim}
+    module nor4input(input logic in0, in1, in2, in3,
+        output logic out);
+
+        wire nor01, nor23;
+        wire or01, or23;
+
+        nor #3 (nor01, in0, in1);
+        nor #3 (or01, nor01, nor01);
+
+        nor #3 (nor23, in2, in3);
+        nor #3 (or23, nor23, nor23);
+
+        nor #3 (out, or01, or23);
+
+    endmodule
+\end{verbatim}
+
+
+\subsubsection {A 16 to 1 Multiplexer}
+
+\begin{verbatim}
+    module mux16(input logic [15:0] in, input logic [3:0] sl,
+        output logic out, muxlast);
+
+        wire sl00, sl01, sl02, sl03; // original select lines
+        wire sl10, sl11, sl12, sl13; // inverted select lines
+
+        assign sl00 = sl[0];
+        assign sl01 = sl[1];
+        assign sl02 = sl[2];
+        assign sl03 = sl[3];
+
+        nor #3 (sl10, sl00, sl00);
+        nor #3 (sl11, sl01, sl01);
+        nor #3 (sl12, sl02, sl02);
+        nor #3 (sl13, sl03, sl03);
+
+        wire nor00, nor01, nor02, nor03, nor04, nor05, nor06, nor07,
+            nor08, nor09, nor10, nor11, nor12, nor13, nor14, nor15;
+
+        nor5input nor500 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl00), .in4(in[00]),
+        .out(nor00));
+        nor5input nor501 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl10), .in4(in[01]),
+        .out(nor01));
+        nor5input nor502 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl00), .in4(in[02]),
+        .out(nor02));
+        nor5input nor503 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl10), .in4(in[03]),
+        .out(nor03));
+        nor5input nor504 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl00), .in4(in[04]),
+        .out(nor04));
+        nor5input nor505 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl10), .in4(in[05]),
+        .out(nor05));
+        nor5input nor506 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl00), .in4(in[06]),
+        .out(nor06));
+        nor5input nor507 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl10), .in4(in[07]),
+        .out(nor07));
+        nor5input nor508 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl00), .in4(in[08]),
+        .out(nor08));
+        nor5input nor509 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl10), .in4(in[09]),
+        .out(nor09));
+        nor5input nor510 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl00), .in4(in[10]),
+        .out(nor10));
+        nor5input nor511 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl10), .in4(in[11]),
+        .out(nor11));
+        nor5input nor512 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl00), .in4(in[12]),
+        .out(nor12));
+        nor5input nor513 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl10), .in4(in[13]),
+        .out(nor13));
+        nor5input nor514 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl00), .in4(in[14]),
+        .out(nor14));
+        nor5input nor515 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(in[15]),
+        .out(nor15), .f4high(muxlast));
+
+        wire fnor0, fnor1, fnor2, fnor3;
+        wire for0, for1, for2, for3;
+
+        nor #3 (for0, fnor0, fnor0);
+        nor #3 (for1, fnor1, fnor1);
+        nor #3 (for2, fnor2, fnor2);
+        nor #3 (for3, fnor3, fnor3);
+
+        nor4input nor400 (.in0(nor00), .in1(nor01), .in2(nor02), .in3(nor03), .out(fnor0));
+        nor4input nor401 (.in0(nor04), .in1(nor05), .in2(nor06), .in3(nor07), .out(fnor1));
+        nor4input nor402 (.in0(nor08), .in1(nor09), .in2(nor10), .in3(nor11), .out(fnor2));
+        nor4input nor403 (.in0(nor12), .in1(nor13), .in2(nor14), .in3(nor15), .out(fnor3));
+
+        nor4input nor404 (.in0(for0), .in1(for1), .in2(for2), .in3(for3), .out(out));
+
+    endmodule
+\end{verbatim}
+
+\clearpage
+
+\subsubsection {An Abstracted Schematic of A 16 to 1 Multiplexer}
 
 \begin{figure} [!ht]
     \centering
@@ -100,6 +345,163 @@
     }
     \caption{Schematic of a 16 to 1 MUX}
 \end{figure}
+
+\section {Edge Dectectors}
+
+\subsection {Falling Edge Dectector}
+
+\begin{verbatim}
+    module edge_detector(input logic clk,
+        output logic feclk);
+
+        /*
+         * Falling edge detector
+         * */
+
+        wire notclk;
+
+        nor #30 (notclk, clk, clk);
+        nor #3 (feclk, notclk, clk);
+
+    endmodule
+\end{verbatim}
+
+\subsection {Falling Edge Dectector with Inverted Output}
+
+\begin{verbatim}
+    module edge_detector_inv(input logic clk,
+        output logic notfeclk);
+
+        /*
+         * Falling edge detector,
+         * with inverted output
+         * */
+
+        wire notclk;
+        wire feclk;
+
+        nor #30 (notclk, clk, clk);
+        nor #3 (feclk, notclk, clk);
+        nor #3 (notfeclk, feclk, feclk);
+
+    endmodule
+\end{verbatim}
+
+\section {Logic Gates}
+
+\subsection {XOR Gate}
+
+\begin{verbatim}
+    module xor_gate(input logic a, b,
+        output logic y);
+
+        wire anorb, nor1, nor2, xnor1;
+
+        nor #3 (anorb, a, b);
+        nor #3 (nor1, anorb, a);
+        nor #3 (nor2, anorb, b);
+        nor #3 (xnor1, nor1, nor2);
+        nor #3 (y, xnor1, xnor1);
+
+    endmodule
+\end{verbatim}
+
+\subsection {AND Gate}
+
+\begin{verbatim}
+    module and_gate(input logic a, b,
+        output logic y);
+
+        wire anot, bnot;
+
+        nor #3 (anot, a, a);
+        nor #3 (bnot, b, b);
+        nor #3 (y, anot, bnot);
+
+    endmodule
+\end{verbatim}
+
+\subsection {OR Gate}
+
+\begin{verbatim}
+    module or_gate(input logic a, b,
+        output logic y);
+
+        wire anorb;
+
+        nor #3 (anorb, a, b);
+        nor #3 (y, anorb, anorb);
+
+    endmodule
+\end{verbatim}
+
+\subsection {NOT Gate}
+
+\begin{verbatim}
+    module not_gate(input logic a,
+        output logic y);
+
+        nor #3 (y, a, a);
+
+    endmodule
+\end{verbatim}
+
+\subsection {NOR Gate}
+
+\begin{verbatim}
+    module nor_gate(input logic a, b,
+        output logic y);
+
+        nor #3 (y, a, b);
+
+    endmodule
+\end{verbatim}
+
+\subsection {NAND Gate}
+
+\begin{verbatim}
+    module nand_gate(input logic a, b,
+        output logic y);
+
+        wire nota, notb;
+        wire andab;
+
+        nor #3 (nota, a, a);
+        nor #3 (notb, b, b);
+        nor #3 (andab, nota, notb);
+        nor #3 (y, andab, andab);
+
+    endmodule
+
+\end{verbatim}
+
+\subsection {Full Adder}
+
+\begin{verbatim}
+    module full_adder(input logic a, b, cin,
+        output logic sum, cout);
+
+        wire anorb;
+        wire xnor1, xnor2;
+        wire xnor1nor1, xnor1nor2, xnor2nor1, xnor2nor2;
+        wire xnor1norcin;
+
+        // sum
+        nor #3 (anorb, a, b);
+        nor #3 (xnor1nor1, a, anorb);
+        nor #3 (xnor1nor2, b, anorb);
+        nor #3 (xnor1, xnor1nor1, xnor1nor2);
+
+        nor #3 (xnor1norcin, xnor1, cin);
+        nor #3 (xnor2nor1, xnor1, xnor1norcin);
+        nor #3 (xnor2nor2, cin, xnor1norcin);
+        nor #3 (sum, xnor2nor1, xnor2nor2);
+
+        // cout
+        nor #3 (cout, xnor1norcin, anorb);
+
+    endmodule
+\end{verbatim}
 
 %%% \subsection{Flipflops}
 %%%
