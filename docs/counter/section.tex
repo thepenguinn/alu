@@ -14,7 +14,88 @@
 % reclk feclk rst count
 
 \begin{document}
-\section {4 Bit Up Counter}
+
+
+\section {Counter}
+
+\subsection {Fout Bit Asynchronous Up Counter}
+
+\begin{verbatim}
+    module counter(input logic reclk, feclk, rst,
+        output logic [3:0] count);
+
+        wire feclk1, feclk2, feclk3;
+
+        wire acfeclk1, acfeclk2, acfeclk3;
+        wire mux11, mux12, mux21, mux22, mux31, mux32;
+        wire notrst;
+
+        nor #3 (notrst, rst, rst);
+
+        ms_flipflop msff00 (
+            .data(count[0]),
+            .rst(rst),
+            .reclk(reclk),
+            .feclk(feclk),
+            .q(count[0])
+        );
+
+        edge_detector_inv ed01 (
+            .clk(count[0]),
+            .notfeclk(feclk1)
+        );
+
+        nor #3 (mux11, rst, feclk1);
+        nor #3 (mux12, notrst, feclk);
+        nor #3 (acfeclk1, mux11, mux12);
+
+        ms_flipflop msff01 (
+            .data(count[1]),
+            .rst(rst),
+            .reclk(reclk),
+            .feclk(acfeclk1),
+            .q(count[1])
+        );
+
+        edge_detector_inv ed02 (
+            .clk(count[1]),
+            .notfeclk(feclk2)
+        );
+
+        nor #3 (mux21, rst, feclk2);
+        nor #3 (mux22, notrst, feclk);
+        nor #3 (acfeclk2, mux21, mux22);
+
+        ms_flipflop msff02 (
+            .data(count[2]),
+            .rst(rst),
+            .reclk(reclk),
+            .feclk(acfeclk2),
+            .q(count[2])
+        );
+
+        edge_detector_inv ed03 (
+            .clk(count[2]),
+            .notfeclk(feclk3)
+        );
+
+        nor #3 (mux31, rst, feclk3);
+        nor #3 (mux32, notrst, feclk);
+        nor #3 (acfeclk3, mux31, mux32);
+
+        ms_flipflop msff03 (
+            .data(count[3]),
+            .rst(rst),
+            .reclk(reclk),
+            .feclk(acfeclk3),
+            .q(count[3])
+        );
+
+
+    endmodule
+\end{verbatim}
+
+\subsection {Schematic of a Four Bit Asynchronous Up Counter}
 
 \begin{figure}[!h]
     \centering
