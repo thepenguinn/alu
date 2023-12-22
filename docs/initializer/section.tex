@@ -11,6 +11,160 @@
 
 \section{Initializer}
 
+\subsection {Clock Generator}
+
+\begin{verbatim}
+    module clk_gen(input logic clk,
+        output logic notfeclk, notdfeclk, dreclk, notreclk);
+
+        wire notclk;
+        wire reclk;
+
+        nor #3 (notclk, clk, clk);
+
+        edge_detector ed0 (
+            .clk(clk),
+            .feclk(feclk)
+        );
+
+        edge_detector ed1 (
+            .clk(notclk),
+            .feclk(reclk)
+        );
+
+        wire dsre0, dsfe0;
+
+        nor #3  (notreclk, reclk, reclk);
+
+        nor #15 (dsre0, reclk, reclk);
+        nor #15 (dreclk, dsre0, dsre0);
+
+        nor #3 (notfeclk, feclk, feclk);
+
+        nor #15 (dsfe0, notfeclk, notfeclk);
+        nor #15 (notdfeclk, dsfe0, dsfe0);
+
+    endmodule
+\end{verbatim}
+
+\subsection {Reset Signal Generator}
+
+\begin{verbatim}
+    module rst_gen(input logic on, notreclk, notdfeclk,
+        output logic fsrq, rstsig);
+
+        wire feon;
+        wire ssrset, srreset;
+        wire ssrlqbar, fsrqbar;
+
+        edge_detector ed0 (
+            .clk(on),
+            .feclk(feon)
+        );
+
+        sr_latch fsrl (
+            .set(feon),
+            .reset(srreset),
+            .q(fsrq),
+            .qbar(fsrqbar)
+        );
+
+        nor #3 (ssrset, fsrqbar, notreclk);
+
+        sr_latch ssrl (
+            .set(ssrset),
+            .reset(srreset),
+            .q(rstsig),
+            .qbar(ssrqbar)
+        );
+
+        wire resetfl, rflnoron;
+
+        nor #3 (resetfl, notdfeclk, ssrqbar);
+        nor #3 (rflnoron, resetfl, on);
+        nor #3 (srreset, rflnoron, rflnoron);
+
+    endmodule
+\end{verbatim}
+
+\subsection {Halt Unit}
+
+\begin{verbatim}
+    module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, dreclk,
+        output logic notreclkout);
+
+        wire fsrset, fsrqbar;
+
+        sr_latch fsrl (
+            .set(fsrset),
+            .reset(rgfsrq),
+            .qbar(fsrqbar)
+        );
+
+        wire muxnorq, notmuxnorq;
+
+        nor #3 (muxnorq, muxlast, rgfsrq);
+        nor #3 (notmuxnorq, muxnorq, muxnorq);
+
+        nor #3 (fsrset, notmuxnorq, notreclk);
+
+        wire ssrset, ssrq;
+
+        sr_latch ssrl (
+            .set(ssrset),
+            .reset(rgfsrq),
+            .q(ssrq)
+        );
+
+        nor #3 (ssrset, fsrqbar, notfeclk);
+
+        nor #3 (notreclkout, ssrq, dreclk);
+
+    endmodule
+\end{verbatim}
+
+\subsection {Initializing Circuit}
+
+\begin{verbatim}
+    module init(input logic clk, on, muxlast,
+        output logic notreclkout, notfeclkout, rstsig);
+
+
+        wire notdfeclk, notdreclk, notreclk;
+        wire dreclk;
+        wire rgfsrq;
+
+        clk_gen cg (
+            .clk(clk),
+            .notfeclk(notfeclkout),
+            .notdfeclk(notdfeclk),
+            .dreclk(dreclk),
+            .notreclk(notreclk)
+        );
+
+        rst_gen rg (
+            .on(on),
+            .notreclk(notreclk),
+            .notdfeclk(notdfeclk),
+            .fsrq(rgfsrq),
+            .rstsig(rstsig)
+        );
+
+        halt_unit hu (
+            .muxlast(muxlast),
+            .rgfsrq(rgfsrq),
+            /* since we don't have notfeclk, notdfeclk will be just fine */
+            .notfeclk(notdfeclk),
+            .notreclk(notreclk),
+            .dreclk(dreclk),
+            .notreclkout(notreclkout)
+        );
+
+    endmodule
+\end{verbatim}
+
+\subsection {Schematic of the Initializing Circuit}
+
 \begin{figure}[!ht]
 
     \centering
