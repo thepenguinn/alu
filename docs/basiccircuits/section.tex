@@ -3,9 +3,10 @@
 \ifSubfilesClassLoaded{
     \input{tikzset}
     \input{subctikz}
-    \input{../onebitalu/tikzset}
-    \input{../onebitalu/subctikz}
-    % \tikzexternalize[prefix=figcache/]
+    %% um, why did I add this...
+    %% \input{../onebitalu/tikzset}
+    %% \input{../onebitalu/subctikz}
+    \tikzexternalize[prefix=figcache/]
 } {
 }
 
@@ -97,7 +98,31 @@
 
         \end{tikzpicture}
     }
-    \caption{A 16 to 1 MUX}
+    \caption{Schematic of a 16 to 1 MUX}
 \end{figure}
 
+%%% \subsection{Flipflops}
+%%%
+%%% \newcommand\testing[1] {
+%%%
+%%% }
+%%%
+%%% \tikzset{external/force remake=true}
+%%%
+%%% \subsubsection {SR Latch}
+%%%
+%%% \begin{figure} [!ht]
+%%%     \centering
+%%%     \resizebox{\textwidth}{!} {
+%%%         \begin{tikzpicture}
+%%%             \draw
+%%%             \testing {billie}
+%%%             ;
+%%%         \end{tikzpicture}
+%%%     }
+%%%     \caption{SR Latch}
+%%% \end{figure}
+%%%
+%%% \tikzset{external/force remake=false}
+%%%
 \end{document}

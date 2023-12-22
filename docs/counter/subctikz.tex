@@ -26,13 +26,13 @@
     %%
     \msFlipFlop {#1-msff00} {d} {}
     %%
-    (#1-msff00-reclk) ++(0,1)
+    (#1-msff00-reclk) ++(0,1.5)
     coordinate (#1-msfffeclkheight)
     %%
     (#1-msff00-q) ++(1.5,0)
     coordinate (#1-msff00qout)
     %%
-    (#1-msff00-qbar) -- (#1-msff00-qbar-|#1-msff00qout)
+    (#1-msff00-q) -- (#1-msff00-q-|#1-msff00qout)
     %%
     \edgeDetector {#1-ed00} {clk} {}
     %%
@@ -61,7 +61,7 @@
     %%
     %% Drawing the other eds and muxs
     %%
-    (#1-msff01-qbar) -- ++($(#1-ed00-clk)-(#1-msff00-qbar)$)
+    (#1-msff01-q) -- ++($(#1-ed00-clk)-(#1-msff00-q)$)
     %%
     \edgeDetector {#1-ed01} {clk} {}
     %%
@@ -76,7 +76,7 @@
     %%
     %%
     %%
-    (#1-msff02-qbar) -- ++($(#1-ed00-clk)-(#1-msff00-qbar)$)
+    (#1-msff02-q) -- ++($(#1-ed00-clk)-(#1-msff00-q)$)
     %%
     \edgeDetector {#1-ed02} {clk} {}
     %%
@@ -176,21 +176,24 @@
     \constcornerleft {(#1-msff00-d) ++($(#1-msff00din)-(#1-msff00-d)$) ++(0,-1)}
     \constcornerdown {(#1-msff00qout|-#1-msffqtodheight)}
     -- (#1-msff00qout|-#1-msffqtodheight)
-    \constcornerup {(#1-msff00-q)}
+    -- (#1-msff00qout|-#1-msff00-q)
+    %%% \constcornerup {(#1-msff00-q)}
     -- (#1-msff00-q)
     %%
     (#1-msff01-d)
     \constcornerleft {(#1-msff01-d) ++($(#1-msff00din)-(#1-msff00-d)$) ++(0,-1)}
     \constcornerdown {(#1-msff01qout|-#1-msffqtodheight)}
     -- (#1-msff01qout|-#1-msffqtodheight)
-    \constcornerup {(#1-msff01-q)}
+    -- (#1-msff01qout|-#1-msff01-q)
+    %%% \constcornerup {(#1-msff01-q)}
     -- (#1-msff01-q)
     %%
     (#1-msff02-d)
     \constcornerleft {(#1-msff02-d) ++($(#1-msff00din)-(#1-msff00-d)$) ++(0,-1)}
     \constcornerdown {(#1-msff02qout|-#1-msffqtodheight)}
     -- (#1-msff02qout|-#1-msffqtodheight)
-    \constcornerup {(#1-msff02-q)}
+    -- (#1-msff02qout|-#1-msff02-q)
+    %%% \constcornerup {(#1-msff02-q)}
     -- (#1-msff02-q)
     %%
     %%

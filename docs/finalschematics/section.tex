@@ -25,7 +25,7 @@
 
 \begin{figure} [!ht]
     \centering
-    \resizebox{!}{0.9\textheight}{
+    \resizebox{!}{0.95\textheight}{
         \begin{tikzpicture} [american, rotate = -90, transform shape]
 
             \draw [line join = round]
@@ -217,7 +217,10 @@
             coordinate (muxlastaboveheight)
 
             (tocounterleftvrt)
-            ++(-4,0)
+            \getmagnitude {tmp}
+            {($(init-rstsig)-(init-feclk)$)}
+            ++(-\n{tmp-magtmp},0)
+            ++(-2,0)
             coordinate (muxlastleftvrt)
 
             %% Drawing
