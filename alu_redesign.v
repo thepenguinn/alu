@@ -680,7 +680,7 @@ module alu( input logic [2:0] op,
 endmodule
 
 module clk_gen(input logic clk,
-    output logic notfeclk, notdfeclk, dreclk, notreclk);
+    output logic notfeclk, notdfeclk, notdreclk, notreclk);
 
     wire notclk;
     wire reclk;
@@ -697,12 +697,11 @@ module clk_gen(input logic clk,
         .feclk(reclk)
     );
 
-    wire dsre0, dsfe0;
+    wire dsfe0;
 
     nor #3  (notreclk, reclk, reclk);
 
-    nor #15 (dsre0, reclk, reclk);
-    nor #15 (dreclk, dsre0, dsre0);
+    nor #30 (notdreclk, reclk, reclk);
 
     nor #3 (notfeclk, feclk, feclk);
 
@@ -747,7 +746,7 @@ module rst_gen(input logic on, notreclk, notdfeclk,
 
 endmodule
 
-module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, dreclk,
+module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, notdreclk,
     output logic notreclkout);
 
     wire fsrset, fsrqbar;
@@ -775,23 +774,24 @@ module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, dreclk,
 
     nor #3 (ssrset, fsrqbar, notfeclk);
 
-    nor #3 (notreclkout, ssrq, dreclk);
+    wire dreclk;
+
+    nor #3 (dreclk, ssrq, notdreclk);
+    nor #3 (notreclkout, dreclk, dreclk);
 
 endmodule
 
 module init(input logic clk, on, muxlast,
     output logic notreclkout, notfeclkout, rstsig);
 
-
     wire notdfeclk, notdreclk, notreclk;
-    wire dreclk;
     wire rgfsrq;
 
     clk_gen cg (
         .clk(clk),
         .notfeclk(notfeclkout),
         .notdfeclk(notdfeclk),
-        .dreclk(dreclk),
+        .notdreclk(notdreclk),
         .notreclk(notreclk)
     );
 
@@ -809,7 +809,7 @@ module init(input logic clk, on, muxlast,
         /* since we don't have notfeclk, notdfeclk will be just fine */
         .notfeclk(notdfeclk),
         .notreclk(notreclk),
-        .dreclk(dreclk),
+        .notdreclk(notdreclk),
         .notreclkout(notreclkout)
     );
 
