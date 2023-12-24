@@ -1,0 +1,138 @@
+\documentclass[../main]{subfiles}
+
+\ifSubfilesClassLoaded{
+    \input{tikzset}
+    \input{subctikz}
+    % \tikzexternalize[prefix=figcache/]
+} {
+}
+
+\begin{document}
+
+\section{Testing the Sixteen Bit ALU}
+
+\subsection {Ring Oscillator to Generate a Clock Signal}
+
+\begin{verbatim}
+    /*
+     * Yepp, everything is structural ! ;)
+     * */
+    module ring_oscillator(input logic en,
+        output logic out);
+
+        wire s4, s2, s3;
+        wire noten, nots3;
+
+        nor (noten, en, en);
+        nor (nots3, s3, s3);
+        nor (s4, noten, nots3);
+
+        nor #300 (s2, out, out);
+        nor #300 (s3, s2, s2);
+        nor #300 (out, s4, s4);
+
+    endmodule
+\end{verbatim}
+
+
+\subsection {Testbench}
+
+\begin{verbatim}
+    module testbench;
+
+        reg en;
+        wire clkout;
+
+        reg [15:0] aluina, aluinb;
+        reg [2:0] aluop;
+        reg aluon;
+        wire [3:0] alucount;
+        wire [16:0] aluout;
+
+        integer i, j;
+
+        ring_oscillator rosci (
+            .en(en),
+            .out(clkout)
+        );
+
+        alu16 alu (
+            .clk(clkout),
+            .on(aluon),
+            .ina(aluina),
+            .inb(aluinb),
+            .op(aluop),
+            .out(aluout),
+            .count(alucount)
+        );
+
+        initial begin
+
+            en = 1'b0;
+            #900;
+            en = 1'b1;
+
+            aluina = 16'b0111_0000_0000_0011;
+            aluinb = 16'b1100_0000_0000_0011;
+
+            aluop = 3'b011;
+
+            aluon = 1'b0;
+            #100;
+            aluon = 1'b1;
+            #100;
+            aluon = 1'b0;
+
+            j = 0;
+            i = 0;
+
+        end
+
+        initial begin
+            $display("  Count Aluout                            Time ");
+        end
+
+        always @(posedge clkout) begin
+            if (aluon == 1'b0) begin
+                if (i < 22) begin
+                    i++;
+                    #20 $display("%b %b %b %t", clkout, alucount, aluout, $time);
+                end else begin
+                    $finish;
+                end
+            end
+        end
+
+    endmodule
+\end{verbatim}
+
+\subsection {Output}
+
+\begin{verbatim}
+
+       Count Aluout                            Time
+    1  xxxx  xxxxxxxxxxxxxxxxx                 2120
+    1  0000  00000000000000000                 3920 <-- Restting Every FlipFlops
+    1  0001  01000000000000000                 5720
+    1  0010  01100000000000000                 7520
+    1  0011  00110000000000000                 9320
+    1  0100  00011000000000000                11120
+    1  0101  00001100000000000                12920
+    1  0110  00000110000000000                14720
+    1  0111  00000011000000000                16520
+    1  1000  00000001100000000                18320
+    1  1001  00000000110000000                20120
+    1  1010  00000000011000000                21920
+    1  1011  00000000001100000                23720
+    1  1100  00000000000110000                25520
+    1  1101  00000000000011000                27320
+    1  1110  00000000000001100                29120
+    1  1111  01000000000000110                30920
+    1  0000  00100000000000011                32720 <-- Clk Halts
+    1  0000  00100000000000011                34520
+    1  0000  00100000000000011                36320
+    1  0000  00100000000000011                38120
+    1  0000  00100000000000011                39920
+    testbench_redesign.v:62: $finish called at 41700 (1s)
+
+\end{verbatim}
