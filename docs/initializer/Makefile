@@ -1,7 +1,9 @@
 # Makefile
 #
 
-TEXFILES = ../main.tex ../generalcommands.sty ../generaltikzset.sty ../cornercommands.sty ../preamble.tex ../generalsubctikz.sty
+TEXFILES = ../catppuccin-latte.sty ../catppuccin-mocha.sty ../colorthemes.sty \
+		   ../cornercommands.sty ../generalcommands.sty ../generalsubctikz.sty \
+		   ../generaltikzset.sty ../abstract.tex ../main.tex ../preamble.tex
 
 INITIALIZER = section.tex tikzset.tex subctikz.tex
 
