@@ -16,7 +16,7 @@
     \input{basiccircuits/subctikz}
     \input{finalschematics/tikzset}
     \input{finalschematics/subctikz}
-    %% \tikzexternalize[prefix=figcache/]
+    %% %% \tikzexternalize[prefix=figcache/]
 
 }
 
@@ -29,18 +29,22 @@
 
 \begin{document}
 
-\subfile{onebitalu/section.tex}
+\input{abstract}
 
-\subfile{counter/section.tex}
+\subfileinclude{introduction/section.tex}
 
-\subfile{memoryunit/section.tex}
+\subfileinclude{basiccircuits/section.tex}
 
-\clearpage
+\subfileinclude{initializer/section.tex}
 
-\subfile{initializer/section.tex}
+\subfileinclude{onebitalu/section.tex}
 
-\subfile{basiccircuits/section.tex}
+\subfileinclude{counter/section.tex}
 
-\subfile{finalschematics/section.tex}
+\subfileinclude{memoryunit/section.tex}
+
+\subfileinclude{finalschematics/section.tex}
+
+\subfileinclude{testbench/section.tex}
 
 \end{document}
