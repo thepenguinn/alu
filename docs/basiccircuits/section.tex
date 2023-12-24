@@ -6,7 +6,10 @@
     %% um, why did I add this...
     %% \input{../onebitalu/tikzset}
     %% \input{../onebitalu/subctikz}
-    \tikzexternalize[prefix=figcache/]
+    %% \tikzexternalize[prefix=figcache/]
+    \usepackage{catppuccintheme}
+    \usemintedstyle{catppuccin-mocha}
+    \ctikzset{open poles fill = black}
 } {
 }
 
@@ -18,7 +21,7 @@
 
 \subsubsection {SR Latch}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module sr_latch(input logic set, reset,
         output logic q, qbar);
 
@@ -26,11 +29,11 @@
         nor #3 (qbar, q, set);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsubsection {SR FlipFlop}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module sr_flipflop(input logic set, reset, clk,
         output logic q, qbar);
 
@@ -51,11 +54,11 @@
         nor #3 (srlset, reset, clk);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsubsection {D FlipFlop}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module d_flipflop(input logic data, clk,
         output logic q, qbar);
 
@@ -63,7 +66,7 @@
          * With active low clk
          * */
 
-        wire notdata;
+         wire notdata;
 
         sr_flipflop srff (
             .set(data),
@@ -76,11 +79,11 @@
         nor #3 (notdata, data, data);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsubsection {D FlipFlop with Synchronous Reset}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module d_flipflop_sr(input logic data, rst, clk,
         output logic q, qbar);
 
@@ -100,11 +103,11 @@
         nor #3 (acdata, data, rst);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsubsection {MS FlipFlop}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module ms_flipflop(input logic data, rst, reclk, feclk,
         output logic q, qbar);
 
@@ -132,13 +135,13 @@
         );
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsection{Multiplexer}
 
 \subsubsection {Five Input NOR Gate from Two Input NOR Gate}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module nor5input(input logic in0, in1, in2, in3, in4,
         output logic out, f4high);
 
@@ -161,11 +164,11 @@
         assign f4high = or0123;
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsubsection {Four Input NOR Gate from Two Input NOR Gate}
 
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     module nor4input(input logic in0, in1, in2, in3,
         output logic out);
 
@@ -181,12 +184,12 @@
         nor #3 (out, or01, or23);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 
 \subsubsection {A 16 to 1 Multiplexer}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module mux16(input logic [15:0] in, input logic [3:0] sl,
         output logic out, muxlast);
 
@@ -255,7 +258,7 @@
         nor4input nor404 (.in0(for0), .in1(for1), .in2(for2), .in3(for3), .out(out));
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \clearpage
 
@@ -266,7 +269,9 @@
     \resizebox{\textwidth}{!} {
         \begin{tikzpicture}
 
-            \draw [thick]
+            \draw [thick, color = catppuccinfg]
+            % \draw [thick, color = {rgb:red,100;green,50;blue,20}]
+            % \draw [thick, color = \color{draculafg}]
             (0,0)
             \muxSixteen {mux} {out}
 
@@ -330,7 +335,7 @@
             (mux-out) node [ocirc] {}
             (mux-out) node [below = 4pt] {$Out$}
 
-            (mux-muxlast) node [circleinv, anchor = top] {}
+            (mux-muxlast) node [circleinv, fill = black, anchor = top] {}
 
             (mux-muxlast)
             -- (mux-muxlast|-mux-out)
@@ -350,7 +355,7 @@
 
 \subsubsection {Falling Edge Dectector}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module edge_detector(input logic clk,
         output logic feclk);
 
@@ -364,11 +369,11 @@
         nor #3 (feclk, notclk, clk);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsubsection {Falling Edge Dectector with Inverted Output}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module edge_detector_inv(input logic clk,
         output logic notfeclk);
 
@@ -385,13 +390,13 @@
         nor #3 (notfeclk, feclk, feclk);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsection {Logic Gates}
 
 \subsubsection {XOR Gate}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module xor_gate(input logic a, b,
         output logic y);
 
@@ -404,11 +409,11 @@
         nor #3 (y, xnor1, xnor1);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsubsection {AND Gate}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module and_gate(input logic a, b,
         output logic y);
 
@@ -419,11 +424,11 @@
         nor #3 (y, anot, bnot);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsubsection {OR Gate}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module or_gate(input logic a, b,
         output logic y);
 
@@ -433,33 +438,33 @@
         nor #3 (y, anorb, anorb);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsubsection {NOT Gate}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module not_gate(input logic a,
         output logic y);
 
         nor #3 (y, a, a);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsubsection {NOR Gate}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module nor_gate(input logic a, b,
         output logic y);
 
         nor #3 (y, a, b);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsubsection {NAND Gate}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module nand_gate(input logic a, b,
         output logic y);
 
@@ -473,11 +478,11 @@
 
     endmodule
 
-\end{verbatim}
+\end{minted}
 
 \subsection {Full Adder}
 
-\begin{verbatim}
+\begin{minted} {verilog}
     module full_adder(input logic a, b, cin,
         output logic sum, cout);
 
@@ -501,7 +506,7 @@
         nor #3 (cout, xnor1norcin, anorb);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 %%% \subsection{Flipflops}
 %%%
