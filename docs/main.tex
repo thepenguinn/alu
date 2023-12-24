@@ -16,7 +16,8 @@
     \input{basiccircuits/subctikz}
     \input{finalschematics/tikzset}
     \input{finalschematics/subctikz}
-    %% %% \tikzexternalize[prefix=figcache/]
+    %% \tikzexternalize[prefix=figcache/]
+    %% \tikzset{external/optimize=false}
 
 }
 
@@ -30,6 +31,12 @@
 \begin{document}
 
 \input{abstract}
+
+\newpage
+
+\tableofcontents
+
+\newpage
 
 \subfileinclude{introduction/section.tex}
 

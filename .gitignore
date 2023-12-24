@@ -12,6 +12,7 @@ testbench/test.c
 testbench/true.c
 figcache/
 _minted*
+*.toc
 *.aux
 *.auxlock
 *.log
