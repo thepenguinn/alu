@@ -13,7 +13,7 @@
 
 \subsection {Clock Generator}
 
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     module clk_gen(input logic clk,
         output logic notfeclk, notdfeclk, notdreclk, notreclk);
 
@@ -44,11 +44,11 @@
         nor #15 (notdfeclk, dsfe0, dsfe0);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsection {Reset Signal Generator}
 
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     module rst_gen(input logic on, notreclk, notdfeclk,
         output logic fsrq, rstsig);
 
@@ -84,11 +84,11 @@
         nor #3 (srreset, rflnoron, rflnoron);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsection {Halt Unit}
 
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, notdreclk,
         output logic notreclkout);
 
@@ -123,11 +123,11 @@
         nor #3 (notreclkout, dreclk, dreclk);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsection {Initializing Circuit}
 
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     module init(input logic clk, on, muxlast,
         output logic notreclkout, notfeclkout, rstsig);
 
@@ -161,7 +161,7 @@
         );
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsection {Schematic of the Initializing Circuit}
 

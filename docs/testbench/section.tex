@@ -13,7 +13,7 @@
 
 \subsection {Ring Oscillator to Generate a Clock Signal}
 
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     /*
      * Yepp, everything is structural ! ;)
      * */
@@ -32,12 +32,12 @@
         nor #300 (out, s4, s4);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 
 \subsection {Testbench}
 
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     module testbench;
 
         reg en;
@@ -104,7 +104,7 @@
         end
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsection {Output}
 
@@ -112,7 +112,7 @@
 
        Count Aluout                            Time
     1  xxxx  xxxxxxxxxxxxxxxxx                 2120
-    1  0000  00000000000000000                 3920 <-- Restting Every FlipFlops
+    1  0000  00000000000000000                 3920 <-- Resetting Every FlipFlops
     1  0001  01000000000000000                 5720
     1  0010  01100000000000000                 7520
     1  0011  00110000000000000                 9320

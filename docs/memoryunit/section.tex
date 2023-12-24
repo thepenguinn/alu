@@ -16,7 +16,7 @@
 
 \subsection{A Sixteen Bit Shift Register with Serial In and Parallel Out}
 
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     module shiftreg(input logic sin, rst, reclk, feclk,
         output logic [15:0] pout);
 
@@ -60,7 +60,7 @@
                              .feclk(feclk),    .q(pout[15]), .qbar(qbout[00]) );
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \clearpage
 

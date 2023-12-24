@@ -15,7 +15,7 @@
 
 \subsection {ALU Initializer}
 
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     module alu_init(input logic bin, cin, rst, op,
         output logic bout, cout);
 
@@ -45,10 +45,10 @@
         nor #3 (cout, muxsl, muxsl);
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsection {A Seven to 1 Multiplexer}
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     module mux7(input logic [6:0] in, input logic [2:0] sl,
         output logic slf00, out);
 
@@ -101,11 +101,11 @@
 
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \subsection {One Bit ALU}
 
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     module alu( input logic [2:0] op,
         input logic ain, bin, rst, reclk, feclk,
         output logic aluout, regout);
@@ -156,7 +156,7 @@
         nand_gate gnand  ( .a(ain), .b(bin), .y(muxin[6]) );
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \clearpage
 

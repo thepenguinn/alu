@@ -23,7 +23,7 @@
 
 \subsection {Sixteen Bit Sequential ALU}
 
-\begin{verbatim}
+\begin{minted} [mathescape] {verilog}
     module alu16(input logic clk, on,
         input logic [15:0] ina, inb,
         input logic [2:0] op,
@@ -86,13 +86,13 @@
 
 
     endmodule
-\end{verbatim}
+\end{minted}
 
 \clearpage
 
 \subsection{Final Abstracted Schematic}
 
-Refer to \ref{counter_val}
+Refer to Section \ref{schm:counter} for more info on counter.
 
 \begin{figure} [!ht]
     \centering
@@ -602,7 +602,7 @@ Refer to \ref{counter_val}
             %% Drawing circleinv for mux
 
             \draw
-            (muxb-muxlast) node [circleinv, anchor = bottom] {}
+            (muxb-muxlast) node [circleinv, fill = circleinvfillcolor, anchor = bottom] {}
             ;
 
 

@@ -21,7 +21,7 @@
     \markcoordinate {#1} {cout} {rpin 2}
     \markcoordinate {#1} {op}   {bpin 5}
     \markcoordinate {#1} {rst}  {tpin 1}%
-    (#1-bcout) node [circleinv, anchor = left] {}
+    (#1-bcout) node [circleinv, fill = circleinvfillcolor, anchor = left] {}
 }
 
 \ctikzsubcircuitdef{subctklogicOp} {
@@ -52,8 +52,8 @@
     \markcoordinate {#1}   {sl2} {bpin 2}%
     \markcoordinate {#1} {and01} {rpin 1}
     \markcoordinate {#1}   {out} {rpin 2}
-    (#1-bout) node [circleinv, anchor = left] {}
-    (#1-band01) node [circleinv, anchor = left] {}
+    (#1-bout) node [circleinv, fill = circleinvfillcolor, anchor = left] {}
+    (#1-band01) node [circleinv, fill = circleinvfillcolor, anchor = left] {}
 }
 
 \ctikzsubcircuitactivate{subctkfullAdder}
