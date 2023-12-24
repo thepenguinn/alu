@@ -1,0 +1,54 @@
+\documentclass[../main]{subfiles}
+
+\ifSubfilesClassLoaded{
+    \input{tikzset}
+    \input{subctikz}
+    % \tikzexternalize[prefix=figcache/]
+} {
+}
+
+\begin{document}
+
+\section{Introduction}
+
+The sixteen bit ALU computes the operation using a one bit ALU. When the ON
+signal is pressed and released, the initializer circuit generates a rst signal
+to reset the Flipflops and to the ALU. During the first clock cycle this signal
+resets the entire circuit. Then the counter counts upto 1111 in binary. And
+this output goes to the two 16:1 MUXs. It selects each of the input bits to the
+ALU. The ALU computes the operation specified by the opcodes. And the output
+from the ALU is connected to the serial in of the shift register. It stores the
+output from the ALU. When the counter reaches 1111 one of the MUX generates a
+muxlast signal to the halt unit of the initializer and it halts the clock.
+
+\subsection {Specification}
+
+\begin{verbatim}
+
+    Inputs
+        A - 16 bit number
+        B - 16 bit number
+
+        Clk - A clock pulse
+        On  - An on signal to start the computation
+
+    Opcodes
+
+        ADD  -  000
+        SUB  -  001
+        XOR  -  010
+        AND  -  011
+        NOT  -  100
+        OR   -  101
+        NOR  -  110
+        NAND -  111
+
+    Output
+        Out    - 16 bit from memory unit
+        Regout - 1 bit from register inside ALU
+
+
+\end{verbatim}
+
+
+\end{document}
