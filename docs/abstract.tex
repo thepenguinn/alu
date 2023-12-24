@@ -1,0 +1,133 @@
+% \documentclass[a4paper, 10pt, notitlepage]{report}
+% \usepackage[margin=1in]{geometry}
+% \usepackage{anyfontsize}
+% \usepackage{titling}
+% \usepackage{setspace}
+%
+% \thispagestyle{empty}
+
+% \begin{document}
+
+\title{Joy of Radio}
+
+\def\groupMemberA{Daniel V Mathew}
+\def\groupMemberB{}
+\def\groupMemberC{}
+\def\superviser{Prof. Neetha George}
+\def\titleA{LOGIC CIRCUIT DESIGN}
+% \def\titleA{SAVE YOUR LUNGS}
+\def\titleB{A SIXTEEN BIT ALU}
+
+\author {
+    Eldhose K Biju
+    \and
+    Dibin Divakaran
+    \and
+    Daniel V Mathew
+}
+
+% \author{Daniel V Mathew}
+
+% \begin{titlepage}
+%     \setlength{\parindent}{0pt}
+%     \setlength{\parskip}{0pt}
+%     \vspace*{\stretch{1}}
+%     \rule{\linewidth}{1pt}
+%     \begin{flushright}
+%         \Huge A Title \\[14pt]
+%         First Name Last Name
+%     \end{flushright}
+%     \rule{\linewidth}{2pt}
+%     \vspace*{\stretch{2}}
+% \end{titlepage}
+
+\renewcommand{\maketitle} {
+    \begin{center}
+        {\LARGE \bfseries \titleA}
+        \vspace{50pt} \\
+        {\bfseries SIMULATION ASSIGNMENT}
+        \vspace{10pt}
+    \end{center}
+
+    \begin{center}
+        \rule{\textwidth}{.75pt}
+        \vspace{2pt}
+    \end{center}
+
+    \begin{center}
+        {\huge \bfseries \titleB}
+        \vspace{2pt}
+    \end{center}
+
+    \begin{center}
+        \rule{\textwidth}{.75pt}
+        \vspace{30pt}
+    \end{center}
+
+    \begin{center}
+        \begin{minipage}{.86\textwidth}
+            {\large
+            \noindent
+            \textit{Author}
+            \hfill
+            \textit{Supervisor}
+
+            \vspace{4pt}
+
+            \noindent
+            \bfseries \groupMemberA
+            \vspace{2pt}
+            \hfill
+            \superviser
+
+            \noindent
+            \bfseries \groupMemberB
+            \vspace{2pt} \\
+            \noindent
+            \bfseries \groupMemberC
+            }
+        \end{minipage}
+    \end{center}
+}
+
+\maketitle
+
+\renewenvironment{abstract} {
+    \vspace{40pt}
+    \begin{center}
+        {\large \bfseries \abstractname}
+    \end{center}
+    \vspace{4pt}
+} {
+}
+
+\vspace{40pt}
+
+\begin{abstract}
+    % {\fontsize{12}{} \selectfont
+    \begin{center}
+        \begin{minipage}{.86\textwidth}
+            \setlength{\parindent}{20pt}
+            {\large
+            %  {\fontsize{12pt}{} \selectfont 12pt
+
+            An implementation of a basic 16 bit ALU which performs the
+            operations sequentially with a 1 bit ALU having 3 bit wide opcodes,
+            and having the ability to ADD, SUB and perform 6 other logical
+            operations.
+
+
+            }
+        \end{minipage}
+    \end{center}
+\end{abstract}
+
+% \vfill
+\vspace{120pt}
+\begin{center}
+    {\LARGE \bfseries
+    \today
+    }
+\end{center}
+
+%%\end{document}
