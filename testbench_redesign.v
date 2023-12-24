@@ -49,25 +49,17 @@ module testbench;
 
     end
 
+    initial begin
+        $display("  Count  Aluout                          Time");
+    end
+
     always @(posedge clkout) begin
         if (aluon == 1'b0) begin
-            if (i < 22) begin
+            if (i < 32) begin
                 i++;
-                #20 $display("%b %b %b", clkout, alucount, aluout);
+                #20 $display("%b %b %b %t", clkout, alucount, aluout, $time);
             end else begin
-
-                if (j == 0) begin
-                    i = 0;
-                    j = 1;
-                    $display("Pressing on button again");
-                    aluon = 1'b0;
-                    #100;
-                    aluon = 1'b1;
-                    #100;
-                    aluon = 1'b0;
-                end else begin
-                    $finish;
-                end
+                $finish;
             end
         end
     end
