@@ -10,14 +10,19 @@
     \usepackage{catppuccintheme}
     %% \usemintedstyle{catppuccin-mocha}
     %% \ctikzset{open poles fill = black}
-    \def\truthTableWidth{0.4\textwidth}
-    \renewcommand\tabularxcolumn[1]{m{#1}}%
-    \newcolumntype{G}{>{\centering\arraybackslash}X}
-    \newcolumntype{T}{>{\centering\arraybackslash}m{\truthTableWidth}}
 } {
 }
 
 \begin{document}
+
+%%%% Some definitions
+
+\def\truthTableWidth{0.4\textwidth}
+\renewcommand\tabularxcolumn[1]{m{#1}}%
+\newcolumntype{G}{>{\centering\arraybackslash}X}
+\newcolumntype{T}{>{\centering\arraybackslash}m{\truthTableWidth}}
+
+%%%%
 
 \chapter{Basic Circuits}
 
