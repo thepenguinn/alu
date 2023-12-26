@@ -11,9 +11,9 @@
 
 \begin{document}
 
-\section{One Bit ALU}
+\chapter{One Bit ALU}
 
-\subsection {ALU Initializer}
+\section {ALU Initializer}
 
 \begin{minted} [mathescape] {verilog}
     module alu_init(input logic bin, cin, rst, op,
@@ -47,7 +47,7 @@
     endmodule
 \end{minted}
 
-\subsection {A Seven to 1 Multiplexer}
+\section {A Seven to 1 Multiplexer}
 \begin{minted} [mathescape] {verilog}
     module mux7(input logic [6:0] in, input logic [2:0] sl,
         output logic slf00, out);
@@ -103,7 +103,7 @@
     endmodule
 \end{minted}
 
-\subsection {One Bit ALU}
+\section {One Bit ALU}
 
 \begin{minted} [mathescape] {verilog}
     module alu( input logic [2:0] op,
@@ -160,7 +160,7 @@
 
 \clearpage
 
-\subsection {Schematic of a One Bit ALU}
+\section {Schematic of a One Bit ALU}
 
 \begin{figure}[!h]
     \centering

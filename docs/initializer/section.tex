@@ -9,9 +9,9 @@
 
 \begin{document}
 
-\section{Initializer}
+\chapter{Initializer}
 
-\subsection {Clock Generator}
+\section {Clock Generator}
 
 \begin{minted} [mathescape] {verilog}
     module clk_gen(input logic clk,
@@ -46,7 +46,7 @@
     endmodule
 \end{minted}
 
-\subsection {Reset Signal Generator}
+\section {Reset Signal Generator}
 
 \begin{minted} [mathescape] {verilog}
     module rst_gen(input logic on, notreclk, notdfeclk,
@@ -86,7 +86,7 @@
     endmodule
 \end{minted}
 
-\subsection {Halt Unit}
+\section {Halt Unit}
 
 \begin{minted} [mathescape] {verilog}
     module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, notdreclk,
@@ -125,7 +125,7 @@
     endmodule
 \end{minted}
 
-\subsection {Initializing Circuit}
+\section {Initializing Circuit}
 
 \begin{minted} [mathescape] {verilog}
     module init(input logic clk, on, muxlast,
@@ -163,7 +163,7 @@
     endmodule
 \end{minted}
 
-\subsection {Schematic of the Initializing Circuit}
+\section {Schematic of the Initializing Circuit}
 
 \begin{figure}[!ht]
 
