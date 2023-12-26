@@ -8,20 +8,78 @@
     %% \input{../onebitalu/subctikz}
     %% \tikzexternalize[prefix=figcache/]
     \usepackage{catppuccintheme}
-    \usemintedstyle{catppuccin-mocha}
-    \ctikzset{open poles fill = black}
+    %% \usemintedstyle{catppuccin-mocha}
+    %% \ctikzset{open poles fill = black}
+    \def\truthTableWidth{0.4\textwidth}
+    \renewcommand\tabularxcolumn[1]{m{#1}}%
+    \newcolumntype{G}{>{\centering\arraybackslash}X}
+    \newcolumntype{T}{>{\centering\arraybackslash}m{\truthTableWidth}}
 } {
 }
 
 \begin{document}
 
-\section{Basic Circuits}
+\chapter{Basic Circuits}
 
-\subsection {FlipFlops}
+\section {FlipFlops} \label{sec:flipflops}
 
-\subsubsection {SR Latch}
+\subsection {SR Latch} \label{sec:srlatch}
 
-\begin{minted} {verilog}
+\begin{figure} [!ht]
+
+    \renewcommand\tabularxcolumn[1]{m{#1}}%
+    %% \newcolumntype{G}{>{\centering\arraybackslash}X}
+    %% \newcolumntype{T}{>{\centering\arraybackslash}m{0.3\textwidth}}
+
+    \begin{tabularx} {\textwidth} {*{1}G*{1}G}
+        \centering
+        \vfill
+        \resizebox {0.3\textwidth} {!} {
+            \begin{tikzpicture} [american]
+                \draw
+                (0,0)
+                \gLvlSRLatch {srl} {s}
+                (srl-s)    node [ocirc] {}
+                (srl-r)    node [ocirc] {}
+                (srl-q)    node [ocirc] {}
+                (srl-qbar) node [ocirc] {}
+                (srl-s)    node [left = 4pt]             {\texttt{S}}
+                (srl-r)    node [left = 4pt]             {\texttt{R}}
+                (srl-q)    node [right = 4pt]            {\texttt{Q}}
+                (srl-qbar) node [right = 4pt]        {\texttt{\={Q}}}
+                ;
+            \end{tikzpicture}
+        }
+        \vfill
+        &
+        %% \begin{tabularx} {>{\centering}m{0.5\linewidth}m{0.5\linewidth}}
+        \vfill
+        {\begin{tabularx} {\truthTableWidth} {*{3}{>{\centering\arraybackslash}X}}
+            \toprule
+            \textsc{\textbf{S}} & \textsc{\textbf{R}} & \textsc{\textbf{Q\textsubscript{$t+1$}}} \\
+            \midrule
+            0   &  0  &   Q\textsubscript{t} \\
+            0   &  1  &       0 \\
+            1   &  0  &       1 \\
+            1   &  1  &    $Invalid$\\
+            \bottomrule
+        \end{tabularx}}
+        \vfill
+        \\
+        \captionof{figure}{SR Latch}
+        \label{fig:glvlsrlatch}
+        &
+        \captionof{table}{Truth Table of SR Latch}
+        \label{tbl:ttsrlatch} \\
+        \end{tabularx}
+
+\end{figure}
+
+Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
+
+\subsubsection{Verilog Implementation} \label{hdl:srlatch}
+
+\begin{minted}[mathescape] {verilog}
     module sr_latch(input logic set, reset,
         output logic q, qbar);
 
@@ -31,9 +89,62 @@
     endmodule
 \end{minted}
 
-\subsubsection {SR FlipFlop}
+\subsection {SR FlipFlop} \label{sec:srflipflop}
 
-\begin{minted} {verilog}
+\begin{figure} [!h]
+    \begin{tabularx} {\textwidth} {*{1}G*{1}T}
+        \centering
+        \vfill
+        \resizebox{0.5\textwidth}{!} {
+            \begin{tikzpicture} [american]
+
+                \draw
+                (0,0)
+
+                \gLvlSRFlipFlop {srff} {s}
+
+                (srff-s)    node [ocirc] {}
+                (srff-r)    node [ocirc] {}
+                (srff-q)    node [ocirc] {}
+                (srff-qbar) node [ocirc] {}
+                (srff-clk) node [ocirc] {}
+
+                (srff-s)    node [left = 4pt]             {\texttt{S}}
+                (srff-r)    node [left = 4pt]             {\texttt{R}}
+                (srff-q)    node [right = 4pt]            {\texttt{Q}}
+                (srff-qbar) node [right = 4pt]        {\texttt{\={Q}}}
+                (srff-clk)  node [left = 4pt]           {\texttt{CLK}}
+
+                ;
+            \end{tikzpicture}
+        }
+        \vfill
+        &
+        \vfill
+        {\begin{tabularx} {\truthTableWidth} {*{4}{>{\centering\arraybackslash}X}}
+            \toprule
+            \textsc{\textbf{CLK}} & \textsc{\textbf{S}} & \textsc{\textbf{R}} & \textsc{\textbf{Q\textsubscript{$t+1$}}} \\
+            \midrule
+            0   &   0   &  0  &    $Invalid$ \\
+            0   &   0   &  1  &       0 \\
+            0   &   1   &  0  &       1 \\
+            0   &   1   &  1  &    Q\textsubscript{t} \\
+            1   &   X   &  X  &    Q\textsubscript{t} \\
+            \bottomrule
+        \end{tabularx}}
+        \vfill
+        \\
+        \caption{SR FlipFlop}
+        \label{fig:glvlsrflipflop}
+        &
+        \captionof{table}{Truth Table of SR FlipFlop}
+        \label{tbl:ttsrflipflop} \\
+    \end{tabularx}
+\end{figure}
+
+\subsubsection{Verilog Implementation} \label{hdl:srflipflop}
+
+\begin{minted}[mathescape] {verilog}
     module sr_flipflop(input logic set, reset, clk,
         output logic q, qbar);
 
@@ -43,6 +154,7 @@
 
         wire srlset, srlreset;
 
+        /* Refer, (section $\ref{hdl:srlatch}$) */
         sr_latch srl (
             .set(srlset),
             .reset(srlreset),
@@ -56,9 +168,59 @@
     endmodule
 \end{minted}
 
-\subsubsection {D FlipFlop}
+\subsection {D FlipFlop} \label{sec:dflipflop}
 
-\begin{minted} {verilog}
+\begin{figure} [!hb]
+    \def\truthTableWidth{0.35\textwidth}
+    \begin{tabularx} {\textwidth} {GT}
+        \centering
+        \vfill
+        \resizebox{0.6\textwidth}{!} {
+            \begin{tikzpicture} [american]
+
+                \draw
+                (0,0)
+
+                \gLvlDFlipFlop {dff} {s}
+
+                (dff-d)    node [ocirc] {}
+                (dff-q)    node [ocirc] {}
+                (dff-qbar) node [ocirc] {}
+                (dff-clk) node [ocirc]  {}
+
+                (dff-d)    node [left = 4pt]             {\texttt{D}}
+                (dff-clk)  node [left = 4pt]           {\texttt{CLK}}
+                (dff-q)    node [right = 4pt]            {\texttt{Q}}
+                (dff-qbar) node [right = 4pt]        {\texttt{\={Q}}}
+
+                ;
+            \end{tikzpicture}
+        }
+        \vfill
+        &
+        \vfill
+        {\begin{tabularx} {0.75\linewidth} {*{3}{>{\centering\arraybackslash}X}}
+            \toprule
+            \textsc{\textbf{CLK}} & \textsc{\textbf{D}} & \textsc{\textbf{Q\textsubscript{t+1}}} \\
+            \midrule
+            0   &   0   &   0   \\
+            0   &   1   &   1   \\
+            1   &   X   &   Q\textsubscript{t}   \\
+            \bottomrule
+        \end{tabularx}}
+        \vfill
+        \\
+        \captionof{figure}{D FlipFlop}
+        \label{fig:glvldflipflop}
+        &
+        \captionof{table}{Truth Table of D FlipFlop}
+        \label{tbl:dflipflop}
+    \end{tabularx}
+\end{figure}
+
+\subsubsection{Verilog Implementation} \label{hdl:dflipflop}
+
+\begin{minted}[mathescape] {verilog}
     module d_flipflop(input logic data, clk,
         output logic q, qbar);
 
@@ -68,6 +230,7 @@
 
          wire notdata;
 
+        /* Refer, (section $\ref{hdl:srflipflop}$) */
         sr_flipflop srff (
             .set(data),
             .reset(notdata),
@@ -81,9 +244,62 @@
     endmodule
 \end{minted}
 
-\subsubsection {D FlipFlop with Synchronous Reset}
+\subsection {D FlipFlop with Synchronous Reset} \label{sec:dflipflopsr}
 
-\begin{minted} {verilog}
+\begin{figure} [!ht]
+    \def\truthTableWidth{0.35\textwidth}
+    \begin{tabularx} {\textwidth} {GT}
+        \centering
+        \vfill
+        \resizebox{0.6\textwidth}{!} {
+            \begin{tikzpicture} [american]
+
+                \draw
+                (0,0)
+
+                \gLvlDFlipFlopSR {dffsr} {s}
+
+                (dffsr-d)    node [ocirc] {}
+                (dffsr-q)    node [ocirc] {}
+                (dffsr-qbar) node [ocirc] {}
+                (dffsr-clk)  node [ocirc] {}
+                (dffsr-rst)  node [ocirc] {}
+
+                (dffsr-d)    node [left = 4pt]             {\texttt{D}}
+                (dffsr-clk)  node [left = 4pt]           {\texttt{CLK}}
+                (dffsr-q)    node [right = 4pt]            {\texttt{Q}}
+                (dffsr-qbar) node [right = 4pt]        {\texttt{\={Q}}}
+                (dffsr-rst)  node [below = 4pt]          {\texttt{RST}}
+
+                ;
+            \end{tikzpicture}
+        }
+        \vfill
+        &
+        \vfill
+        {\begin{tabularx} {0.75\linewidth} {*{4}{>{\centering\arraybackslash}X}}
+            \toprule
+            \textsc{\textbf{CLK}} & \textsc{\textbf{RST}} & \textsc{\textbf{D}} & \textsc{\textbf{Q\textsubscript{t+1}}} \\
+            \midrule
+            0   &   0   &   0   &   1   \\
+            0   &   0   &   1   &   0   \\
+            0   &   1   &   X   &   0   \\
+            1   &   X   &   X   &   Q\textsubscript{t}   \\
+            \bottomrule
+        \end{tabularx}}
+        \vfill
+        \\
+        \caption{D FlipFlop with Synchronous Reset}
+        \label{fig:glvldflipflopsr}
+        &
+        \captionof{table}{Truth Table of D FlipFlop with Synchronous Reset}
+        \label{tbl:dflipflopsr}
+    \end{tabularx}
+\end{figure}
+
+\subsubsection{Verilog Implementation} \label{hdl:dflipflopsr}
+
+\begin{minted}[mathescape] {verilog}
     module d_flipflop_sr(input logic data, rst, clk,
         output logic q, qbar);
 
@@ -93,6 +309,7 @@
 
         wire acdata;
 
+        /* Refer, (section $\ref{hdl:dflipflop}$) */
         d_flipflop dl (
             .data(acdata),
             .clk(clk),
@@ -105,9 +322,78 @@
     endmodule
 \end{minted}
 
-\subsubsection {MS FlipFlop}
+\subsection {MS FlipFlop} \label{sec:msflipflop}
 
-\begin{minted} {verilog}
+\begin{figure} [!hb]
+    \centering
+    \resizebox{\textwidth}{!} {
+        \begin{tikzpicture} [american]
+
+            \draw
+            (0,0)
+
+            \gLvlMSFlipFlop {msff} {s}
+
+            (msff-d)     node [ocirc] {}
+            (msff-rst)   node [ocirc] {}
+            (msff-q)     node [ocirc] {}
+            (msff-qbar)  node [ocirc] {}
+            (msff-reclk) node [ocirc] {}
+            (msff-feclk) node [ocirc] {}
+
+            (msff-d)     node [left = 4pt]             {\texttt{D}}
+            (msff-rst)   node [below = 4pt]          {\texttt{RST}}
+            (msff-q)     node [right = 4pt]            {\texttt{Q}}
+            (msff-qbar)  node [right = 4pt]        {\texttt{\={Q}}}
+            (msff-reclk) node [above = 4pt]        {\texttt{RECLK}}
+            (msff-feclk) node [above = 4pt]        {\texttt{FECLK}}
+
+            ;
+
+            %% Drawing a table to indicate the active state of
+            %% inputs
+
+            \draw
+            (msff-northeast)
+
+            node (mgla1) [align = center, anchor = north east] {
+
+                \begin{tabularx} {0.33\textwidth} {*{2}{>{\raggedleft\arraybackslash}X}}
+                                    &       \texttt{INPUTS} \\
+                    \midrule
+                    \texttt{D}      &   \texttt{ACTIVE LOW} \\
+                    \texttt{RST}    &  \texttt{ACTIVE HIGH} \\
+                    \texttt{RECLK}  &   \texttt{ACTIVE LOW} \\
+                    \texttt{FECLK}  &   \texttt{ACTIVE LOW} \\
+                \end{tabularx}
+
+            }
+
+            (msff-southwest)
+
+            node (mgla2) [align = center, anchor = south west] {
+
+                \begin{tabularx} {0.33\textwidth} {*{1}{>{\raggedright\arraybackslash}p{0.4cm}}*{1}{>{\raggedright\arraybackslash}X}}
+                    \multicolumn{2}{l}{\texttt{OUTPUTS}}     \\
+                    \midrule
+                    \texttt{Q}       & \texttt{ACTIVE HIGH}  \\
+                    \texttt{\={Q}}   & \texttt{ACTIVE LOW}  \\
+                \end{tabularx}
+
+            }
+
+            ;
+
+
+        \end{tikzpicture}
+    }
+    \caption{MS FlipFlop}
+    \label{fig:glvlmsflipflop}
+\end{figure}
+
+\subsubsection{Verilog Implementation} \label{hdl:msflipflop}
+
+\begin{minted}[mathescape] {verilog}
     module ms_flipflop(input logic data, rst, reclk, feclk,
         output logic q, qbar);
 
@@ -118,6 +404,7 @@
 
         wire sdata, notsdata;
 
+        /* Refer, (section $\ref{hdl:dflipflopsr}$) */
         d_flipflop_sr master (
             .data(data),
             .clk(reclk),
@@ -126,6 +413,7 @@
             .rst(rst)
         );
 
+        /* Refer, (section $\ref{hdl:srflipflop}$) */
         sr_flipflop slave (
             .set(sdata),
             .reset(notsdata),
@@ -137,9 +425,11 @@
     endmodule
 \end{minted}
 
-\subsection{Multiplexer}
+\end{document}
 
-\subsubsection {Five Input NOR Gate from Two Input NOR Gate}
+\section{Multiplexer}
+
+\subsection {Five Input NOR Gate from Two Input NOR Gate}
 
 \begin{minted} {verilog}
     module nor5input(input logic in0, in1, in2, in3, in4,
@@ -166,7 +456,7 @@
     endmodule
 \end{minted}
 
-\subsubsection {Four Input NOR Gate from Two Input NOR Gate}
+\subsection {Four Input NOR Gate from Two Input NOR Gate}
 
 \begin{minted} [mathescape] {verilog}
     module nor4input(input logic in0, in1, in2, in3,
@@ -187,7 +477,7 @@
 \end{minted}
 
 
-\subsubsection {A 16 to 1 Multiplexer}
+\subsection {A 16 to 1 Multiplexer}
 
 \begin{minted} {verilog}
     module mux16(input logic [15:0] in, input logic [3:0] sl,
@@ -262,7 +552,7 @@
 
 \clearpage
 
-\subsubsection {An Abstracted Schematic of A 16 to 1 Multiplexer}
+\subsection {An Abstracted Schematic of A 16 to 1 Multiplexer}
 
 \begin{figure} [!ht]
     \centering
@@ -305,35 +595,35 @@
             (mux-in14) node [ocirc] {}
             (mux-in15) node [ocirc] {}
 
-            (mux-in00) node [above = 4pt] {$In_{00}$}
-            (mux-in01) node [above = 4pt] {$In_{01}$}
-            (mux-in02) node [above = 4pt] {$In_{02}$}
-            (mux-in03) node [above = 4pt] {$In_{03}$}
-            (mux-in04) node [above = 4pt] {$In_{04}$}
-            (mux-in05) node [above = 4pt] {$In_{05}$}
-            (mux-in06) node [above = 4pt] {$In_{06}$}
-            (mux-in07) node [above = 4pt] {$In_{07}$}
-            (mux-in08) node [above = 4pt] {$In_{08}$}
-            (mux-in09) node [above = 4pt] {$In_{09}$}
-            (mux-in10) node [above = 4pt] {$In_{10}$}
-            (mux-in11) node [above = 4pt] {$In_{11}$}
-            (mux-in12) node [above = 4pt] {$In_{12}$}
-            (mux-in13) node [above = 4pt] {$In_{13}$}
-            (mux-in14) node [above = 4pt] {$In_{14}$}
-            (mux-in15) node [above = 4pt] {$In_{15}$}
+            (mux-in00) node [above = 4pt] {\texttt{I\textsubscript{00}}}
+            (mux-in01) node [above = 4pt] {\texttt{I\textsubscript{01}}}
+            (mux-in02) node [above = 4pt] {\texttt{I\textsubscript{02}}}
+            (mux-in03) node [above = 4pt] {\texttt{I\textsubscript{03}}}
+            (mux-in04) node [above = 4pt] {\texttt{I\textsubscript{04}}}
+            (mux-in05) node [above = 4pt] {\texttt{I\textsubscript{05}}}
+            (mux-in06) node [above = 4pt] {\texttt{I\textsubscript{06}}}
+            (mux-in07) node [above = 4pt] {\texttt{I\textsubscript{07}}}
+            (mux-in08) node [above = 4pt] {\texttt{I\textsubscript{08}}}
+            (mux-in09) node [above = 4pt] {\texttt{I\textsubscript{09}}}
+            (mux-in10) node [above = 4pt] {\texttt{I\textsubscript{10}}}
+            (mux-in11) node [above = 4pt] {\texttt{I\textsubscript{11}}}
+            (mux-in12) node [above = 4pt] {\texttt{I\textsubscript{12}}}
+            (mux-in13) node [above = 4pt] {\texttt{I\textsubscript{13}}}
+            (mux-in14) node [above = 4pt] {\texttt{I\textsubscript{14}}}
+            (mux-in15) node [above = 4pt] {\texttt{I\textsubscript{15}}}
 
             (mux-sl0) node [ocirc] {}
             (mux-sl1) node [ocirc] {}
             (mux-sl2) node [ocirc] {}
             (mux-sl3) node [ocirc] {}
 
-            (mux-sl0) node [left = 4pt] {$Sl_{0}$}
-            (mux-sl1) node [left = 4pt] {$Sl_{1}$}
-            (mux-sl2) node [left = 4pt] {$Sl_{2}$}
-            (mux-sl3) node [left = 4pt] {$Sl_{3}$}
+            (mux-sl0) node [left = 4pt] {\texttt{SL\textsubscript{0}}}
+            (mux-sl1) node [left = 4pt] {\texttt{SL\textsubscript{1}}}
+            (mux-sl2) node [left = 4pt] {\texttt{SL\textsubscript{2}}}
+            (mux-sl3) node [left = 4pt] {\texttt{SL\textsubscript{3}}}
 
             (mux-out) node [ocirc] {}
-            (mux-out) node [below = 4pt] {$Out$}
+            (mux-out) node [below = 4pt] {\texttt{OUT}}
 
             (mux-muxlast) node [circleinv, fill = circleinvfillcolor, anchor = top] {}
 
@@ -342,7 +632,7 @@
 
             coordinate (muxlast)
             (muxlast) node [ocirc] {}
-            (muxlast) node [below = 4pt] {$Muxlast$}
+            (muxlast) node [below = 4pt] {\texttt{MUXLAST}}
 
             ;
 
@@ -351,9 +641,9 @@
     \caption{Schematic of a 16 to 1 MUX}
 \end{figure}
 
-\subsection {Edge Dectectors}
+\section {Edge Dectectors}
 
-\subsubsection {Falling Edge Dectector}
+\subsection {Falling Edge Dectector}
 
 \begin{minted} {verilog}
     module edge_detector(input logic clk,
@@ -371,7 +661,7 @@
     endmodule
 \end{minted}
 
-\subsubsection {Falling Edge Dectector with Inverted Output}
+\subsection {Falling Edge Dectector with Inverted Output}
 
 \begin{minted} {verilog}
     module edge_detector_inv(input logic clk,
@@ -392,9 +682,9 @@
     endmodule
 \end{minted}
 
-\subsection {Logic Gates}
+\section {Logic Gates}
 
-\subsubsection {XOR Gate}
+\subsection {XOR Gate}
 
 \begin{minted} {verilog}
     module xor_gate(input logic a, b,
@@ -411,7 +701,7 @@
     endmodule
 \end{minted}
 
-\subsubsection {AND Gate}
+\subsection {AND Gate}
 
 \begin{minted} {verilog}
     module and_gate(input logic a, b,
@@ -426,7 +716,7 @@
     endmodule
 \end{minted}
 
-\subsubsection {OR Gate}
+\subsection {OR Gate}
 
 \begin{minted} {verilog}
     module or_gate(input logic a, b,
@@ -440,7 +730,7 @@
     endmodule
 \end{minted}
 
-\subsubsection {NOT Gate}
+\subsection {NOT Gate}
 
 \begin{minted} {verilog}
     module not_gate(input logic a,
@@ -451,7 +741,7 @@
     endmodule
 \end{minted}
 
-\subsubsection {NOR Gate}
+\subsection {NOR Gate}
 
 \begin{minted} {verilog}
     module nor_gate(input logic a, b,
@@ -462,7 +752,7 @@
     endmodule
 \end{minted}
 
-\subsubsection {NAND Gate}
+\subsection {NAND Gate}
 
 \begin{minted} {verilog}
     module nand_gate(input logic a, b,
@@ -480,7 +770,7 @@
 
 \end{minted}
 
-\subsection {Full Adder}
+\section {Full Adder}
 
 \begin{minted} {verilog}
     module full_adder(input logic a, b, cin,
@@ -508,7 +798,7 @@
     endmodule
 \end{minted}
 
-%%% \subsection{Flipflops}
+%%% \section{Flipflops}
 %%%
 %%% \newcommand\testing[1] {
 %%%
@@ -516,7 +806,7 @@
 %%%
 %%% \tikzset{external/force remake=true}
 %%%
-%%% \subsubsection {SR Latch}
+%%% \subsection {SR Latch}
 %%%
 %%% \begin{figure} [!ht]
 %%%     \centering

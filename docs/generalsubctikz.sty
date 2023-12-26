@@ -45,18 +45,18 @@
 } {
     coordinate (#1-q)
     %%
-    ++(-2,0)
+    ++(-1,0)
     node (#1-nor1) [nor port, anchor = out] {}
     %%
     (#1-nor1.in 2)
-    ++(0,-2.5)
+    ++(0,-3)
     %%
     node (#1-nor2) [nor port, anchor = in 1] {}
     %%
     %% Markings for cross coupling
     %%
-    (#1-nor1.in 2)
-    ++(-1,0)
+    ($(#1-nor1.in 2)!0.50!(#1-nor2.in 1)$)
+    ++(-0.75,0)
     coordinate (#1-invrt)
     %%
     (#1-nor1.out)
@@ -67,7 +67,7 @@
     coordinate (#1-ccfbvrt)
     %%
     (#1-nor1.in 2-|#1-ccfbvrt)
-    ++ (0,-1)
+    ++ (0,-1.25)
     coordinate (#1-ccfbabove)
     %%
     (#1-nor2.in 1-|#1-ccfbabove)
@@ -78,13 +78,13 @@
     %% Drawing the cross coupling
     %%
     (#1-nor1.in 2)
-    -- (#1-nor1.in 2-|#1-invrt)
+    \constcornerleft {(#1-nor2.in 1-|#1-invrt)}
     \varcornerdownright {(#1-ccfbbelow)}
     \constcornerright {(#1-nor2.out-|#1-outvrt)}
     -- (#1-nor2.out-|#1-outvrt)
     %%
     (#1-nor2.in 1)
-    -- (#1-nor2.in 1-|#1-invrt)
+    \constcornerleft {(#1-nor1.in 2-|#1-invrt)}
     \varcornerupright {(#1-ccfbabove)}
     \constcornerright {(#1-nor1.out-|#1-outvrt)}
     -- (#1-nor1.out-|#1-outvrt)
@@ -101,7 +101,7 @@
     %% Drawing inputs
     %%
     (#1-nor1.in 1)
-    -- ++(-2,0)
+    -- ++(-1,0)
     coordinate (#1-r)
     %%
     (#1-nor2.in 2)
@@ -156,7 +156,7 @@
     %% Markings for clk
     (#1-srl-center-|#1-nor1.in 1)
     coordinate (#1-tmp)
-    ++(-1,0)
+    ++(-0.5,0)
     coordinate (#1-clkbr)
     %%
     %% Drawing clk
@@ -167,7 +167,7 @@
     -- (#1-nor2.in 1)
     %%
     (#1-clkbr)
-    -- ++(-1,0)
+    -- ++(-0.5,0)
     coordinate (#1-clk)
     %%
     %% Drawing inputs
@@ -386,17 +386,45 @@
     \gLvlSRFlipFlop {#1-srff} {clk}
     %%
     (#1-srff-r)
-    \gLvlNotGateRight {#1-notnor} {out}
     %%
-    (#1-notnor-in)
-    -- ++(-0.5,0)
+    (#1-srff-nor2.in 2)
+    ++($(#1-srff-nor2.out)-(#1-srff-srl-nor2.in 2)$)
+    node (#1-notnor) [nor port, anchor = out] {}
+    %%
+    %%
+    (#1-notnor.in 2)
+    ++($(#1-srff-nor2.out)-(#1-srff-srl-nor2.in 2)$)
+    ++(1,0)
+    coordinate (#1-d)
+    (#1-d|-#1-notnor.in 2)
+    coordinate (#1-d)
+    %%
+    ++(1,0)
+    ($(#1-d|-#1-notnor.in 2)!0.50!(#1-notnor.in 2)$)
     coordinate (#1-dbr)
+    %%
+    (#1-dbr)
     \constcornerup {(#1-srff-s)}
     -- (#1-srff-s)
     %%
-    (#1-dbr)
-    -- ++(-1,0)
-    coordinate (#1-d)
+    %% Shorting the inputs of notnor
+    %%
+    ($(#1-notnor.in 1)!0.3!(#1-notnor.in 2)$)
+    ++(-0.2,0)
+    coordinate (#1-notnorbr)
+    %%
+    (#1-notnor.in 1)
+    \varcornerleftdown {(#1-notnorbr)}
+    -- (#1-notnorbr|-#1-notnor.in 2)
+    %%
+    (#1-notnor.in 2)
+    -- (#1-d)
+    %%
+    %% Drawing notnor out to srff r
+    %%
+    (#1-notnor.out)
+    \varcornerrightdown {(#1-srff-pr)}
+    -- (#1-srff-r)
     %%
     (#1-srff-clk)
     coordinate (#1-clk)
@@ -437,19 +465,33 @@
     bd, bclk, bq, bqbar, brst%
 } {
     \gLvlDFlipFlop {#1-dff} {clk}
-    (#1-dff-d)
+    (#1-dff-notnor.in 2)
+    ++($(#1-dff-notnor.out)-(#1-dff-srff-nor2.in 2)$)
     node (#1-rstnor) [nor port, anchor = out] {}
     %%
     %% Drawing rst
     %%
     (#1-rstnor.in 2)
-    \constcornerleft {(#1-rstnor.in 2) ++(-1,-1)}
+    \constcornerleft {(#1-rstnor.in 2) ++(-0.75,-1)}
     -- ++(0,-1)
     coordinate (#1-rst)
     %%
     (#1-rstnor.in 1)
-    -- ++(-2,0)
+    -- ++(-1,0)
     coordinate (#1-d)
+    %%
+    %% Marking the topmost point, so as to make dffsr's geo choords
+    %% symmetric along x axis
+    %%
+    (#1-dff-north)
+    ++($(#1-dff-south)-(#1-dff-south|-#1-rst)$)
+    coordinate (#1-topmostpoint)
+    %%
+    %% Drawing rstnor out to dff d
+    %%
+    (#1-rstnor.out)
+    \varcornerrightdown {(#1-dff-pd)}
+    -- (#1-dff-d)
     %%
     (#1-dff-clk)
     coordinate (#1-clk)
@@ -465,9 +507,10 @@
     \glvlmarkcoordinate {#1} {rst} {(0,1)}
     \glvlmarkcoordinate {#1} {q} {(-1,0)}
     \glvlmarkcoordinate {#1} {qbar} {(-1,0)}
+    \glvlmarkcoordinate {#1} {topmostpoint} {(0,-1)}
     %%
     \markgeocoordinate {#1}
-    {(#1-dff-north)} {(#1-rst)}
+    {(#1-topmostpoint)} {(#1-rst)}
     {(#1-d)} {(#1-q)}
     %%
 }
@@ -528,7 +571,7 @@
     coordinate (#1-feclkbendheight)
     %%
     (#1-slave-clk)
-    ++(-1.5,0)
+    ++(-1,0)
     coordinate (#1-feclkbendvrt)
     %%
     %% Drawing clk lines
@@ -537,7 +580,7 @@
     \constcornerleft {(#1-reclkvrt|-#1-clkheight)}
     -- (#1-reclkvrt|-#1-clkheight)
     coordinate (#1-reclk)
-    ++ (3,0)
+    ++ (2,0)
     coordinate (#1-feclk)
     %%
     (#1-slave-clk)
