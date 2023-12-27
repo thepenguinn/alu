@@ -1,579 +1,108 @@
 \documentclass[a4paper, 10pt]{article}
 
+
 \usepackage[siunitx]{circuitikz}
+\usepackage{minted}
+\usepackage{calc}
 \usepackage[margin = 1in]{geometry}
+\usepackage{../../colorthemes}
 \usepackage{../../generalcommands}
 \usepackage{../../cornercommands}
-\usepackage{../../generaltikzset}
-\usepackage{../../generalsubctikz}
+%% \usepackage{../../generaltikzset}
+%% \usepackage{../../generalsubctikz}
+
+%% \input{../tikzset}
+%% \input{../subctikz}
 
 \usetikzlibrary{intersections}
 \usetikzlibrary{calc}
 
-\newcommand\testing[1] {
-    \gLvlMSFlipFlop {#1-msff15} {d} {}
-    %%
-    (#1-msff15-qbar)
-    ++(1.5,-1)
-    %%
-    \gLvlMSFlipFlop {#1-msff14} {d} {}
-    (#1-msff14-qbar) ++($(#1-msff14-d)-(#1-msff15-qbar)$)
-    \gLvlMSFlipFlop {#1-msff13} {d} {}
-    (#1-msff13-qbar) ++($(#1-msff14-d)-(#1-msff15-qbar)$)
-    \gLvlMSFlipFlop {#1-msff12} {d} {}
-    %%
-    %%
-    %%
-    (#1-msff15-qbar)
-    \varcornerrightdown {(#1-msff14-pd)}
-    -- (#1-msff14-d)
-    %%
-    (#1-msff14-qbar)
-    \varcornerrightdown {(#1-msff13-pd)}
-    -- (#1-msff13-d)
-    %%
-    (#1-msff13-qbar)
-    \varcornerrightdown {(#1-msff12-pd)}
-    -- (#1-msff12-d)
-    %%
-    %% General marks
-    %%
-    (#1-msff15-d) ++(-0.75,0)
-    coordinate (#1-sregleftvrt)
-    %%
-    (#1-msff12-qbar) ++(0.75,0)
-    coordinate (#1-sregrightvrt)
-    %%
-    %% marks specific to first layer
-    %%
-    (#1-msff15-preclk) ++(0,0.5)
-    coordinate (#1-msffl1reclkheight)
-    %%
-    %% Black Magic
-    let \p{#1-tmp} = ($(#1-msff15-reclk)-(#1-msff15-feclk)$),
-    \n{#1-magtmp} = {veclen(\x{#1-tmp}, \y{#1-tmp})}
-    in
-    ++(0,\n{#1-magtmp})
-    coordinate (#1-msffl1feclkheight)
-    %%
-    %% Some marks for first layer
-    %%
-    (#1-msff12-prst) %% ++(0,-0.5)
-    coordinate (#1-msffl1rstheight)
-    %%
-    (#1-msffl1rstheight) ++(0,-0.75)
-    coordinate (#1-msffl2feclkheight)
-    %%
-    %% Black Magic
-    let \p{#1-tmp} = ($(#1-msff15-reclk)-(#1-msff15-feclk)$),
-    \n{#1-magtmp} = {veclen(\x{#1-tmp}, \y{#1-tmp})}
-    in
-    ++(0,-\n{#1-magtmp})
-    coordinate (#1-msffl2reclkheight)
-    %%
-    (#1-msffl2reclkheight) ++(0,-0.75)
-    coordinate (#1-msffl1qbartod)
-    %%
-    %% Drawing first msff of the second layer
-    %%
-    (#1-msffl1qbartod) ++(0,-0.25)
-    coordinate (#1-tmp)
-    (#1-tmp-|#1-msff15-reclk)
-    \gLvlMSFlipFlop {#1-msff11} {reclk} {}
-    %%
-    %% Drawing the rest
-    %%
-    (#1-msff11-qbar) ++($(#1-msff14-d)-(#1-msff15-qbar)$)
-    \gLvlMSFlipFlop {#1-msff10} {d} {}
-    (#1-msff10-qbar) ++($(#1-msff14-d)-(#1-msff15-qbar)$)
-    \gLvlMSFlipFlop {#1-msff09} {d} {}
-    (#1-msff09-qbar) ++($(#1-msff14-d)-(#1-msff15-qbar)$)
-    \gLvlMSFlipFlop {#1-msff08} {d} {}
-    %%
-    %% Drawing third layer
-    %%
-    (#1-msff11-d) ++($(#1-msff11-d)-(#1-msff15-d)$)
-    \gLvlMSFlipFlop {#1-msff07} {d} {}
-    %%
-    (#1-msff07-qbar) ++($(#1-msff14-d)-(#1-msff15-qbar)$)
-    \gLvlMSFlipFlop {#1-msff06} {d} {}
-    (#1-msff06-qbar) ++($(#1-msff14-d)-(#1-msff15-qbar)$)
-    \gLvlMSFlipFlop {#1-msff05} {d} {}
-    (#1-msff05-qbar) ++($(#1-msff14-d)-(#1-msff15-qbar)$)
-    \gLvlMSFlipFlop {#1-msff04} {d} {}
-    %%
-    %% Drawing fourth layer
-    %%
-    (#1-msff07-d) ++($(#1-msff11-d)-(#1-msff15-d)$)
-    \gLvlMSFlipFlop {#1-msff03} {d} {}
-    %%
-    (#1-msff03-qbar) ++($(#1-msff14-d)-(#1-msff15-qbar)$)
-    \gLvlMSFlipFlop {#1-msff02} {d} {}
-    (#1-msff02-qbar) ++($(#1-msff14-d)-(#1-msff15-qbar)$)
-    \gLvlMSFlipFlop {#1-msff01} {d} {}
-    (#1-msff01-qbar) ++($(#1-msff14-d)-(#1-msff15-qbar)$)
-    \gLvlMSFlipFlop {#1-msff00} {d} {}
-    %%
-    %% Some marks for second layer
-    %%
-    (#1-msff08-prst) ++($(#1-msffl1rstheight)-(#1-msff12-prst)$)
-    coordinate (#1-msffl2rstheight)
-    %%
-    (#1-msffl2rstheight) ++($(#1-msffl2feclkheight)-(#1-msffl1rstheight)$)
-    coordinate (#1-msffl3feclkheight)
-    %%
-    %% Black Magic
-    let \p{#1-tmp} = ($(#1-msff15-reclk)-(#1-msff15-feclk)$),
-    \n{#1-magtmp} = {veclen(\x{#1-tmp}, \y{#1-tmp})}
-    in
-    ++(0,-\n{#1-magtmp})
-    coordinate (#1-msffl3reclkheight)
-    %%
-    (#1-msffl3reclkheight) ++($(#1-msffl1qbartod)-(#1-msffl2reclkheight)$)
-    coordinate (#1-msffl2qbartod)
-    %%
-    %% Some marks for third layer
-    %%
-    (#1-msff04-prst) ++($(#1-msffl1rstheight)-(#1-msff12-prst)$)
-    coordinate (#1-msffl3rstheight)
-    %%
-    (#1-msffl3rstheight) ++($(#1-msffl2feclkheight)-(#1-msffl1rstheight)$)
-    coordinate (#1-msffl4feclkheight)
-    %%
-    %% Black Magic
-    let \p{#1-tmp} = ($(#1-msff15-reclk)-(#1-msff15-feclk)$),
-    \n{#1-magtmp} = {veclen(\x{#1-tmp}, \y{#1-tmp})}
-    in
-    ++(0,-\n{#1-magtmp})
-    coordinate (#1-msffl4reclkheight)
-    %%
-    (#1-msffl4reclkheight) ++($(#1-msffl1qbartod)-(#1-msffl2reclkheight)$)
-    coordinate (#1-msffl3qbartod)
-    %%
-    %% Marks specific to fourth layer
-    %%
-    (#1-msff00-prst) ++($(#1-msffl1rstheight)-(#1-msff12-prst)$)
-    coordinate (#1-msffl4rstheight)
-    %%
-    %% Connecting msffs in second layer
-    %%
-    (#1-msff11-qbar)
-    \varcornerrightdown {(#1-msff10-pd)}
-    -- (#1-msff10-d)
-    %%
-    (#1-msff10-qbar)
-    \varcornerrightdown {(#1-msff09-pd)}
-    -- (#1-msff09-d)
-    %%
-    (#1-msff09-qbar)
-    \varcornerrightdown {(#1-msff08-pd)}
-    -- (#1-msff08-d)
-    %%
-    %% Connecting msffs in third layer
-    %%
-    (#1-msff07-qbar)
-    \varcornerrightdown {(#1-msff06-pd)}
-    -- (#1-msff06-d)
-    %%
-    (#1-msff06-qbar)
-    \varcornerrightdown {(#1-msff05-pd)}
-    -- (#1-msff05-d)
-    %%
-    (#1-msff05-qbar)
-    \varcornerrightdown {(#1-msff04-pd)}
-    -- (#1-msff04-d)
-    %%
-    %% Connecting msffs in fourth layer
-    %%
-    (#1-msff03-qbar)
-    \varcornerrightdown {(#1-msff02-pd)}
-    -- (#1-msff02-d)
-    %%
-    (#1-msff02-qbar)
-    \varcornerrightdown {(#1-msff01-pd)}
-    -- (#1-msff01-d)
-    %%
-    (#1-msff01-qbar)
-    \varcornerrightdown {(#1-msff00-pd)}
-    -- (#1-msff00-d)
-    %%
-    %% Drawing qbar to d first layer
-    %%
-    (#1-msff12-qbar)
-    \constcornerright {(#1-msff12-qbar-|#1-sregrightvrt) ++(0,-1)}
-    \constcornerdown {(#1-msffl1qbartod)}
-    \constcornerleft {(#1-msffl1qbartod-|#1-sregleftvrt) ++(0,-1)}
-    \constcornerdown {(#1-msff11-d)}
-    -- (#1-msff11-d)
-    %%
-    %% Drawing qbar to d second layer
-    %%
-    (#1-msff08-qbar)
-    \constcornerright {(#1-msff08-qbar-|#1-sregrightvrt) ++(0,-1)}
-    \constcornerdown {(#1-msffl2qbartod)}
-    \constcornerleft {(#1-msffl2qbartod-|#1-sregleftvrt) ++(0,-1)}
-    \constcornerdown {(#1-msff07-d)}
-    -- (#1-msff07-d)
-    %%
-    %% Drawing qbar to d third layer
-    %%
-    (#1-msff04-qbar)
-    \constcornerright {(#1-msff04-qbar-|#1-sregrightvrt) ++(0,-1)}
-    \constcornerdown {(#1-msffl3qbartod)}
-    \constcornerleft {(#1-msffl3qbartod-|#1-sregleftvrt) ++(0,-1)}
-    \constcornerdown {(#1-msff03-d)}
-    -- (#1-msff03-d)
-    %%
-    %% Drawing rst
-    %%
-    (#1-sregrightvrt) ++(0.75,0)
-    coordinate (#1-sregrstvrt)
-    %%
-    %% Drawing rst of first layer
-    %%
-    (#1-msff14-rst)
-    -- (#1-msff14-rst|-#1-msffl1rstheight)
-    (#1-msff13-rst)
-    -- (#1-msff13-rst|-#1-msffl1rstheight)
-    (#1-msff12-rst)
-    -- (#1-msff12-rst|-#1-msffl1rstheight)
-    %%
-    %% Drawing rst of second layer
-    %%
-    (#1-msff10-rst)
-    -- (#1-msff10-rst|-#1-msffl2rstheight)
-    (#1-msff09-rst)
-    -- (#1-msff09-rst|-#1-msffl2rstheight)
-    (#1-msff08-rst)
-    -- (#1-msff08-rst|-#1-msffl2rstheight)
-    %%
-    (#1-sregrstvrt|-#1-msffl2rstheight)
-    \constcornerleft {(#1-msff11-rst)}
-    -- (#1-msff11-rst)
-    %%
-    %% Drawing rst of third layer
-    %%
-    (#1-msff06-rst)
-    -- (#1-msff06-rst|-#1-msffl3rstheight)
-    (#1-msff05-rst)
-    -- (#1-msff05-rst|-#1-msffl3rstheight)
-    (#1-msff04-rst)
-    -- (#1-msff04-rst|-#1-msffl3rstheight)
-    %%
-    (#1-sregrstvrt|-#1-msffl3rstheight)
-    \constcornerleft {(#1-msff07-rst)}
-    -- (#1-msff07-rst)
-    %%
-    %% Drawing rst of fourth layer
-    %%
-    (#1-msff03-rst)
-    -- (#1-msff03-rst|-#1-msffl4rstheight)
-    (#1-msff02-rst)
-    -- (#1-msff02-rst|-#1-msffl4rstheight)
-    (#1-msff01-rst)
-    -- (#1-msff01-rst|-#1-msffl4rstheight)
-    (#1-msff00-rst)
-    -- (#1-msff00-rst|-#1-msffl4rstheight)
-    %%
-    %% (#1-sregrstvrt|-#1-msffl4rstheight)
-    %% \constcornerleft {(#1-msff03-rst)}
-    %% -- (#1-msff03-rst)
-    %%
-    %% Connecting all rsts together
-    %%
-    (#1-msff15-rst)
-    \constcornerdown {(#1-sregrstvrt|-#1-msffl1rstheight)}
-    \constcornerright {(#1-sregrstvrt|-#1-msffl1rstheight) ++(0,-1)}
-    \constcornerdown {(#1-sregrstvrt|-#1-msffl4rstheight) ++(-1,0)}
-    -- (#1-msffl4rstheight-|#1-sregleftvrt)
-    -- ++(-4,0)
-    coordinate (#1-rst)
-    %%
-    %% Drawing reclk to msffs
-    %%
-    (#1-sregleftvrt) ++(-0.75,0)
-    coordinate (#1-sregreclkvrt)
-    %%
-    %% First layer
-    %%
-    (#1-msff15-reclk)
-    -- (#1-msff15-reclk|-#1-msffl1reclkheight)
-    (#1-msff14-reclk)
-    -- (#1-msff14-reclk|-#1-msffl1reclkheight)
-    (#1-msff13-reclk)
-    -- (#1-msff13-reclk|-#1-msffl1reclkheight)
-    %%
-    %%
-    %% Second layer
-    %%
-    (#1-msff11-reclk)
-    -- (#1-msff11-reclk|-#1-msffl2reclkheight)
-    (#1-msff10-reclk)
-    -- (#1-msff10-reclk|-#1-msffl2reclkheight)
-    (#1-msff09-reclk)
-    -- (#1-msff09-reclk|-#1-msffl2reclkheight)
-    (#1-sregreclkvrt|-#1-msffl2reclkheight)
-    \constcornerright {(#1-msff08-reclk)}
-    -- (#1-msff08-reclk)
-    %%
-    %% Third layer
-    %%
-    (#1-msff07-reclk)
-    -- (#1-msff07-reclk|-#1-msffl3reclkheight)
-    (#1-msff06-reclk)
-    -- (#1-msff06-reclk|-#1-msffl3reclkheight)
-    (#1-msff05-reclk)
-    -- (#1-msff05-reclk|-#1-msffl3reclkheight)
-    (#1-sregreclkvrt|-#1-msffl3reclkheight)
-    \constcornerright {(#1-msff04-reclk)}
-    -- (#1-msff04-reclk)
-    %%
-    %% Fourth layer
-    %%
-    (#1-msff03-reclk)
-    -- (#1-msff03-reclk|-#1-msffl4reclkheight)
-    (#1-msff02-reclk)
-    -- (#1-msff02-reclk|-#1-msffl4reclkheight)
-    (#1-msff01-reclk)
-    -- (#1-msff01-reclk|-#1-msffl4reclkheight)
-    (#1-sregreclkvrt|-#1-msffl4reclkheight)
-    \constcornerright {(#1-msff00-reclk)}
-    -- (#1-msff00-reclk)
-    %%
-    %% Connecting all the reclks
-    %%
-    (#1-msff12-reclk)
-    \constcornerup {(#1-sregreclkvrt|-#1-msffl1reclkheight)}
-    \constcornerleft {(#1-sregreclkvrt|-#1-msffl1reclkheight) ++(0,-1)}
-    -- (#1-sregreclkvrt|-#1-msffl4reclkheight)
-    -- (#1-rst|-#1-msffl4reclkheight)
-    coordinate (#1-reclk)
-    %%
-    %% Drawing feclk
-    %%
-    (#1-sregreclkvrt) ++($(#1-msff15-reclk)-(#1-msff15-feclk)$)
-    coordinate (#1-sregfeclkvrt)
-    %%
-    (#1-reclk) ++(0,1)
-    coordinate (#1-feclk)
-    ++(1,0)
-    coordinate (#1-feclkbend)
-    %%
-    %% First layer
-    %%
-    (#1-msff15-feclk)
-    -- (#1-msff15-feclk|-#1-msffl1feclkheight)
-    (#1-msff14-feclk)
-    -- (#1-msff14-feclk|-#1-msffl1feclkheight)
-    (#1-msff13-feclk)
-    -- (#1-msff13-feclk|-#1-msffl1feclkheight)
-    %%
-    %% Second layer
-    %%
-    (#1-msff11-feclk)
-    -- (#1-msff11-feclk|-#1-msffl2feclkheight)
-    (#1-msff10-feclk)
-    -- (#1-msff10-feclk|-#1-msffl2feclkheight)
-    (#1-msff09-feclk)
-    -- (#1-msff09-feclk|-#1-msffl2feclkheight)
-    %%
-    (#1-msff08-feclk)
-    \aroundcornerupleft {($(#1-msff15-reclk)-(#1-msff15-feclk)$)}
-    {(#1-msff08-reclk|-#1-msffl2reclkheight) ++(-\cornerbase,0)}
-    -- (#1-sregfeclkvrt|-#1-msffl2feclkheight)
-    %%
-    %% Third layer
-    %%
-    (#1-msff07-feclk)
-    -- (#1-msff07-feclk|-#1-msffl3feclkheight)
-    (#1-msff06-feclk)
-    -- (#1-msff06-feclk|-#1-msffl3feclkheight)
-    (#1-msff05-feclk)
-    -- (#1-msff05-feclk|-#1-msffl3feclkheight)
-    %%
-    (#1-msff04-feclk)
-    \aroundcornerupleft {($(#1-msff15-reclk)-(#1-msff15-feclk)$)}
-    {(#1-msff04-reclk|-#1-msffl3reclkheight) ++(-\cornerbase,0)}
-    -- (#1-sregfeclkvrt|-#1-msffl3feclkheight)
-    %%
-    %% Fourth layer
-    %%
-    (#1-msff03-feclk)
-    -- (#1-msff03-feclk|-#1-msffl4feclkheight)
-    (#1-msff02-feclk)
-    -- (#1-msff02-feclk|-#1-msffl4feclkheight)
-    (#1-msff01-feclk)
-    -- (#1-msff01-feclk|-#1-msffl4feclkheight)
-    %%
-    (#1-msff00-feclk)
-    \aroundcornerupleft {($(#1-msff15-reclk)-(#1-msff15-feclk)$)}
-    {(#1-msff00-reclk|-#1-msffl4reclkheight) ++(-\cornerbase,0)}
-    -- (#1-sregfeclkvrt|-#1-msffl4feclkheight)
-    %%
-    %% Conecting all the feclks
-    %%
-    (#1-msff12-feclk)
-    \aroundcornerupleft {($(#1-msff15-reclk)-(#1-msff15-feclk)$)}
-    {(#1-msff12-reclk|-#1-msffl1reclkheight) ++(-\cornerbase,0)}
-    %%
-    \aroundcornerleftdown {($(#1-msff15-reclk)-(#1-msff15-feclk)$)}
-    {(#1-sregreclkvrt|-#1-msffl1reclkheight) ++(0,-\cornerbase)}
-    %%
-    -- (#1-sregfeclkvrt|-#1-msffl4feclkheight)
-    \varcornerleftup {(#1-feclkbend)}
-    -- (#1-feclk)
-    %%
-    %% Drawing the serial in line
-    %%
-    (#1-msff15-d)
-    -- (#1-rst|-#1-msff15-d)
-    coordinate (#1-sin)
-    %%
-    %% Drawing parallel output of msffs
-    %%
-    (#1-sregrightvrt)
-    ++(3,0)
-    coordinate (#1-sregqvrt)
-    %%
-    %% First layer
-    %%
-    (#1-msff15-q) -- (#1-msff15-q-|#1-sregqvrt)
-    coordinate (#1-q15)
-    (#1-msff14-q) -- (#1-msff14-q-|#1-sregqvrt)
-    coordinate (#1-q14)
-    (#1-msff13-q) -- (#1-msff13-q-|#1-sregqvrt)
-    coordinate (#1-q13)
-    (#1-msff12-q) -- (#1-msff12-q-|#1-sregqvrt)
-    coordinate (#1-q12)
-    %%
-    %% Second layer
-    %%
-    (#1-msff11-q) -- (#1-msff11-q-|#1-sregqvrt)
-    coordinate (#1-q11)
-    (#1-msff10-q) -- (#1-msff10-q-|#1-sregqvrt)
-    coordinate (#1-q10)
-    (#1-msff09-q) -- (#1-msff09-q-|#1-sregqvrt)
-    coordinate (#1-q09)
-    (#1-msff08-q) -- (#1-msff08-q-|#1-sregqvrt)
-    coordinate (#1-q08)
-    %%
-    %% Third layer
-    %%
-    (#1-msff07-q) -- (#1-msff07-q-|#1-sregqvrt)
-    coordinate (#1-q07)
-    (#1-msff06-q) -- (#1-msff06-q-|#1-sregqvrt)
-    coordinate (#1-q06)
-    (#1-msff05-q) -- (#1-msff05-q-|#1-sregqvrt)
-    coordinate (#1-q05)
-    (#1-msff04-q) -- (#1-msff04-q-|#1-sregqvrt)
-    coordinate (#1-q04)
-    %%
-    %% Fourth layer
-    %%
-    (#1-msff03-q) -- (#1-msff03-q-|#1-sregqvrt)
-    coordinate (#1-q03)
-    (#1-msff02-q) -- (#1-msff02-q-|#1-sregqvrt)
-    coordinate (#1-q02)
-    (#1-msff01-q) -- (#1-msff01-q-|#1-sregqvrt)
-    coordinate (#1-q01)
-    (#1-msff00-q) -- (#1-msff00-q-|#1-sregqvrt)
-    coordinate (#1-q00)
+\ctikzsubcircuitdef{subctkgLvlNotGateRight} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    in, out,
+    bin, bout%
+} {
+    node (#1-nor)[nor port] {}
+    %%
+    %% in
+    %%
+    ($(#1-nor.in 1)!0.50!(#1-nor.in 2)$)
+    ++ (-0.25,0)
+    coordinate (#1-in)
+    %%
+    (#1-nor.in 1)
+    \varcornerleftdown {($(#1-in|-#1-nor.in 1)!0.40!(#1-in)$)}
+    -- (#1-in)
+    (#1-nor.in 2)
+    \varcornerleftup {($(#1-in|-#1-nor.in 2)!0.40!(#1-in)$)}
+    -- (#1-in)
+    %%
+    %% out
+    %%
+    (#1-nor.out)
+    coordinate (#1-out)
+    %%
+    %% Marking b* p*
+    %%
+    \glvlmarkcoordinate {#1} {in} {(1,0)}
+    \glvlmarkcoordinate {#1} {out} {(-1,0)}
+    %%
+    %% Geo coords
     %%
     \markgeocoordinate {#1}
-    {(#1-msffl1feclkheight)} {(#1-rst)}
-    {(#1-rst)} {(#1-q00)}
+    {(#1-nor.north)} {(#1-nor.south)}
+    {(#1-in)} {(#1-out)}
+    %%
+}
+
+\ctikzsubcircuitactivate{subctkgLvlNotGateRight}
+
+\newcommand\gLvlNotGateRight[2] {
+    \subctkgLvlNotGateRight{#1} {#2}
+}
+
+\def\glvllogicgatewidth{10cm}
+\def\glvllogicgateheight{4cm}
+\newlength{\xnorglvllogicgatewidth}
+\setlength{\xnorglvllogicgatewidth}{\glvllogicgatewidth-2cm}
+
+\newcommand\testing[1] {
+
+    \gLvlNotGateRight {not} {in}
 
 }
 
-
 \begin{document}
 
-\section {SR Latch}
+\section{Logic Gates}
+
+\subsection{AND Gate}
 
 \begin{figure} [!ht]
-    \centering
-    \resizebox{\textwidth}{!} {
-        \begin{tikzpicture} [american]
 
-            \draw
-            (0,0)
+    \begin{tikzpicture} [american]
 
+        \draw
 
-            \testing {billie}
-            %% \gLvlMSFlipFlop {billie} {reclk}
-            %% \gLvlDFlipFlopSR {billie} {clk}
+        (0,0)
+        -- ++(\glvllogicgatewidth,0)
+        (0,0)
+        -- ++(0,\glvllogicgateheight)
+        (0,0)
 
-            %% (0,0) -- ++(1,1)
+        \testing {billie}
 
-            %% \gLvlSRLatch {billie} {s}
+        %% (billie-north) -- ++(1,1)
+        %% (billie-south) -- ++(1,1)
+        %% (billie-east) -- ++(1,1)
+        %% (billie-west) -- ++(1,1)
+        %% (billie-center) -- ++(1,1)
+        ;
 
-            %% (billie-s) node [ocirc] {}
-            %% (billie-r) node [ocirc] {}
-            %% (billie-q) node [ocirc] {}
-            %% (billie-qbar) node [ocirc] {}
+    \end{tikzpicture}
 
-            %% (billie-s) node [left = 4pt] {$S$}
-            %% (billie-r) node [left = 4pt] {$R$}
-            %% (billie-q) node [right = 4pt] {$Q$}
-            %% (billie-qbar) node [right = 4pt] {$Qbar$}
-            %(billie-q)
-            % \gLvlSRFlipFlop {hai} {clk}
-            ;
-        \end{tikzpicture}
-    }
-    \caption{SR Latch}
 \end{figure}
-
-%% \begin{figure} [!ht]
-%%     \centering
-%%     \resizebox{0.4\textwidth}{!} {
-%%         \begin{tikzpicture} [american]
-%%
-%%             \draw
-%%             (0,0)
-%%
-%%             \gLvlSRFlipFlop {billie} {s}
-%%
-%%             (billie-s) node [ocirc] {}
-%%             (billie-r) node [ocirc] {}
-%%             (billie-q) node [ocirc] {}
-%%             (billie-qbar) node [ocirc] {}
-%%
-%%             (billie-s) node [left = 4pt] {$S$}
-%%             (billie-r) node [left = 4pt] {$R$}
-%%             (billie-q) node [right = 4pt] {$Q$}
-%%             (billie-qbar) node [right = 4pt] {$Qbar$}
-%%             %(billie-q)
-%%             % \gLvlSRFlipFlop {hai} {clk}
-%%             ;
-%%         \end{tikzpicture}
-%%     }
-%%     \caption{SR FlipFlop}
-%% \end{figure}
-%%
-%% \begin{figure} [!ht]
-%%     \centering
-%%     \resizebox{0.4\textwidth}{!} {
-%%         \begin{tikzpicture} [american]
-%%
-%%             \draw
-%%             (0,0)
-%%
-%%             \gLvlDFlipFlop {billie} {s}
-%%
-%%             (billie-d) node [ocirc] {}
-%%             (billie-q) node [ocirc] {}
-%%             (billie-qbar) node [ocirc] {}
-%%
-%%             (billie-d) node [left = 4pt] {$D$}
-%%             (billie-q) node [right = 4pt] {$Q$}
-%%             (billie-qbar) node [right = 4pt] {$Qbar$}
-%%             %(billie-q)
-%%             % \gLvlSRFlipFlop {hai} {clk}
-%%             ;
-%%         \end{tikzpicture}
-%%     }
-%%     \caption{D FlipFlop}
-%% \end{figure}
 
 \end{document}
