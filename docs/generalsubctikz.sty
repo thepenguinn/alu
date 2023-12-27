@@ -38,3 +38,127 @@
     \subctkedgeDetector{#1} {#2}
     (#1.center) node[]{#3}
 }
+
+%% Gate level XNOR gate using NOR gates
+
+\def\glvllogicgatewidth{10cm}
+\def\glvllogicgateheight{4cm}
+\newlength{\xnorglvllogicgatewidth}
+\setlength{\xnorglvllogicgatewidth}{\glvllogicgatewidth-2cm}
+
+\ctikzsubcircuitdef{subctkgLvlXnorGate} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    ain, bin, yout,
+    bain, bbin, byout%
+} {
+    coordinate (#1-origin)
+    ++(\xnorglvllogicgatewidth,0)
+    coordinate (#1-rightvrt)
+    (#1-origin)
+    ++(0,\glvllogicgateheight)
+    coordinate (#1-topheight)
+    %%
+    %% We are marking geo coords early.
+    %% Because we can use them
+    %%
+    \markgeocoordinate {#1}
+    {(#1-topheight)} {(#1-origin)}
+    {(#1-origin)} {(#1-rightvrt)}
+    %%
+    ($(#1-west)!0.65!(#1-center)$)
+    node (#1-nor1) [nor port, anchor = center] {}
+    %%
+    ($(#1-north)!0.50!($(#1-center)!0.20!(#1-west)$)$)
+    node (#1-nor2) [nor port, anchor = south west] {}
+    %%
+    ($(#1-south)!0.50!($(#1-center)!0.20!(#1-west)$)$)
+    node (#1-nor3) [nor port, anchor = north west] {}
+    %%
+    ($(#1-east)!0.50!(#1-center)$)
+    node (#1-nor4) [nor port, anchor = west] {}
+    %%
+    %% Marking
+    %%
+    ($(#1-center)!0.85!(#1-nor4.west)$)
+    coordinate (#1-l3fstbendvrt)
+    %%
+    ($(#1-center)!0.95!(#1-nor4.west)$)
+    coordinate (#1-l3secbendvrt)
+    %%
+    %% Connecting layer 2 and 3
+    %%
+    (#1-nor2.out)
+    \constcornerright {(#1-l3fstbendvrt)}
+    \varcornerdownright {(#1-nor4.in 1-|#1-l3secbendvrt)}
+    -- (#1-nor4.in 1)
+    %%
+    (#1-nor3.out)
+    \constcornerright {(#1-l3fstbendvrt)}
+    \varcornerupright {(#1-nor4.in 2-|#1-l3secbendvrt)}
+    -- (#1-nor4.in 2)
+    %%
+    %% Connecting layer 1 and 2
+    %%
+    %% Marking
+    %%
+    ($(#1-center-|#1-nor2.west)!0.7!(#1-nor1.out)$)
+    coordinate (#1-l1outbr)
+    %%
+    %% Drawing
+    %%
+    (#1-nor2.in 2)
+    \constcornerleft {(#1-l1outbr)}
+    \constcornerdown {(#1-nor3.in 1)}
+    -- (#1-nor3.in 1)
+    %%
+    (#1-nor1.out)
+    -- (#1-l1outbr)
+    %%
+    %% Connecting inputs to layer 1
+    %%
+    %% Marking
+    %%
+    ($(#1-west)!0.50!(#1-nor1.west)$)
+    coordinate (#1-l1invrt)
+    %%
+    %% Drawing
+    %%
+    (#1-nor1.in 1)
+    \constcornerleft {(#1-l1invrt|-#1-nor2.in 1)}
+    -- (#1-l1invrt|-#1-nor2.in 1)
+    %%
+    (#1-nor1.in 2)
+    \constcornerleft {(#1-l1invrt|-#1-nor3.in 2)}
+    -- (#1-l1invrt|-#1-nor3.in 2)
+    %%
+    %% Connecting inputs to layer 2
+    %%
+    (#1-nor2.in 1)
+    -- (#1-nor2.in 1-|#1-west)
+    coordinate (#1-ain)
+    %%
+    (#1-nor3.in 2)
+    -- (#1-nor3.in 2-|#1-west)
+    coordinate (#1-bin)
+    %%
+    %% Output
+    %%
+    (#1-nor4.out)
+    -- (#1-east)
+    coordinate (#1-yout)
+    %%
+    %% Marking b* p*
+    %%
+    \glvlmarkcoordinate {#1} {ain}     {(1,0)}
+    \glvlmarkcoordinate {#1} {bin}     {(1,0)}
+    \glvlmarkcoordinate {#1} {yout}    {(-1,0)}
+    %%
+}
+
+\ctikzsubcircuitactivate{subctkgLvlXnorGate}
+
+\newcommand\gLvlXnorGate[2] {
+    \subctkgLvlXnorGate{#1} {#2}
+}
