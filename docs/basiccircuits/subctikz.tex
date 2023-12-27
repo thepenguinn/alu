@@ -1058,13 +1058,9 @@
 
 %% Gate level implementation of logic gates
 
-\ctikzsubcircuitdef{subctkgLvlXorGate} {
-    north, south, east, west,
-    northeast, northwest, southeast, southwest,
-    center,
-    ain, bin, yout,
-    bain, bbin, byout%
-} {
+\def\leftrightgatepadding{0.5cm}
+
+\newcommand\markglvlgeocoordinate[1] {
     coordinate (#1-origin)
     ++(\glvllogicgatewidth,0)
     coordinate (#1-rightvrt)
@@ -1078,7 +1074,22 @@
     \markgeocoordinate {#1}
     {(#1-topheight)} {(#1-origin)}
     {(#1-origin)} {(#1-rightvrt)}
-    %%
+    (#1-west)
+    ++(-\leftrightgatepadding,0)
+    coordinate (#1-leftpadding)
+    (#1-east)
+    ++(\leftrightgatepadding,0)
+    coordinate (#1-rightpadding)
+}
+
+\ctikzsubcircuitdef{subctkgLvlXorGate} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    ain, bin, yout,
+    bain, bbin, byout%
+} {
+    \markglvlgeocoordinate {#1}
     (#1-west)
     \gLvlXnorGate {#1-xnor} {west}
     %%
@@ -1118,4 +1129,319 @@
 
 \newcommand\gLvlXorGate[2] {
     \subctkgLvlXorGate{#1} {#2}
+}
+
+\ctikzsubcircuitdef{subctkgLvlAndGate} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    ain, bin, yout,
+    bain, bbin, byout%
+} {
+    \markglvlgeocoordinate {#1}
+    %%
+    %% Some markings
+    %%
+    ($(#1-west)!0.65!(#1-center)$)
+    coordinate (#1-l1vrt)
+    %%
+    ($(#1-center)!0.50!(#1-east)$)
+    coordinate (#1-l2vrt)
+    %%
+    %% Drawing layer 1
+    %%
+    ($(#1-l1vrt|-#1-north)!0.30!(#1-l1vrt)$)
+    \gLvlNotGateRight {#1-nota} {center}
+    %%
+    ($(#1-l1vrt|-#1-south)!0.30!(#1-l1vrt)$)
+    \gLvlNotGateRight {#1-notb} {center}
+    %%
+    %% Drawing layer 2
+    %%
+    (#1-l2vrt)
+    node (#1-nor) [nor port, anchor = center] {}
+    %%
+    %% Connecting l1 and l2
+    %%
+    ($(#1-center)!0.50!(#1-center-|#1-nor.in 1)$)
+    coordinate (#1-bendvrt)
+    %%
+    (#1-nota-out)
+    \varcornerrightdown {(#1-bendvrt|-#1-nor.in 1)}
+    -- (#1-nor.in 1)
+    %%
+    (#1-notb-out)
+    \varcornerrightup {(#1-bendvrt|-#1-nor.in 2)}
+    -- (#1-nor.in 2)
+    %%
+    %% Inputs
+    %%
+    (#1-nota-in)
+    -- ++(-1,0)
+    coordinate (#1-ain)
+    %%
+    (#1-notb-in)
+    -- (#1-ain|-#1-notb-in)
+    coordinate (#1-bin)
+    %%
+    %% Output
+    %%
+    (#1-nor.out)
+    -- ++(1,0)
+    coordinate (#1-yout)
+    %%
+    \glvlmarkcoordinate {#1} {ain}     {(1,0)}
+    \glvlmarkcoordinate {#1} {bin}     {(1,0)}
+    \glvlmarkcoordinate {#1} {yout}    {(-1,0)}
+    %%
+}
+
+\ctikzsubcircuitactivate{subctkgLvlAndGate}
+
+\newcommand\gLvlAndGate[2] {
+    \subctkgLvlAndGate{#1} {#2}
+}
+
+\ctikzsubcircuitdef{subctkgLvlNandGate} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    ain, bin, yout,
+    bain, bbin, byout%
+} {
+    \markglvlgeocoordinate {#1}
+    %%
+    %% Some markings
+    %%
+    ($(#1-west)!0.45!(#1-center)$)
+    coordinate (#1-l1vrt)
+    %%
+    ($(#1-center)!0.20!(#1-east)$)
+    coordinate (#1-l2vrt)
+    %%
+    ($(#1-center)!0.60!(#1-east)$)
+    coordinate (#1-l3vrt)
+    %%
+    %% Drawing layer 1
+    %%
+    ($(#1-l1vrt|-#1-north)!0.30!(#1-l1vrt)$)
+    \gLvlNotGateRight {#1-nota} {center}
+    %%
+    ($(#1-l1vrt|-#1-south)!0.30!(#1-l1vrt)$)
+    \gLvlNotGateRight {#1-notb} {center}
+    %%
+    %% Drawing layer 2
+    %%
+    (#1-l2vrt)
+    node (#1-nor) [nor port, anchor = center] {}
+    %%
+    %% Drawing layer 3
+    %%
+    (#1-l3vrt)
+    \gLvlNotGateRight {#1-notout} {center}
+    %%
+    %% Connecting l1 and l2
+    %%
+    ($(#1-center-|#1-nota-out)!0.90!(#1-center-|#1-nor.in 1)$)
+    coordinate (#1-bendvrt)
+    %%
+    (#1-nota-out)
+    \varcornerrightdown {(#1-bendvrt|-#1-nor.in 1)}
+    -- (#1-nor.in 1)
+    %%
+    (#1-notb-out)
+    \varcornerrightup {(#1-bendvrt|-#1-nor.in 2)}
+    -- (#1-nor.in 2)
+    %%
+    %% Connecting l2 and l3
+    %%
+    (#1-nor.out)
+    -- (#1-notout-in)
+    %%
+    %% Inputs
+    %%
+    (#1-nota-in)
+    -- ++(-1,0)
+    coordinate (#1-ain)
+    %%
+    (#1-notb-in)
+    -- (#1-ain|-#1-notb-in)
+    coordinate (#1-bin)
+    %%
+    %% Output
+    %%
+    (#1-notout-out)
+    -- ++(0.75,0)
+    coordinate (#1-yout)
+    %%
+    \glvlmarkcoordinate {#1} {ain}     {(1,0)}
+    \glvlmarkcoordinate {#1} {bin}     {(1,0)}
+    \glvlmarkcoordinate {#1} {yout}    {(-1,0)}
+    %%
+}
+
+\ctikzsubcircuitactivate{subctkgLvlNandGate}
+
+\newcommand\gLvlNandGate[2] {
+    \subctkgLvlNandGate{#1} {#2}
+}
+
+\ctikzsubcircuitdef{subctkgLvlNorGate} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    ain, bin, yout,
+    bain, bbin, byout%
+} {
+    \markglvlgeocoordinate {#1}
+    %%
+    ($(#1-west)!0.90!(#1-center)$)
+    %%
+    node (#1-nor) [nor port, anchor = west] {}
+    %%
+    (#1-nor.in 1|-#1-center)
+    ++(-2,0)
+    coordinate (#1-invrt)
+    %%
+    %% Inputs
+    %%
+    ($(#1-invrt|-#1-north)!0.30!(#1-invrt)$)
+    coordinate (#1-ain)
+    %%
+    ($(#1-invrt|-#1-south)!0.30!(#1-invrt)$)
+    coordinate (#1-bin)
+    %%
+    (#1-invrt)
+    ++ (1.75,0)
+    coordinate (#1-bendvrt)
+    %%
+    (#1-ain)
+    \varcornerrightdown {(#1-nor.in 1-|#1-bendvrt)}
+    -- (#1-nor.in 1)
+    %%
+    (#1-bin)
+    \varcornerrightup {(#1-nor.in 2-|#1-bendvrt)}
+    -- (#1-nor.in 2)
+    %%
+    %% Output
+    %%
+    (#1-nor.out)
+    -- ++(1.75,0)
+    coordinate (#1-yout)
+    %%
+    \glvlmarkcoordinate {#1} {ain}     {(1,0)}
+    \glvlmarkcoordinate {#1} {bin}     {(1,0)}
+    \glvlmarkcoordinate {#1} {yout}    {(-1,0)}
+    %%
+}
+
+\ctikzsubcircuitactivate{subctkgLvlNorGate}
+
+\newcommand\gLvlNorGate[2] {
+    \subctkgLvlNorGate{#1} {#2}
+}
+
+\ctikzsubcircuitdef{subctkgLvlOrGate} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    ain, bin, yout,
+    bain, bbin, byout%
+} {
+    \markglvlgeocoordinate {#1}
+    %%
+    ($(#1-west)!0.60!(#1-center)$)
+    %%
+    node (#1-nor) [nor port, anchor = west] {}
+    %%
+    (#1-nor.in 1|-#1-center)
+    ++(-2,0)
+    coordinate (#1-invrt)
+    %%
+    %% Inputs
+    %%
+    ($(#1-invrt|-#1-north)!0.30!(#1-invrt)$)
+    coordinate (#1-ain)
+    %%
+    ($(#1-invrt|-#1-south)!0.30!(#1-invrt)$)
+    coordinate (#1-bin)
+    %%
+    (#1-invrt)
+    ++ (1.75,0)
+    coordinate (#1-bendvrt)
+    %%
+    (#1-ain)
+    \varcornerrightdown {(#1-nor.in 1-|#1-bendvrt)}
+    -- (#1-nor.in 1)
+    %%
+    (#1-bin)
+    \varcornerrightup {(#1-nor.in 2-|#1-bendvrt)}
+    -- (#1-nor.in 2)
+    %%
+    %% Ouput not
+    %%
+    %% Marking
+    %%
+    ($(#1-center)!0.3!(#1-east)$)
+    %%
+    \gLvlNotGateRight {#1-notout} {center}
+    %%
+    %% Connecting nor to not
+    %%
+    (#1-nor.out)
+    -- (#1-notout-in)
+    %%
+    %%
+    %% Output
+    %%
+    (#1-notout-out)
+    -- ++(1.75,0)
+    coordinate (#1-yout)
+    %%
+    \glvlmarkcoordinate {#1} {ain}     {(1,0)}
+    \glvlmarkcoordinate {#1} {bin}     {(1,0)}
+    \glvlmarkcoordinate {#1} {yout}    {(-1,0)}
+    %%
+}
+
+\ctikzsubcircuitactivate{subctkgLvlOrGate}
+
+\newcommand\gLvlOrGate[2] {
+    \subctkgLvlOrGate{#1} {#2}
+}
+
+\ctikzsubcircuitdef{subctkgLvlNotGate} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    ain, yout,
+    bain, byout%
+} {
+    \markglvlgeocoordinate {#1}
+    %%
+    ($(#1-center)!0.05!(#1-east)$)
+    %%
+    \gLvlNotGateRight {#1-not} {center}
+    %%
+    %% Input
+    %%
+    (#1-not-in)
+    -- ++(-2,0)
+    coordinate (#1-ain)
+    %%
+    %% Output
+    %%
+    (#1-not-out)
+    -- ++(1.75,0)
+    coordinate (#1-yout)
+    %%
+    \glvlmarkcoordinate {#1} {ain}     {(1,0)}
+    \glvlmarkcoordinate {#1} {yout}    {(-1,0)}
+    %%
+}
+
+\ctikzsubcircuitactivate{subctkgLvlNotGate}
+
+\newcommand\gLvlNotGate[2] {
+    \subctkgLvlNotGate{#1} {#2}
 }

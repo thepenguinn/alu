@@ -430,8 +430,6 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
     endmodule
 \end{minted}
 
-\end{document}
-
 \section{Multiplexer}
 
 \subsection {Five Input NOR Gate from Two Input NOR Gate}
@@ -555,11 +553,9 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
     endmodule
 \end{minted}
 
-\clearpage
-
 \subsection {An Abstracted Schematic of A 16 to 1 Multiplexer}
 
-\begin{figure} [!ht]
+\begin{figure} [!h]
     \centering
     \resizebox{\textwidth}{!} {
         \begin{tikzpicture}
@@ -687,11 +683,60 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
     endmodule
 \end{minted}
 
-\section {Logic Gates}
+\section {Logic Gates} \label{sec:logicgates}
 
-\subsection {XOR Gate}
+\subsection {XOR Gate} \label{sec:xorgate}
 
-\begin{minted} {verilog}
+\begin{figure} [!ht]
+    \def\truthTableWidth{0.35\textwidth}
+    \begin{tabularx} {\textwidth} {GT}
+        \centering
+        \vfill
+        \resizebox{0.6\textwidth}{!} {
+            \begin{tikzpicture} [american]
+
+                \draw
+                (0,0)
+
+                \gLvlXorGate {xor} {ain}
+
+                (xor-ain)     node [ocirc] {}
+                (xor-bin)     node [ocirc] {}
+                (xor-yout)    node [ocirc] {}
+
+                (xor-ain)    node [left = 4pt]    {\texttt{A}}
+                (xor-bin)    node [left = 4pt]    {\texttt{B}}
+                (xor-yout)  node [right = 4pt]    {\texttt{Y}}
+
+                ;
+            \end{tikzpicture}
+        }
+        \vfill
+        &
+        \vfill
+        {\begin{tabularx} {0.75\linewidth} {*{3}{>{\centering\arraybackslash}X}}
+            \toprule
+            \textsc{\textbf{A}} & \textsc{\textbf{B}} & \textsc{\textbf{Y}} \\
+            \midrule
+            0   &   0   &   0   \\
+            0   &   1   &   1   \\
+            1   &   0   &   1   \\
+            1   &   1   &   0   \\
+            \bottomrule
+        \end{tabularx}}
+        \vfill
+        \\
+        \captionof{figure} {XOR Gate Using NOR Gates}
+        \label{fig:glvlxorgate}
+        &
+        \captionof{table} {Truth Table of XOR Gate}
+        \label{tbl:ttxorgate}
+    \end{tabularx}
+\end{figure}
+
+\subsubsection{Verilog Implementation} \label{hdl:xorgate}
+
+\begin{minted}[mathescape] {verilog}
     module xor_gate(input logic a, b,
         output logic y);
 
@@ -706,9 +751,58 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
     endmodule
 \end{minted}
 
-\subsection {AND Gate}
+\subsection {AND Gate} \label{sec:andgate}
 
-\begin{minted} {verilog}
+\begin{figure} [!ht]
+    \def\truthTableWidth{0.35\textwidth}
+    \begin{tabularx} {\textwidth} {GT}
+        \centering
+        \vfill
+        \resizebox{0.6\textwidth}{!} {
+            \begin{tikzpicture} [american]
+
+                \draw
+                (0,0)
+
+                \gLvlAndGate {and} {ain}
+
+                (and-ain)     node [ocirc] {}
+                (and-bin)     node [ocirc] {}
+                (and-yout)    node [ocirc] {}
+
+                (and-ain)    node [left = 4pt]    {\texttt{A}}
+                (and-bin)    node [left = 4pt]    {\texttt{B}}
+                (and-yout)  node [right = 4pt]    {\texttt{Y}}
+
+                ;
+            \end{tikzpicture}
+        }
+        \vfill
+        &
+        \vfill
+        {\begin{tabularx} {0.75\linewidth} {*{3}{>{\centering\arraybackslash}X}}
+            \toprule
+            \textsc{\textbf{A}} & \textsc{\textbf{B}} & \textsc{\textbf{Y}} \\
+            \midrule
+            0   &   0   &   0   \\
+            0   &   1   &   0   \\
+            1   &   0   &   0   \\
+            1   &   1   &   1   \\
+            \bottomrule
+        \end{tabularx}}
+        \vfill
+        \\
+        \captionof{figure} {AND Gate Using NOR Gates}
+        \label{fig:glvlandgate}
+        &
+        \captionof{table} {Truth Table of AND Gate}
+        \label{tbl:ttandgate}
+    \end{tabularx}
+\end{figure}
+
+\subsubsection{Verilog Implementation} \label{hdl:andgate}
+
+\begin{minted}[mathescape] {verilog}
     module and_gate(input logic a, b,
         output logic y);
 
@@ -721,9 +815,58 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
     endmodule
 \end{minted}
 
-\subsection {OR Gate}
+\subsection {OR Gate} \label{sec:orgate}
 
-\begin{minted} {verilog}
+\begin{figure} [!ht]
+    \def\truthTableWidth{0.35\textwidth}
+    \begin{tabularx} {\textwidth} {GT}
+        \centering
+        \vfill
+        \resizebox{0.6\textwidth}{!} {
+            \begin{tikzpicture} [american]
+
+                \draw
+                (0,0)
+
+                \gLvlOrGate {or} {ain}
+
+                (or-ain)     node [ocirc] {}
+                (or-bin)     node [ocirc] {}
+                (or-yout)    node [ocirc] {}
+
+                (or-ain)    node [left = 4pt]    {\texttt{A}}
+                (or-bin)    node [left = 4pt]    {\texttt{B}}
+                (or-yout)  node [right = 4pt]    {\texttt{Y}}
+
+                ;
+            \end{tikzpicture}
+        }
+        \vfill
+        &
+        \vfill
+        {\begin{tabularx} {0.75\linewidth} {*{3}{>{\centering\arraybackslash}X}}
+            \toprule
+            \textsc{\textbf{A}} & \textsc{\textbf{B}} & \textsc{\textbf{Y}} \\
+            \midrule
+            0   &   0   &   0   \\
+            0   &   1   &   1   \\
+            1   &   0   &   1   \\
+            1   &   1   &   1   \\
+            \bottomrule
+        \end{tabularx}}
+        \vfill
+        \\
+        \captionof{figure} {OR Gate Using NOR Gates}
+        \label{fig:glvlorgate}
+        &
+        \captionof{table} {Truth Table of OR Gate}
+        \label{tbl:ttorgate}
+    \end{tabularx}
+\end{figure}
+
+\subsubsection{Verilog Implementation} \label{hdl:orgate}
+
+\begin{minted}[mathescape] {verilog}
     module or_gate(input logic a, b,
         output logic y);
 
@@ -735,9 +878,54 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
     endmodule
 \end{minted}
 
-\subsection {NOT Gate}
+\subsection {NOT Gate} \label{sec:notgate}
 
-\begin{minted} {verilog}
+\begin{figure} [!ht]
+    \def\truthTableWidth{0.35\textwidth}
+    \begin{tabularx} {\textwidth} {GT}
+        \centering
+        \vfill
+        \resizebox{0.6\textwidth}{!} {
+            \begin{tikzpicture} [american]
+
+                \draw
+                (0,0)
+
+                \gLvlNotGate {not} {ain}
+
+                (not-ain)     node [ocirc] {}
+                (not-yout)    node [ocirc] {}
+
+                (not-ain)    node [left = 4pt]    {\texttt{A}}
+                (not-yout)  node [right = 4pt]    {\texttt{Y}}
+
+                ;
+            \end{tikzpicture}
+        }
+        \vfill
+        &
+        \vfill
+        {\begin{tabularx} {0.75\linewidth} {*{2}{>{\centering\arraybackslash}X}}
+            \toprule
+            \textsc{\textbf{A}} & \textsc{\textbf{Y}} \\
+            \midrule
+            0   &   1   \\
+            1   &   0   \\
+            \bottomrule
+        \end{tabularx}}
+        \vfill
+        \\
+        \captionof{figure} {NOT Gate Using NOR Gate}
+        \label{fig:glvlnotgate}
+        &
+        \captionof{table} {Truth Table of NOT Gate}
+        \label{tbl:ttnotgate}
+    \end{tabularx}
+\end{figure}
+
+\subsubsection{Verilog Implementation} \label{hdl:notgate}
+
+\begin{minted}[mathescape] {verilog}
     module not_gate(input logic a,
         output logic y);
 
@@ -746,9 +934,58 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
     endmodule
 \end{minted}
 
-\subsection {NOR Gate}
+\subsection {NOR Gate} \label{sec:norgate}
 
-\begin{minted} {verilog}
+\begin{figure} [!ht]
+    \def\truthTableWidth{0.35\textwidth}
+    \begin{tabularx} {\textwidth} {GT}
+        \centering
+        \vfill
+        \resizebox{0.6\textwidth}{!} {
+            \begin{tikzpicture} [american]
+
+                \draw
+                (0,0)
+
+                \gLvlNorGate {nor} {ain}
+
+                (nor-ain)     node [ocirc] {}
+                (nor-bin)     node [ocirc] {}
+                (nor-yout)    node [ocirc] {}
+
+                (nor-ain)    node [left = 4pt]    {\texttt{A}}
+                (nor-bin)    node [left = 4pt]    {\texttt{B}}
+                (nor-yout)  node [right = 4pt]    {\texttt{Y}}
+
+                ;
+            \end{tikzpicture}
+        }
+        \vfill
+        &
+        \vfill
+        {\begin{tabularx} {0.75\linewidth} {*{3}{>{\centering\arraybackslash}X}}
+            \toprule
+            \textsc{\textbf{A}} & \textsc{\textbf{B}} & \textsc{\textbf{Y}} \\
+            \midrule
+            0   &   0   &   1   \\
+            0   &   1   &   0   \\
+            1   &   0   &   0   \\
+            1   &   1   &   0   \\
+            \bottomrule
+        \end{tabularx}}
+        \vfill
+        \\
+        \captionof{figure} {NOR Gate Using NOR Gate}
+        \label{fig:glvlnorgate}
+        &
+        \captionof{table} {Truth Table of NOR Gate}
+        \label{tbl:ttnorgate}
+    \end{tabularx}
+\end{figure}
+
+\subsubsection{Verilog Implementation} \label{hdl:norgate}
+
+\begin{minted}[mathescape] {verilog}
     module nor_gate(input logic a, b,
         output logic y);
 
@@ -757,9 +994,58 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
     endmodule
 \end{minted}
 
-\subsection {NAND Gate}
+\subsection {NAND Gate} \label{sec:nandgate}
 
-\begin{minted} {verilog}
+\begin{figure} [!ht]
+    \def\truthTableWidth{0.35\textwidth}
+    \begin{tabularx} {\textwidth} {GT}
+        \centering
+        \vfill
+        \resizebox{0.6\textwidth}{!} {
+            \begin{tikzpicture} [american]
+
+                \draw
+                (0,0)
+
+                \gLvlNandGate {nand} {ain}
+
+                (nand-ain)     node [ocirc] {}
+                (nand-bin)     node [ocirc] {}
+                (nand-yout)    node [ocirc] {}
+
+                (nand-ain)    node [left = 4pt]    {\texttt{A}}
+                (nand-bin)    node [left = 4pt]    {\texttt{B}}
+                (nand-yout)  node [right = 4pt]    {\texttt{Y}}
+
+                ;
+            \end{tikzpicture}
+        }
+        \vfill
+        &
+        \vfill
+        {\begin{tabularx} {0.75\linewidth} {*{3}{>{\centering\arraybackslash}X}}
+            \toprule
+            \textsc{\textbf{A}} & \textsc{\textbf{B}} & \textsc{\textbf{Y}} \\
+            \midrule
+            0   &   0   &   1   \\
+            0   &   1   &   1   \\
+            1   &   0   &   1   \\
+            1   &   1   &   0   \\
+            \bottomrule
+        \end{tabularx}}
+        \vfill
+        \\
+        \captionof{figure} {NAND Gate Using NOR Gates}
+        \label{fig:glvlnandgate}
+        &
+        \captionof{table} {Truth Table of NAND Gate}
+        \label{tbl:ttnandgate}
+    \end{tabularx}
+\end{figure}
+
+\subsubsection{Verilog Implementation} \label{hdl:nandgate}
+
+\begin{minted}[mathescape] {verilog}
     module nand_gate(input logic a, b,
         output logic y);
 
@@ -777,7 +1063,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
 
 \section {Full Adder}
 
-\begin{minted} {verilog}
+\begin{minted}[mathescape] {verilog}
     module full_adder(input logic a, b, cin,
         output logic sum, cout);
 
