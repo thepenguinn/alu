@@ -10,6 +10,7 @@
     \usepackage{catppuccintheme}
     %% \usemintedstyle{catppuccin-mocha}
     %% \ctikzset{open poles fill = black}
+    %% \setminted[verilog]{frame = lines, framesep = 2mm}
 } {
 }
 
@@ -389,6 +390,18 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
 
             ;
 
+            %% TEST Marking some points
+
+            \draw [dashed, catppuccinfg!70!catppuccinbg, thin,]
+            (msff-slave-s)
+            circle(0.35cm)
+            (msff-slave-s)
+            ++(0,0.25)
+            \constcornerdown {++(1,1.5)}
+            -- ++(2,0)
+            node (msff-label-master-q) [right = 4pt] {\texttt{MASTER Q}}
+            ;
+
 
         \end{tikzpicture}
     }
@@ -429,6 +442,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
 
     endmodule
 \end{minted}
+
+%% \end{document}
 
 \section{Multiplexer}
 
