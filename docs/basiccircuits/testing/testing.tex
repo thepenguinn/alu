@@ -4,74 +4,289 @@
 \usepackage[siunitx]{circuitikz}
 \usepackage{minted}
 \usepackage{calc}
+\usepackage{tikz-timing}
+\usepackage{booktabs}
+
 \usepackage[margin = 1in]{geometry}
 \usepackage{../../colorthemes}
 \usepackage{../../generalcommands}
 \usepackage{../../cornercommands}
 %% \usepackage{../../generaltikzset}
 %% \usepackage{../../generalsubctikz}
-
+%%
 %% \input{../tikzset}
 %% \input{../subctikz}
 
 \usetikzlibrary{intersections}
 \usetikzlibrary{calc}
 
-\ctikzsubcircuitdef{subctkgLvlNotGateRight} {
-    north, south, east, west,
-    northeast, northwest, southeast, southwest,
-    center,
-    in, out,
-    bin, bout%
+\ctikzsubcircuitdef{subctkgLvlSRLatch} {
+    s, r, q, qbar,
+    bs, br, bq, bqbar%
 } {
-    node (#1-nor)[nor port] {}
+    coordinate (#1-q)
     %%
-    %% in
+    ++(-1,0)
+    node (#1-nor1) [nor port, anchor = out] {}
     %%
-    ($(#1-nor.in 1)!0.50!(#1-nor.in 2)$)
-    ++ (-0.25,0)
-    coordinate (#1-in)
+    (#1-nor1.in 2)
+    ++(0,-3)
     %%
-    (#1-nor.in 1)
-    \varcornerleftdown {($(#1-in|-#1-nor.in 1)!0.40!(#1-in)$)}
-    -- (#1-in)
-    (#1-nor.in 2)
-    \varcornerleftup {($(#1-in|-#1-nor.in 2)!0.40!(#1-in)$)}
-    -- (#1-in)
+    node (#1-nor2) [nor port, anchor = in 1] {}
     %%
-    %% out
+    %% Markings for cross coupling
     %%
-    (#1-nor.out)
-    coordinate (#1-out)
+    ($(#1-nor1.in 2)!0.50!(#1-nor2.in 1)$)
+    ++(-0.75,0)
+    coordinate (#1-invrt)
+    %%
+    (#1-nor1.out)
+    ++(0.5,0)
+    coordinate (#1-outvrt)
+    %%
+    (#1-nor1.in 2)
+    coordinate (#1-ccfbvrt)
+    %%
+    (#1-nor1.in 2-|#1-ccfbvrt)
+    ++ (0,-1.25)
+    coordinate (#1-ccfbabove)
+    %%
+    (#1-nor2.in 1-|#1-ccfbabove)
+    ++ ($(#1-nor1.in 2-|#1-ccfbvrt)-(#1-ccfbabove)$)
+    coordinate (#1-ccfbbelow)
+    %%
+    %%
+    %% Drawing the cross coupling
+    %%
+    (#1-nor1.in 2)
+    \constcornerleft {(#1-nor2.in 1-|#1-invrt)}
+    \constcornerdown {(#1-ccfbbelow)}
+    %% \varcornerdownright {(#1-ccfbbelow)}
+    \constcornerright {(#1-nor2.out-|#1-outvrt)}
+    -- (#1-nor2.out-|#1-outvrt)
+    %%
+    (#1-nor2.in 1)
+    \constcornerleft {(#1-nor1.in 2-|#1-invrt)}
+    \constcornerup {(#1-ccfbabove)}
+    %% \varcornerupright {(#1-ccfbabove)}
+    \constcornerright {(#1-nor1.out-|#1-outvrt)}
+    -- (#1-nor1.out-|#1-outvrt)
+    %%
+    %% Drawing outputs
+    %%
+    (#1-nor1.out)
+    -- (#1-q)
+    %%
+    (#1-nor2.out)
+    -- (#1-nor2.out-|#1-q)
+    coordinate (#1-qbar)
+    %%
+    %% Drawing inputs
+    %%
+    (#1-nor1.in 1)
+    -- ++(-1,0)
+    coordinate (#1-r)
+    %%
+    (#1-nor2.in 2)
+    -- (#1-nor2.in 2-|#1-r)
+    coordinate (#1-s)
+    %%
+    %% (#1-nor1.north) isn't working for some reason in markgeocoordinate
+    %% while passing it as a argument
+    %%
+    (#1-nor1.north) coordinate (#1-north)
+    (#1-nor2.south) coordinate (#1-south)
+    %%
+    \glvlmarkcoordinate {#1} {s} {(1,0)}
+    \glvlmarkcoordinate {#1} {r} {(1,0)}
+    \glvlmarkcoordinate {#1} {q} {(-1,0)}
+    \glvlmarkcoordinate {#1} {qbar} {(-1,0)}
+    %%
+    \markgeocoordinate {#1}
+    {(#1-north)} {(#1-south)}
+    {(#1-s)} {(#1-q)}
+}
+
+\ctikzsubcircuitactivate{subctkgLvlSRLatch}
+
+\newcommand\gLvlSRLatch[2] {
+    \subctkgLvlSRLatch{#1} {#2}
+}
+
+%% \ctikzsubcircuitdef{subctkgLvlNotGateRight} {
+%%     north, south, east, west,
+%%     northeast, northwest, southeast, southwest,
+%%     center,
+%%     in, out,
+%%     bin, bout%
+%% } {
+%%     node (#1-nor)[nor port] {}
+%%     %%
+%%     %% in
+%%     %%
+%%     ($(#1-nor.in 1)!0.50!(#1-nor.in 2)$)
+%%     ++ (-0.25,0)
+%%     coordinate (#1-in)
+%%     %%
+%%     (#1-nor.in 1)
+%%     \varcornerleftdown {($(#1-in|-#1-nor.in 1)!0.40!(#1-in)$)}
+%%     -- (#1-in)
+%%     (#1-nor.in 2)
+%%     \varcornerleftup {($(#1-in|-#1-nor.in 2)!0.40!(#1-in)$)}
+%%     -- (#1-in)
+%%     %%
+%%     %% out
+%%     %%
+%%     (#1-nor.out)
+%%     coordinate (#1-out)
+%%     %%
+%%     %% Marking b* p*
+%%     %%
+%%     \glvlmarkcoordinate {#1} {in} {(1,0)}
+%%     \glvlmarkcoordinate {#1} {out} {(-1,0)}
+%%     %%
+%%     %% Geo coords
+%%     %%
+%%     \markgeocoordinate {#1}
+%%     {(#1-nor.north)} {(#1-nor.south)}
+%%     {(#1-in)} {(#1-out)}
+%%     %%
+%% }
+%%
+%% \ctikzsubcircuitactivate{subctkgLvlNotGateRight}
+%%
+%% \newcommand\gLvlNotGateRight[2] {
+%%     \subctkgLvlNotGateRight{#1} {#2}
+%% }
+%%
+%% \def\leftrightgatepadding{0.5cm}
+%%
+%% \newcommand\markglvlgeocoordinate[1] {
+%%     coordinate (#1-origin)
+%%     ++(\glvllogicgatewidth,0)
+%%     coordinate (#1-rightvrt)
+%%     (#1-origin)
+%%     ++(0,\glvllogicgateheight)
+%%     coordinate (#1-topheight)
+%%     %%
+%%     %% We are marking geo coords early.
+%%     %% Because we can use them
+%%     %%
+%%     \markgeocoordinate {#1}
+%%     {(#1-topheight)} {(#1-origin)}
+%%     {(#1-origin)} {(#1-rightvrt)}
+%%     (#1-west)
+%%     ++(-\leftrightgatepadding,0)
+%%     coordinate (#1-leftpadding)
+%%     (#1-east)
+%%     ++(\leftrightgatepadding,0)
+%%     coordinate (#1-rightpadding)
+%% }
+%%
+%% \def\glvllogicgatewidth{10cm}
+%% \def\glvllogicgateheight{4cm}
+%% \newlength{\xnorglvllogicgatewidth}
+%% \setlength{\xnorglvllogicgatewidth}{\glvllogicgatewidth-2cm}
+%%
+
+\newcommand\testing[1] {
+    \gLvlSRLatch {#1-srl} {s}
+    %%
+    (#1-srl-q-|#1-srl-r)
+    ++(-1,0)
+    node (#1-nor1) [nor port, anchor = out] {}
+    %%
+    (#1-srl-qbar-|#1-nor1.out)
+    node (#1-nor2) [nor port, anchor = out] {}
+    %%
+    %% Connecting nor out to s and r
+    %%
+    (#1-nor1.out)
+    \varcornerrightup {(#1-srl-pr)}
+    -- (#1-srl-r)
+    %%
+    (#1-nor2.out)
+    \varcornerrightdown {(#1-srl-ps)}
+    -- (#1-srl-s)
+    %%
+    %%
+    %% Drawing nor 1 out to nor 2 in
+    %%
+    %% Marking
+    ($(#1-srl-pr)!0.80!(#1-srl-r)$)
+    coordinate (#1-nor1to2rightvrt)
+    %%
+    (#1-srl-ccfbabove)
+    %% ++(0,0.5)
+    coordinate (#1-nor1to2height)
+    %%
+    (#1-srl-center-|#1-nor1.in 1)
+    ++(-0.5,0)
+    coordinate (#1-nor1to2leftvrt)
+    %%
+    %% Drawing
+    (#1-nor1to2rightvrt|-#1-srl-r)
+    \constcornerdown {(#1-nor1to2height-|#1-nor1to2leftvrt)}
+    \constcornerleft {(#1-nor1to2leftvrt|-#1-nor2.in 1)}
+    \constcornerdown {(#1-nor2.in 1)}
+    -- (#1-nor2.in 1)
+    %%
+    %%
+    %% Markings for clk
+    \getmagnitude {#1}
+    {($(#1-nor2.in 1)-(#1-nor2.in 2)$)}
+    (#1-srl-center-|#1-nor1to2leftvrt)
+    ++(-\n{#1-magtmp},0)
+    coordinate (#1-clkbr)
+    %%
+    %% Drawing clk
+    %%
+    %%
+    (#1-nor2.in 2)
+    \aroundcornerleftup {($(#1-nor2.in 1)-(#1-nor2.in 2)$)}
+    {(#1-nor1to2leftvrt|-#1-nor2.in 1) ++(0,\cornerbase)}
+    \constcornerup {(#1-nor1.in 2)}
+    -- (#1-nor1.in 2)
+    %%
+    (#1-clkbr)
+    -- ++(-1,0)
+    coordinate (#1-clk)
+    %%
+    %% Drawing the d input
+    %%
+    (#1-nor1.in 1)
+    \aroundcornerleftdown {($(#1-nor1.in 1)-(#1-nor1.in 2)$)}
+    {(#1-clkbr|-#1-nor1.in 2) ++(0,-\cornerbase)}
+    \constcornerdown {(#1-clkbr|-#1-nor2.out) ++(-1,0)}
+    -- ++(-0.5,0)
+    coordinate (#1-d)
+    %%
+    %% Marking outputs
+    %%
+    (#1-srl-q)
+    coordinate (#1-q)
+    %%
+    (#1-srl-qbar)
+    coordinate (#1-qbar)
     %%
     %% Marking b* p*
     %%
-    \glvlmarkcoordinate {#1} {in} {(1,0)}
-    \glvlmarkcoordinate {#1} {out} {(-1,0)}
+    \glvlmarkcoordinate {#1} {d} {(1,0)}
+    \glvlmarkcoordinate {#1} {clk} {(1,0)}
+    \glvlmarkcoordinate {#1} {q} {(-1,0)}
+    \glvlmarkcoordinate {#1} {qbar} {(-1,0)}
     %%
     %% Geo coords
     %%
     \markgeocoordinate {#1}
-    {(#1-nor.north)} {(#1-nor.south)}
-    {(#1-in)} {(#1-out)}
-    %%
-}
+    {(#1-srl-north)} {(#1-srl-south)}
+    {(#1-d)} {(#1-q)}
 
-\ctikzsubcircuitactivate{subctkgLvlNotGateRight}
-
-\newcommand\gLvlNotGateRight[2] {
-    \subctkgLvlNotGateRight{#1} {#2}
-}
-
-\def\glvllogicgatewidth{10cm}
-\def\glvllogicgateheight{4cm}
-\newlength{\xnorglvllogicgatewidth}
-\setlength{\xnorglvllogicgatewidth}{\glvllogicgatewidth-2cm}
-
-\newcommand\testing[1] {
-
-    \gLvlNotGateRight {not} {in}
-
+    %% testing
+    (#1-nor2.in 2)
+    ++($(#1-nor2.out)-(#1-srl-nor2.in 2)$)
+    ++ (-1,0)
+    node (#1-rstnor) [nor port, anchor = out] {}
 }
 
 \begin{document}
@@ -87,12 +302,20 @@
         \draw
 
         (0,0)
-        -- ++(\glvllogicgatewidth,0)
-        (0,0)
-        -- ++(0,\glvllogicgateheight)
-        (0,0)
+        % -- ++(\glvllogicgatewidth,0)
+        % (0,0)
+        % -- ++(0,\glvllogicgateheight)
+        % (0,0)
 
         \testing {billie}
+
+        %% (billie-ain) node [ocirc] {}
+        %% (billie-bin) node [ocirc] {}
+        %% (billie-yout) node [ocirc] {}
+
+        %% (billie-ain) node [left = 4pt] {\texttt{A}}
+        %% (billie-bin) node [left = 4pt] {\texttt{B}}
+        %% (billie-yout) node [right = 4pt] {\texttt{Y}}
 
         %% (billie-north) -- ++(1,1)
         %% (billie-south) -- ++(1,1)
@@ -101,8 +324,49 @@
         %% (billie-center) -- ++(1,1)
         ;
 
+        \draw [dashed, catppuccinfg!50!catppuccinbg, thin,]
+        (billie-d)
+        circle(0.5cm)
+        (billie-d)
+        ++(0,-0.5)
+        \constcornerdown {++(1,-2)}
+        -- ++(2,0)
+
+        ;
     \end{tikzpicture}
 
 \end{figure}
+
+% \colorlet{red} {catppuccinred}
+% \colorlet{blue} {catppuccinblue}
+
+%%%% \tikzset{timing/m/base/.style={catppuccinorange}}
+%%%% \tikzset{timing/x/.style={catppuccinred}}
+%%%% \tikzset{timing/z/.style={catppuccinblue}}
+%%%%
+%%%% \begin{tikztimingtable}
+%%%%
+%%%%     %% \toprule
+%%%%     %% \texttt{SIGNALS} &     \texttt{TIMING DIAGRAM} \\
+%%%%     \texttt{CLK}               &     16{2C} \\ % ends with edge
+%%%%     \texttt{RECLK}             &     8{2H0.5m0.5l0.5hhH} \\
+%%%%     \texttt{FECLK}             &     0.5h7{3.75H0.25m0.25l}3.75H \\
+%%%%     \texttt{DATA}              &     0.25H3.0L1.0HMZX2.0L3.0H3.0L5.0H3.0L3.0H2.0L2.0H1.0L2.0H1.0L0.75H \\
+%%%%     %% $\mathtt{\overline{DATA}}$ &     0.25LHHHLHHLLLHHHLLLLLHHHLLLHHLLHLLH0.75L  \\
+%%%%     \texttt{MASTER Q}          &     2.0L12.0H4.0L4.0H10.0L  \\
+%%%%     \texttt{SLAVE Q}           &     4.0L12.0H4.0L4.0H8.0L  \\
+%%%%     \extracode
+%%%%     \begin{scope} [semitransparent, thin]
+%%%%         \vertlines[dotted] {2, 4, 6, 8, ..., 30}
+%%%%     \end{scope}
+%%%% \end{tikztimingtable}
+%%%%
+%%%% $\mathtt{\overline{HAI}}$
+
+%% \newcommand{\OL}[1]{\mbox{$\overline{\textrm{#1}}$}}
+%% ${\overline{\mbox{\texttt{DATA}}}}$ but this isn't
+%% %% \fontdimen8\textfont3=0.6pt
+%% \texttt{\OL{D}}
+%% %% \texttt{${{\widebar{\mbox{DATA}}}}$}%%  \texttt{\={D}} but this isn't
 
 \end{document}
