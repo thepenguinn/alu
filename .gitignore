@@ -10,6 +10,7 @@ alutester_vvp_file
 testbench/another.c
 testbench/test.c
 testbench/true.c
+*/tikzpics/dep_cache.lua
 figcache/
 _minted*
 *.toc
