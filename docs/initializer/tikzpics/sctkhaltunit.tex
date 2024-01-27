@@ -1,0 +1,30 @@
+\tikzset{haltUnit/.style = {muxdemux, muxdemux def = {
+    NL = 0, NR = 2, NB = 6, NT = 6,
+    Lh = 3, Rh = 3,
+    w = 5 },
+    draw only right pins = {1},
+    draw only top pins = {1,2,3},
+    draw only bottom pins = {3,4}, }
+}
+
+\ctikzsubcircuitdef{sctkhaltunit} {
+    notreclk, notdfeclk, notdreclk, rgfsrq, muxlast, reclk,
+    bnotreclk, bnotdfeclk, bnotdreclk, brgfsrq, bmuxlast, breclk%
+} {
+    node (#1) [haltUnit]{}%
+    \markcoordinate {#1} {notreclk}  {tpin 1}
+    \markcoordinate {#1} {notdfeclk} {tpin 2}
+    \markcoordinate {#1} {notdreclk} {tpin 3}
+    \markcoordinate {#1} {rgfsrq}    {bpin 3}
+    \markcoordinate {#1} {muxlast}   {bpin 4}
+    \markcoordinate {#1} {reclk}     {rpin 1}
+    \markcoordinate {#1} {fsrq}      {rpin 2}
+    (#1-breclk) node [circleinv, fill = circleinvfillcolor, anchor = left] {}
+    (#1-bmuxlast) node [circleinv, fill = circleinvfillcolor, anchor = top] {}
+}
+
+\ctikzsubcircuitactivate{sctkhaltunit}
+
+\newcommand\sctklabelhaltUnit[2] {
+    (#1.center) node[]{#2}
+}

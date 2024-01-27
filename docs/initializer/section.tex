@@ -1,8 +1,8 @@
 \documentclass[../main]{subfiles}
 
 \ifSubfilesClassLoaded{
-    \input{tikzset}
-    \input{subctikz}
+    % \input{tikzset}
+    % \input{subctikz}
     % \tikzexternalize[prefix=figcache/]
 } {
 }
@@ -169,38 +169,7 @@
 
     \centering
     \resizebox{0.6\textwidth}{!}{
-
-        \begin{tikzpicture} [american]
-
-            \draw [line join = round]
-            (0,0)
-            \initCircuit {init} {clk}
-            \labelinitCircuit {init}
-            {\texttt{CLK GEN}}
-            {\texttt{RST GEN}}
-            {\texttt{HALT UNIT}}
-
-            (init-clk) node[ocirc] {}
-            (init-clk) node[left = 4pt] {$Clk$}
-
-            (init-on) node[ocirc] {}
-            (init-on) node[left = 4pt] {$On$}
-
-            (init-muxlast) node[ocirc] {}
-            (init-muxlast) node[below = 4pt] {$Muxlast$}
-
-            (init-feclk) node[ocirc] {}
-            (init-feclk) node[right = 4pt] {$Feclk$}
-
-            (init-reclk) node[ocirc] {}
-            (init-reclk) node[right = 4pt] {$Reclk$}
-
-            (init-rstsig) node[ocirc] {}
-            (init-rstsig) node[right = 4pt] {$Rstsig$}
-
-            ;
-        \end{tikzpicture}
-
+        \includegraphics{tikzpics/epicinitcircuit.pdf}
     }
     \caption{Schematic of the Initializing Circuit}
 \end{figure}

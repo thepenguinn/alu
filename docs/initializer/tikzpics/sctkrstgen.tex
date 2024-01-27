@@ -1,0 +1,25 @@
+\tikzset{rstGen/.style = {muxdemux, muxdemux def = {
+    NL = 2, NR = 2, NB = 0, NT = 6,
+    Lh = 3, Rh = 3,
+    w = 5 },
+    draw  only left pins = {1},
+    draw only top pins = {2,3}, }
+}
+
+\ctikzsubcircuitdef{sctkrstgen} {
+    on, notreclk, notdfeclk, rstsig, fsrq,
+    bon, bnotreclk, bnotdfeclk, brstsig, bfsrq%
+} {
+    node (#1) [rstGen]{}%
+    \markcoordinate {#1} {on}        {lpin 1}
+    \markcoordinate {#1} {notreclk}  {tpin 2}
+    \markcoordinate {#1} {notdfeclk} {tpin 3}
+    \markcoordinate {#1} {rstsig}    {rpin 1}
+    \markcoordinate {#1} {fsrq}      {rpin 2}
+}
+
+\ctikzsubcircuitactivate{sctkrstgen}
+
+\newcommand\sctklabelrstGen[2] {
+    (#1.center) node[]{#2}
+}

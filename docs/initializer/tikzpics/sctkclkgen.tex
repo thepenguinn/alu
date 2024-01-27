@@ -1,0 +1,25 @@
+\tikzset{clkGen/.style = {muxdemux, muxdemux def = {
+    NL = 3, NR = 4, NB = 0, NT = 0,
+    Lh = 3, Rh = 3,
+    w = 5 },
+    draw only left pins = {1} }
+}
+
+\ctikzsubcircuitdef{sctkclkgen} {
+    clk, feclk, notdreclk, notdfeclk, notreclk,
+    bclk, bfeclk, bnotdreclk, bnotdfeclk, bnotreclk%
+} {
+    node (#1) [clkGen]{}%
+    \markcoordinate {#1} {clk}       {lpin 1}
+    \markcoordinate {#1} {feclk}     {rpin 1}
+    \markcoordinate {#1} {notdreclk} {rpin 2}
+    \markcoordinate {#1} {notdfeclk} {rpin 3}
+    \markcoordinate {#1} {notreclk}  {rpin 4}
+    (#1-bfeclk) node [circleinv, fill = circleinvfillcolor, anchor = left] {}
+}
+
+\ctikzsubcircuitactivate{sctkclkgen}
+
+\newcommand\sctklabelclkGen[2] {
+    (#1.center) node[]{#2}
+}
