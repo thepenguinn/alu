@@ -5,7 +5,7 @@ TEXFILES = ../catppuccin-latte.sty ../catppuccin-mocha.sty ../colorthemes.sty \
 		   ../cornercommands.sty ../generalcommands.sty ../generalsubctikz.sty \
 		   ../generaltikzset.sty ../abstract.tex ../main.tex ../preamble.tex
 
-TESTBENCH = section.tex tikzset.tex subctikz.tex
+TESTBENCH = section.tex
 
 section: viewpdf
 
