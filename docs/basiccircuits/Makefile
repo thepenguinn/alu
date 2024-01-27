@@ -6,7 +6,7 @@ TEXFILES = ../catppuccin-latte.sty ../catppuccin-mocha.sty ../colorthemes.sty \
 		   ../generaltikzset.sty ../abstract.tex ../main.tex ../preamble.tex
 
 
-BASICCIRUITS = section.tex tikzset.tex subctikz.tex
+BASICCIRUITS = section.tex
 
 section: viewpdf
 

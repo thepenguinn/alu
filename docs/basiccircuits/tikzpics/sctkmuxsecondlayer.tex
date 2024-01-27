@@ -1,3 +1,12 @@
+\tikzset{muxSecondLayer/.style = {muxdemux, muxdemux def = {
+    NL = 4, NR = 4, NB = 3, NT = 8,
+    Lh = 4, Rh = 4,
+    % Lh = 5.35, Rh = 3,
+    w = 8 },
+    draw only bottom pins = {2}
+    }
+}
+
 \ctikzsubcircuitdef{sctkmuxsecondlayer} {
     in00, in01, in02, in03, in04, in05, in06, in07,
     in08, in09, in10, in11, in12, in13, in14, in15,
