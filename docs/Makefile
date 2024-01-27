@@ -8,14 +8,14 @@ TEXFILES = catppuccin-latte.sty catppuccin-mocha.sty colorthemes.sty \
 # PDFFILES = onebitalu/section.pdf counter/section.pdf
 #
 
-BASICCIRUITS = basiccircuits/section.tex basiccircuits/tikzset.tex basiccircuits/subctikz.tex
-COUNTER = counter/section.tex counter/tikzset.tex counter/subctikz.tex
-FINALSCHEMATICS = finalschematics/section.tex finalschematics/tikzset.tex finalschematics/subctikz.tex
-INITIALIZER = initializer/section.tex initializer/tikzset.tex initializer/subctikz.tex
-INTRODUCTION = introduction/section.tex introduction/tikzset.tex introduction/subctikz.tex
-MEMORYUNIT = memoryunit/section.tex memoryunit/tikzset.tex memoryunit/subctikz.tex
-ONEBITALU = onebitalu/section.tex onebitalu/tikzset.tex onebitalu/subctikz.tex
-TESTBENCH = testbench/section.tex testbench/tikzset.tex testbench/subctikz.tex
+BASICCIRUITS = basiccircuits/section.tex
+COUNTER = counter/section.tex
+FINALSCHEMATICS = finalschematics/section.tex
+INITIALIZER = initializer/section.tex
+INTRODUCTION = introduction/section.tex
+MEMORYUNIT = memoryunit/section.tex
+ONEBITALU = onebitalu/section.tex
+TESTBENCH = testbench/section.tex
 
 main: viewpdf
 
