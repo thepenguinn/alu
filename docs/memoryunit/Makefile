@@ -5,7 +5,7 @@ TEXFILES = ../catppuccin-latte.sty ../catppuccin-mocha.sty ../colorthemes.sty \
 		   ../cornercommands.sty ../generalcommands.sty ../generalsubctikz.sty \
 		   ../generaltikzset.sty ../abstract.tex ../main.tex ../preamble.tex
 
-MEMORYUNIT = section.tex tikzset.tex subctikz.tex
+MEMORYUNIT = section.tex
 
 section: viewpdf
 
