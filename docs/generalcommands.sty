@@ -60,3 +60,28 @@
     coordinate (#1-p#2)
 
 }
+
+%% from basiccircuits
+\def\leftrightgatepadding{0.5cm}
+
+\newcommand\markglvlgeocoordinate[1] {
+    coordinate (#1-origin)
+    ++(\glvllogicgatewidth,0)
+    coordinate (#1-rightvrt)
+    (#1-origin)
+    ++(0,\glvllogicgateheight)
+    coordinate (#1-topheight)
+    %%
+    %% We are marking geo coords early.
+    %% Because we can use them
+    %%
+    \markgeocoordinate {#1}
+    {(#1-topheight)} {(#1-origin)}
+    {(#1-origin)} {(#1-rightvrt)}
+    (#1-west)
+    ++(-\leftrightgatepadding,0)
+    coordinate (#1-leftpadding)
+    (#1-east)
+    ++(\leftrightgatepadding,0)
+    coordinate (#1-rightpadding)
+}
