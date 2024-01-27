@@ -1,8 +1,8 @@
 \documentclass[../main]{subfiles}
 
 \ifSubfilesClassLoaded{
-    \input{tikzset}
-    \input{subctikz}
+    \input{tikzset.tex}
+    %% \input{subctikz.tex}
     %% um, why did I add this...
     %% \input{../onebitalu/tikzset}
     %% \input{../onebitalu/subctikz}
@@ -41,20 +41,8 @@
         \centering
         \vfill
         \resizebox {0.3\textwidth} {!} {
-            \begin{tikzpicture} [american]
-                \draw
-                (0,0)
-                \sctkglvlsrlatch {srl} {s}
-                (srl-s)    node [ocirc] {}
-                (srl-r)    node [ocirc] {}
-                (srl-q)    node [ocirc] {}
-                (srl-qbar) node [ocirc] {}
-                (srl-s)    node [left = 4pt]             {\texttt{S}}
-                (srl-r)    node [left = 4pt]             {\texttt{R}}
-                (srl-q)    node [right = 4pt]            {\texttt{Q}}
-                (srl-qbar) node [right = 4pt]        {\texttt{\={Q}}}
-                ;
-            \end{tikzpicture}
+            \includegraphics {tikzpics/epicglvlsrlatch.pdf}
+            %% where here: epicglvlsrlatch
         }
         \vfill
         &
@@ -102,27 +90,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
         \centering
         \vfill
         \resizebox{0.5\textwidth}{!} {
-            \begin{tikzpicture} [american]
-
-                \draw
-                (0,0)
-
-                \sctkglvlsrflipflop {srff} {s}
-
-                (srff-s)    node [ocirc] {}
-                (srff-r)    node [ocirc] {}
-                (srff-q)    node [ocirc] {}
-                (srff-qbar) node [ocirc] {}
-                (srff-clk) node [ocirc] {}
-
-                (srff-s)    node [left = 4pt]             {\texttt{S}}
-                (srff-r)    node [left = 4pt]             {\texttt{R}}
-                (srff-q)    node [right = 4pt]            {\texttt{Q}}
-                (srff-qbar) node [right = 4pt]        {\texttt{\={Q}}}
-                (srff-clk)  node [left = 4pt]           {\texttt{CLK}}
-
-                ;
-            \end{tikzpicture}
+            \includegraphics {tikzpics/epicglvlsrflipflop.pdf}
+            %% where here: epicglvlsrflipflop
         }
         \vfill
         &
@@ -182,25 +151,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
         \centering
         \vfill
         \resizebox{0.6\textwidth}{!} {
-            \begin{tikzpicture} [american]
-
-                \draw
-                (0,0)
-
-                \sctkglvldflipflop {dff} {s}
-
-                (dff-d)    node [ocirc] {}
-                (dff-q)    node [ocirc] {}
-                (dff-qbar) node [ocirc] {}
-                (dff-clk) node [ocirc]  {}
-
-                (dff-d)    node [left = 4pt]             {\texttt{D}}
-                (dff-clk)  node [left = 4pt]           {\texttt{CLK}}
-                (dff-q)    node [right = 4pt]            {\texttt{Q}}
-                (dff-qbar) node [right = 4pt]        {\texttt{\={Q}}}
-
-                ;
-            \end{tikzpicture}
+            \includegraphics {tikzpics/epicglvldflipflop.pdf}
+            %% where here: epicglvldflipflop
         }
         \vfill
         &
@@ -258,27 +210,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
         \centering
         \vfill
         \resizebox{0.6\textwidth}{!} {
-            \begin{tikzpicture} [american]
-
-                \draw
-                (0,0)
-
-                \sctkglvldflipflopsr {dffsr} {s}
-
-                (dffsr-d)    node [ocirc] {}
-                (dffsr-q)    node [ocirc] {}
-                (dffsr-qbar) node [ocirc] {}
-                (dffsr-clk)  node [ocirc] {}
-                (dffsr-rst)  node [ocirc] {}
-
-                (dffsr-d)    node [left = 4pt]             {\texttt{D}}
-                (dffsr-clk)  node [left = 4pt]           {\texttt{CLK}}
-                (dffsr-q)    node [right = 4pt]            {\texttt{Q}}
-                (dffsr-qbar) node [right = 4pt]        {\texttt{\={Q}}}
-                (dffsr-rst)  node [below = 4pt]          {\texttt{RST}}
-
-                ;
-            \end{tikzpicture}
+            \includegraphics {tikzpics/epicglvldflipflopsr.pdf}
+            %% where here: epicglvldflipflopsr
         }
         \vfill
         &
@@ -333,77 +266,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
 \begin{figure} [!hb]
     \centering
     \resizebox{\textwidth}{!} {
-        \begin{tikzpicture} [american]
-
-            \draw
-            (0,0)
-
-            \sctkglvlmsflipflop {msff} {s}
-
-            (msff-d)     node [ocirc] {}
-            (msff-rst)   node [ocirc] {}
-            (msff-q)     node [ocirc] {}
-            (msff-qbar)  node [ocirc] {}
-            (msff-reclk) node [ocirc] {}
-            (msff-feclk) node [ocirc] {}
-
-            (msff-d)     node [left = 4pt]             {\texttt{D}}
-            (msff-rst)   node [below = 4pt]          {\texttt{RST}}
-            (msff-q)     node [right = 4pt]            {\texttt{Q}}
-            (msff-qbar)  node [right = 4pt]        {\texttt{\={Q}}}
-            (msff-reclk) node [above = 4pt]        {\texttt{RECLK}}
-            (msff-feclk) node [above = 4pt]        {\texttt{FECLK}}
-
-            ;
-
-            %% Drawing a table to indicate the active state of
-            %% inputs
-
-            \draw
-            (msff-northeast)
-
-            node (mgla1) [align = center, anchor = north east] {
-
-                \begin{tabularx} {0.33\textwidth} {*{2}{>{\raggedleft\arraybackslash}X}}
-                                    &       \texttt{INPUTS} \\
-                    \midrule
-                    \texttt{D}      &   \texttt{ACTIVE LOW} \\
-                    \texttt{RST}    &  \texttt{ACTIVE HIGH} \\
-                    \texttt{RECLK}  &   \texttt{ACTIVE LOW} \\
-                    \texttt{FECLK}  &   \texttt{ACTIVE LOW} \\
-                \end{tabularx}
-
-            }
-
-            (msff-southwest)
-
-            node (mgla2) [align = center, anchor = south west] {
-
-                \begin{tabularx} {0.33\textwidth} {*{1}{>{\raggedright\arraybackslash}p{0.4cm}}*{1}{>{\raggedright\arraybackslash}X}}
-                    \multicolumn{2}{l}{\texttt{OUTPUTS}}     \\
-                    \midrule
-                    \texttt{Q}       & \texttt{ACTIVE HIGH}  \\
-                    \texttt{\={Q}}   & \texttt{ACTIVE LOW}  \\
-                \end{tabularx}
-
-            }
-
-            ;
-
-            %% TEST Marking some points
-
-            \draw [dashed, catppuccinfg!70!catppuccinbg, thin,]
-            (msff-slave-s)
-            circle(0.35cm)
-            (msff-slave-s)
-            ++(0,0.25)
-            \constcornerdown {++(1,1.5)}
-            -- ++(2,0)
-            node (msff-label-master-q) [right = 4pt] {\texttt{MASTER Q}}
-            ;
-
-
-        \end{tikzpicture}
+        \includegraphics {tikzpics/epicglvlmsflipflop.pdf}
+        %% where here: epicglvlmsflipflop
     }
     \caption{MS FlipFlop}
     \label{fig:glvlmsflipflop}
@@ -573,86 +437,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
 \begin{figure} [!h]
     \centering
     \resizebox{\textwidth}{!} {
-        \begin{tikzpicture}
-
-            \draw [thick, color = catppuccinfg]
-            % \draw [thick, color = {rgb:red,100;green,50;blue,20}]
-            % \draw [thick, color = \color{draculafg}]
-            (0,0)
-            \sctkmuxsixteen {mux} {out}
-
-            \sctklabelmuxsixteenfl {mux}
-            {\texttt{FL 07}}
-            {\texttt{FL 06}}
-            {\texttt{FL 05}}
-            {\texttt{FL 04}}
-            {\texttt{FL 03}}
-            {\texttt{FL 02}}
-            {\texttt{FL 01}}
-            {\texttt{FL 00}}
-
-            \sctklabelmuxsixteensl {mux}
-            {\texttt{SECOND LAYER}}
-
-            (mux-in00) node [ocirc] {}
-            (mux-in01) node [ocirc] {}
-            (mux-in02) node [ocirc] {}
-            (mux-in03) node [ocirc] {}
-            (mux-in04) node [ocirc] {}
-            (mux-in05) node [ocirc] {}
-            (mux-in06) node [ocirc] {}
-            (mux-in07) node [ocirc] {}
-            (mux-in08) node [ocirc] {}
-            (mux-in09) node [ocirc] {}
-            (mux-in10) node [ocirc] {}
-            (mux-in11) node [ocirc] {}
-            (mux-in12) node [ocirc] {}
-            (mux-in13) node [ocirc] {}
-            (mux-in14) node [ocirc] {}
-            (mux-in15) node [ocirc] {}
-
-            (mux-in00) node [above = 4pt] {\texttt{I\textsubscript{00}}}
-            (mux-in01) node [above = 4pt] {\texttt{I\textsubscript{01}}}
-            (mux-in02) node [above = 4pt] {\texttt{I\textsubscript{02}}}
-            (mux-in03) node [above = 4pt] {\texttt{I\textsubscript{03}}}
-            (mux-in04) node [above = 4pt] {\texttt{I\textsubscript{04}}}
-            (mux-in05) node [above = 4pt] {\texttt{I\textsubscript{05}}}
-            (mux-in06) node [above = 4pt] {\texttt{I\textsubscript{06}}}
-            (mux-in07) node [above = 4pt] {\texttt{I\textsubscript{07}}}
-            (mux-in08) node [above = 4pt] {\texttt{I\textsubscript{08}}}
-            (mux-in09) node [above = 4pt] {\texttt{I\textsubscript{09}}}
-            (mux-in10) node [above = 4pt] {\texttt{I\textsubscript{10}}}
-            (mux-in11) node [above = 4pt] {\texttt{I\textsubscript{11}}}
-            (mux-in12) node [above = 4pt] {\texttt{I\textsubscript{12}}}
-            (mux-in13) node [above = 4pt] {\texttt{I\textsubscript{13}}}
-            (mux-in14) node [above = 4pt] {\texttt{I\textsubscript{14}}}
-            (mux-in15) node [above = 4pt] {\texttt{I\textsubscript{15}}}
-
-            (mux-sl0) node [ocirc] {}
-            (mux-sl1) node [ocirc] {}
-            (mux-sl2) node [ocirc] {}
-            (mux-sl3) node [ocirc] {}
-
-            (mux-sl0) node [left = 4pt] {\texttt{SL\textsubscript{0}}}
-            (mux-sl1) node [left = 4pt] {\texttt{SL\textsubscript{1}}}
-            (mux-sl2) node [left = 4pt] {\texttt{SL\textsubscript{2}}}
-            (mux-sl3) node [left = 4pt] {\texttt{SL\textsubscript{3}}}
-
-            (mux-out) node [ocirc] {}
-            (mux-out) node [below = 4pt] {\texttt{OUT}}
-
-            (mux-muxlast) node [circleinv, fill = circleinvfillcolor, anchor = top] {}
-
-            (mux-muxlast)
-            -- (mux-muxlast|-mux-out)
-
-            coordinate (muxlast)
-            (muxlast) node [ocirc] {}
-            (muxlast) node [below = 4pt] {\texttt{MUXLAST}}
-
-            ;
-
-        \end{tikzpicture}
+        \includegraphics {tikzpics/epicmuxsixteen.pdf}
+        %% where here: epicmuxsixteen
     }
     \caption{Schematic of a 16 to 1 MUX}
 \end{figure}
@@ -708,23 +494,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
         \centering
         \vfill
         \resizebox{0.6\textwidth}{!} {
-            \begin{tikzpicture} [american]
-
-                \draw
-                (0,0)
-
-                \sctkglvlxorgate {xor} {ain}
-
-                (xor-ain)     node [ocirc] {}
-                (xor-bin)     node [ocirc] {}
-                (xor-yout)    node [ocirc] {}
-
-                (xor-ain)    node [left = 4pt]    {\texttt{A}}
-                (xor-bin)    node [left = 4pt]    {\texttt{B}}
-                (xor-yout)  node [right = 4pt]    {\texttt{Y}}
-
-                ;
-            \end{tikzpicture}
+            \includegraphics {tikzpics/epicglvlxorgate.pdf}
+            %% where here: epicglvlxorgate
         }
         \vfill
         &
@@ -774,23 +545,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
         \centering
         \vfill
         \resizebox{0.6\textwidth}{!} {
-            \begin{tikzpicture} [american]
-
-                \draw
-                (0,0)
-
-                \sctkglvlandgate {and} {ain}
-
-                (and-ain)     node [ocirc] {}
-                (and-bin)     node [ocirc] {}
-                (and-yout)    node [ocirc] {}
-
-                (and-ain)    node [left = 4pt]    {\texttt{A}}
-                (and-bin)    node [left = 4pt]    {\texttt{B}}
-                (and-yout)  node [right = 4pt]    {\texttt{Y}}
-
-                ;
-            \end{tikzpicture}
+            \includegraphics {tikzpics/epicglvlandgate.pdf}
+            %% where here: epicglvlandgate
         }
         \vfill
         &
@@ -838,23 +594,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
         \centering
         \vfill
         \resizebox{0.6\textwidth}{!} {
-            \begin{tikzpicture} [american]
-
-                \draw
-                (0,0)
-
-                \sctkglvlorgate {or} {ain}
-
-                (or-ain)     node [ocirc] {}
-                (or-bin)     node [ocirc] {}
-                (or-yout)    node [ocirc] {}
-
-                (or-ain)    node [left = 4pt]    {\texttt{A}}
-                (or-bin)    node [left = 4pt]    {\texttt{B}}
-                (or-yout)  node [right = 4pt]    {\texttt{Y}}
-
-                ;
-            \end{tikzpicture}
+            \includegraphics {tikzpics/epicglvlorgate.pdf}
+            %% where here: epicglvlorgate
         }
         \vfill
         &
@@ -901,21 +642,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
         \centering
         \vfill
         \resizebox{0.6\textwidth}{!} {
-            \begin{tikzpicture} [american]
-
-                \draw
-                (0,0)
-
-                \sctkglvlnotgate {not} {ain}
-
-                (not-ain)     node [ocirc] {}
-                (not-yout)    node [ocirc] {}
-
-                (not-ain)    node [left = 4pt]    {\texttt{A}}
-                (not-yout)  node [right = 4pt]    {\texttt{Y}}
-
-                ;
-            \end{tikzpicture}
+            \includegraphics {tikzpics/epicglvlnotgate.pdf}
+            %% where here: epicglvlnotgate
         }
         \vfill
         &
@@ -957,23 +685,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
         \centering
         \vfill
         \resizebox{0.6\textwidth}{!} {
-            \begin{tikzpicture} [american]
-
-                \draw
-                (0,0)
-
-                \sctkglvlnorgate {nor} {ain}
-
-                (nor-ain)     node [ocirc] {}
-                (nor-bin)     node [ocirc] {}
-                (nor-yout)    node [ocirc] {}
-
-                (nor-ain)    node [left = 4pt]    {\texttt{A}}
-                (nor-bin)    node [left = 4pt]    {\texttt{B}}
-                (nor-yout)  node [right = 4pt]    {\texttt{Y}}
-
-                ;
-            \end{tikzpicture}
+            \includegraphics {tikzpics/epicglvlnorgate.pdf}
+            %% where here: epicglvlnorgate
         }
         \vfill
         &
@@ -1017,23 +730,8 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
         \centering
         \vfill
         \resizebox{0.6\textwidth}{!} {
-            \begin{tikzpicture} [american]
-
-                \draw
-                (0,0)
-
-                \sctkglvlnandgate {nand} {ain}
-
-                (nand-ain)     node [ocirc] {}
-                (nand-bin)     node [ocirc] {}
-                (nand-yout)    node [ocirc] {}
-
-                (nand-ain)    node [left = 4pt]    {\texttt{A}}
-                (nand-bin)    node [left = 4pt]    {\texttt{B}}
-                (nand-yout)  node [right = 4pt]    {\texttt{Y}}
-
-                ;
-            \end{tikzpicture}
+            \includegraphics {tikzpics/epicglvlnandgate.pdf}
+            %% where here: epicglvlnandgate
         }
         \vfill
         &
@@ -1104,28 +802,4 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
     endmodule
 \end{minted}
 
-%%% \section{Flipflops}
-%%%
-%%% \newcommand\testing[1] {
-%%%
-%%% }
-%%%
-%%% \tikzset{external/force remake=true}
-%%%
-%%% \subsection {SR Latch}
-%%%
-%%% \begin{figure} [!ht]
-%%%     \centering
-%%%     \resizebox{\textwidth}{!} {
-%%%         \begin{tikzpicture}
-%%%             \draw
-%%%             \testing {billie}
-%%%             ;
-%%%         \end{tikzpicture}
-%%%     }
-%%%     \caption{SR Latch}
-%%% \end{figure}
-%%%
-%%% \tikzset{external/force remake=false}
-%%%
 \end{document}

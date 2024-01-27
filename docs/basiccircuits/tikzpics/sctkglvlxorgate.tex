@@ -1,0 +1,44 @@
+\ctikzsubcircuitdef{sctkglvlxorgate} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    ain, bin, yout,
+    bain, bbin, byout%
+} {
+    \markglvlgeocoordinate {#1}
+    (#1-west)
+    \gLvlXnorGate {#1-xnor} {west}
+    %%
+    ($(#1-xnor-yout)!0.07!(#1-east)$)
+    node (#1-notnor) [nor port, anchor = west] {}
+    %%
+    %% connecing xnor yout to notnor in
+    %%
+    (#1-notnor.in 1)
+    \varcornerleftdown {($(#1-xnor-yout|-#1-notnor.in 1)!0.40!(#1-xnor-yout)$)}
+    -- (#1-xnor-yout)
+    (#1-notnor.in 2)
+    \varcornerleftup {($(#1-xnor-yout|-#1-notnor.in 2)!0.40!(#1-xnor-yout)$)}
+    -- (#1-xnor-yout)
+    %%
+    %% Drawing outputs
+    %%
+    (#1-notnor.out)
+    -- (#1-east)
+    coordinate (#1-yout)
+    %%
+    %% Marking inputs
+    %%
+    (#1-xnor-ain)
+    coordinate (#1-ain)
+    %%
+    (#1-xnor-bin)
+    coordinate (#1-bin)
+    %%
+    \glvlmarkcoordinate {#1} {ain}     {(1,0)}
+    \glvlmarkcoordinate {#1} {bin}     {(1,0)}
+    \glvlmarkcoordinate {#1} {yout}    {(-1,0)}
+    %%
+}
+
+\ctikzsubcircuitactivate{sctkglvlxorgate}

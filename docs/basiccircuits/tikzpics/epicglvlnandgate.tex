@@ -1,0 +1,17 @@
+\begin{tikzpicture} [american]
+
+    \draw
+(0,0)
+
+    \sctkglvlnandgate {nand} {ain}
+
+    (nand-ain)     node [ocirc] {}
+    (nand-bin)     node [ocirc] {}
+    (nand-yout)    node [ocirc] {}
+
+    (nand-ain)    node [left = 4pt]    {\texttt{A}}
+    (nand-bin)    node [left = 4pt]    {\texttt{B}}
+    (nand-yout)  node [right = 4pt]    {\texttt{Y}}
+
+    ;
+\end{tikzpicture}

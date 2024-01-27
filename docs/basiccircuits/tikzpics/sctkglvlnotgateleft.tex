@@ -1,0 +1,36 @@
+\ctikzsubcircuitdef{sctkglvlnotgateleft} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    in, out,
+    bin, bout%
+} {
+    node (#1-nor)[nor port, rotate = 180] {}
+    %%
+    %% in
+    %%
+    (#1-nor.in 1)
+    -- (#1-nor.in 2)
+    ($(#1-nor.in 1)!0.50!(#1-nor.in 2)$)
+    -- ++(\glvlbpingap,0)
+    coordinate (#1-in)
+    %%
+    %% out
+    (#1-nor.out)
+    -- ++(-\glvlbpingap,0)
+    coordinate (#1-out)
+    %%
+    %% Marking b* p*
+    %%
+    \glvlmarkcoordinate {#1} {in} {(-1,0)}
+    \glvlmarkcoordinate {#1} {out} {(1,0)}
+    %%
+    %% Geo coords
+    %%
+    \markgeocoordinate {#1}
+    {(#1-nor.north)} {(#1-nor.south)}
+    {(#1-out)} {(#1-in)}
+    %%
+}
+
+\ctikzsubcircuitactivate{sctkglvlnotgateleft}

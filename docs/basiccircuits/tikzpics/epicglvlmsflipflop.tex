@@ -1,0 +1,71 @@
+\begin{tikzpicture} [american]
+
+    \draw
+(0,0)
+
+    \sctkglvlmsflipflop {msff} {s}
+
+    (msff-d)     node [ocirc] {}
+    (msff-rst)   node [ocirc] {}
+    (msff-q)     node [ocirc] {}
+    (msff-qbar)  node [ocirc] {}
+    (msff-reclk) node [ocirc] {}
+    (msff-feclk) node [ocirc] {}
+
+    (msff-d)     node [left = 4pt]             {\texttt{D}}
+    (msff-rst)   node [below = 4pt]          {\texttt{RST}}
+    (msff-q)     node [right = 4pt]            {\texttt{Q}}
+    (msff-qbar)  node [right = 4pt]        {\texttt{\={Q}}}
+    (msff-reclk) node [above = 4pt]        {\texttt{RECLK}}
+    (msff-feclk) node [above = 4pt]        {\texttt{FECLK}}
+
+    ;
+
+%% Drawing a table to indicate the active state of
+%% inputs
+
+    \draw
+(msff-northeast)
+
+    node (mgla1) [align = center, anchor = north east] {
+
+        \begin{tabularx} {0.33\textwidth} {*{2}{>{\raggedleft\arraybackslash}X}}
+        &       \texttt{INPUTS} \\
+            \midrule
+            \texttt{D}      &   \texttt{ACTIVE LOW} \\
+            \texttt{RST}    &  \texttt{ACTIVE HIGH} \\
+            \texttt{RECLK}  &   \texttt{ACTIVE LOW} \\
+            \texttt{FECLK}  &   \texttt{ACTIVE LOW} \\
+            \end{tabularx}
+
+    }
+
+(msff-southwest)
+
+    node (mgla2) [align = center, anchor = south west] {
+
+        \begin{tabularx} {0.33\textwidth} {*{1}{>{\raggedright\arraybackslash}p{0.4cm}}*{1}{>{\raggedright\arraybackslash}X}}
+        \multicolumn{2}{l}{\texttt{OUTPUTS}}     \\
+            \midrule
+            \texttt{Q}       & \texttt{ACTIVE HIGH}  \\
+            \texttt{\={Q}}   & \texttt{ACTIVE LOW}  \\
+            \end{tabularx}
+
+    }
+
+;
+
+%% TEST Marking some points
+
+    \draw [dashed, catppuccinfg!70!catppuccinbg, thin,]
+    (msff-slave-s)
+    circle(0.35cm)
+    (msff-slave-s)
+++(0,0.25)
+    \constcornerdown {++(1,1.5)}
+-- ++(2,0)
+    node (msff-label-master-q) [right = 4pt] {\texttt{MASTER Q}}
+    ;
+
+
+\end{tikzpicture}

@@ -1,0 +1,76 @@
+\ctikzsubcircuitdef{sctkglvldflipflop} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    d, clk, q, qbar,
+    bd, bclk, bq, bqbar%
+} {
+    \sctkglvlsrflipflop {#1-srff} {clk}
+    %%
+    (#1-srff-r)
+    %%
+    (#1-srff-nor2.in 2)
+    ++($(#1-srff-nor2.out)-(#1-srff-srl-nor2.in 2)$)
+    node (#1-notnor) [nor port, anchor = out] {}
+    %%
+    %%
+    (#1-notnor.in 2)
+    ++($(#1-srff-nor2.out)-(#1-srff-srl-nor2.in 2)$)
+    ++(1,0)
+    coordinate (#1-d)
+    (#1-d|-#1-notnor.in 2)
+    coordinate (#1-d)
+    %%
+    ++(1,0)
+    ($(#1-d|-#1-notnor.in 2)!0.50!(#1-notnor.in 2)$)
+    coordinate (#1-dbr)
+    %%
+    (#1-dbr)
+    \constcornerup {(#1-srff-s)}
+    -- (#1-srff-s)
+    %%
+    %% Shorting the inputs of notnor
+    %%
+    ($(#1-notnor.in 1)!0.3!(#1-notnor.in 2)$)
+    ++(-0.2,0)
+    coordinate (#1-notnorbr)
+    %%
+    (#1-notnor.in 1)
+    \varcornerleftdown {(#1-notnorbr)}
+    -- (#1-notnorbr|-#1-notnor.in 2)
+    %%
+    (#1-notnor.in 2)
+    -- (#1-d)
+    %%
+    %% Drawing notnor out to srff r
+    %%
+    (#1-notnor.out)
+    \varcornerrightdown {(#1-srff-pr)}
+    -- (#1-srff-r)
+    %%
+    (#1-srff-clk)
+    coordinate (#1-clk)
+    %%
+    (#1-srff-q)
+    coordinate (#1-q)
+    %%
+    (#1-srff-qbar)
+    coordinate (#1-qbar)
+    %%
+    %% Marking b* p*
+    %%
+    \glvlmarkcoordinate {#1} {d} {(1,0)}
+    \glvlmarkcoordinate {#1} {clk} {(1,0)}
+    \glvlmarkcoordinate {#1} {q} {(-1,0)}
+    \glvlmarkcoordinate {#1} {qbar} {(-1,0)}
+    %%
+    %% Geo coords
+    %%
+    \markgeocoordinate {#1}
+    {(#1-srff-north)} {(#1-srff-south)}
+    {(#1-d)} {(#1-q)}
+    %%
+    %%
+}
+
+\ctikzsubcircuitactivate{sctkglvldflipflop}

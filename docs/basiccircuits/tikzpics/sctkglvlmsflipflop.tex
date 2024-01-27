@@ -1,0 +1,104 @@
+\ctikzsubcircuitdef{sctkglvlmsflipflop} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    d, reclk, feclk, q, qbar, rst,
+    bd, breclk, bfeclk, bq, bqbar, brst%
+} {
+    \sctkglvldflipflopsr {#1-master} {d}
+    %%
+    ($(#1-master-q)!0.50!(#1-master-qbar)$)
+    ++(1,0)
+    \sctkglvlsrflipflop {#1-slave} {clk}
+    %%
+    (#1-master-q)
+    \varcornerrightup {(#1-slave-ps)}
+    -- (#1-slave-s)
+    %%
+    (#1-master-qbar)
+    \varcornerrightdown {(#1-slave-pr)}
+    -- (#1-slave-r)
+    %%
+    %% Marking coords for reclk, feclk and rst
+    %%
+    %% rst
+    %%
+    (#1-slave-south)
+    ++ (0,-5)
+    coordinate (#1-rstheight)
+    %%
+    (#1-master-rst)
+    ++(0,-1)
+    coordinate (#1-rstbendheight)
+    %%
+    (#1-slave-srl-south)
+    coordinate (#1-rstvrt)
+    %%
+    %% clks
+    %%
+    (#1-slave-north)
+    ++ ($(#1-slave-south)-(#1-rstheight)$)
+    coordinate (#1-clkheight)
+    %%
+    (#1-master-rstnor.in 1)
+    coordinate (#1-reclkvrt)
+    %%
+    (#1-slave-north)
+    ++ ($(#1-slave-south)-(#1-slave-south|-#1-rstbendheight)$)
+    coordinate (#1-feclkbendheight)
+    %%
+    (#1-slave-clk)
+    ++(-1,0)
+    coordinate (#1-feclkbendvrt)
+    %%
+    %% Drawing clk lines
+    %%
+    (#1-master-clk)
+    \constcornerleft {(#1-reclkvrt|-#1-clkheight)}
+    -- (#1-reclkvrt|-#1-clkheight)
+    coordinate (#1-reclk)
+    ++ (2,0)
+    coordinate (#1-feclk)
+    %%
+    (#1-slave-clk)
+    \constcornerleft {(#1-feclkbendheight-|#1-feclkbendvrt)}
+    \constcornerup {(#1-feclkbendheight-|#1-feclk)}
+    \constcornerleft {(#1-feclk)}
+    -- (#1-feclk)
+    %%
+    %% Drawing rst line
+    %%
+    (#1-master-rst)
+    \constcornerdown {(#1-rstbendheight-|#1-rstvrt)}
+    \constcornerright {(#1-rstvrt|-#1-rstheight)}
+    -- (#1-rstvrt|-#1-rstheight)
+    coordinate (#1-rst)
+    %%
+    %% Marking d, q, qbar
+    %%
+    (#1-master-d)
+    coordinate (#1-d)
+    %%
+    (#1-slave-q)
+    coordinate (#1-q)
+    %%
+    (#1-slave-qbar)
+    coordinate (#1-qbar)
+    %%
+    %% Marking b* p*
+    %%
+    \glvlmarkcoordinate {#1} {d}     {(1,0)}
+    \glvlmarkcoordinate {#1} {reclk} {(0,-1)}
+    \glvlmarkcoordinate {#1} {feclk} {(0,-1)}
+    \glvlmarkcoordinate {#1} {q}     {(-1,0)}
+    \glvlmarkcoordinate {#1} {qbar}  {(-1,0)}
+    \glvlmarkcoordinate {#1} {rst}   {(0,1)}
+    %%
+    %% Marking Geo coords
+    %%
+    \markgeocoordinate {#1}
+    {(#1-reclk)} {(#1-rst)}
+    {(#1-d)} {(#1-q)}
+}
+
+\ctikzsubcircuitactivate{sctkglvlmsflipflop}

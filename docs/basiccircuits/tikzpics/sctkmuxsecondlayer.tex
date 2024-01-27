@@ -1,0 +1,50 @@
+\ctikzsubcircuitdef{sctkmuxsecondlayer} {
+    in00, in01, in02, in03, in04, in05, in06, in07,
+    in08, in09, in10, in11, in12, in13, in14, in15,
+    topfstmid, topsecmid,
+    muxlast, out,
+    bin00, bin01, bin02, bin03, bin04, bin05, bin06, bin07,
+    bin08, bin09, bin10, bin11, bin12, bin13, bin14, bin15,
+    bout%
+} {
+    node (#1) [muxSecondLayer]{}%
+    \markcoordinate {#1} {in00}   {lpin 4}
+    \markcoordinate {#1} {in01}   {lpin 3}
+    \markcoordinate {#1} {in02}   {lpin 2}
+    \markcoordinate {#1} {in03}   {lpin 1}
+    %%%
+    \markcoordinate {#1} {in04}   {tpin 1}
+    \markcoordinate {#1} {in05}   {tpin 2}
+    \markcoordinate {#1} {in06}   {tpin 3}
+    \markcoordinate {#1} {in07}   {tpin 4}
+    %%%
+    \markcoordinate {#1} {in08}   {tpin 5}
+    \markcoordinate {#1} {in09}   {tpin 6}
+    \markcoordinate {#1} {in10}   {tpin 7}
+    \markcoordinate {#1} {in11}   {tpin 8}
+    %%%
+    \markcoordinate {#1} {in12}   {rpin 1}
+    \markcoordinate {#1} {in13}   {rpin 2}
+    \markcoordinate {#1} {in14}   {rpin 3}
+    \markcoordinate {#1} {in15}   {rpin 4}
+    %%%
+    \markcoordinate {#1} {out}     {bpin 2}
+    %%%
+    (#1.bpin 1) coordinate (#1-muxlast)
+    %%%
+    ($(#1-in05)!0.50!(#1-in06)$)
+    coordinate (#1-topfstmid)
+    ($(#1-in09)!0.50!(#1-in10)$)
+    coordinate (#1-topsecmid)
+    %%%
+    ($(#1-in01)!0.50!(#1-in02)$)
+    coordinate (#1-leftmid)
+    ($(#1-in13)!0.50!(#1-in14)$)
+    coordinate (#1-rightmid)
+}
+
+\ctikzsubcircuitactivate{sctkmuxsecondlayer}
+
+\newcommand\sctklabelmuxsecondlayer[2] {
+    (#1.center) node[]{#2}
+}

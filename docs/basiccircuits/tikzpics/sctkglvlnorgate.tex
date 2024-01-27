@@ -1,0 +1,50 @@
+\ctikzsubcircuitdef{sctkglvlnorgate} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    ain, bin, yout,
+    bain, bbin, byout%
+} {
+    \markglvlgeocoordinate {#1}
+    %%
+    ($(#1-west)!0.90!(#1-center)$)
+    %%
+    node (#1-nor) [nor port, anchor = west] {}
+    %%
+    (#1-nor.in 1|-#1-center)
+    ++(-2,0)
+    coordinate (#1-invrt)
+    %%
+    %% Inputs
+    %%
+    ($(#1-invrt|-#1-north)!0.30!(#1-invrt)$)
+    coordinate (#1-ain)
+    %%
+    ($(#1-invrt|-#1-south)!0.30!(#1-invrt)$)
+    coordinate (#1-bin)
+    %%
+    (#1-invrt)
+    ++ (1.75,0)
+    coordinate (#1-bendvrt)
+    %%
+    (#1-ain)
+    \varcornerrightdown {(#1-nor.in 1-|#1-bendvrt)}
+    -- (#1-nor.in 1)
+    %%
+    (#1-bin)
+    \varcornerrightup {(#1-nor.in 2-|#1-bendvrt)}
+    -- (#1-nor.in 2)
+    %%
+    %% Output
+    %%
+    (#1-nor.out)
+    -- ++(1.75,0)
+    coordinate (#1-yout)
+    %%
+    \glvlmarkcoordinate {#1} {ain}     {(1,0)}
+    \glvlmarkcoordinate {#1} {bin}     {(1,0)}
+    \glvlmarkcoordinate {#1} {yout}    {(-1,0)}
+    %%
+}
+
+\ctikzsubcircuitactivate{sctkglvlnorgate}

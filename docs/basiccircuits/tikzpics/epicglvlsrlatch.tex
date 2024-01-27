@@ -1,0 +1,14 @@
+\begin{tikzpicture} [american]
+    \draw
+(0,0)
+    \sctkglvlsrlatch {srl} {s}
+    (srl-s)    node [ocirc] {}
+    (srl-r)    node [ocirc] {}
+    (srl-q)    node [ocirc] {}
+    (srl-qbar) node [ocirc] {}
+    (srl-s)    node [left = 4pt]             {\texttt{S}}
+    (srl-r)    node [left = 4pt]             {\texttt{R}}
+    (srl-q)    node [right = 4pt]            {\texttt{Q}}
+    (srl-qbar) node [right = 4pt]        {\texttt{\={Q}}}
+    ;
+\end{tikzpicture}

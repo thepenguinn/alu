@@ -1,0 +1,29 @@
+\ctikzsubcircuitdef{sctkmuxfirstlayer} {
+    in0, in1, out0, out1,
+    lsl0, lsl1, lsl2, lsl3,
+    rsl0, rsl1, rsl2, rsl3,
+    blsl0, blsl1, blsl2, blsl3,
+    bin0, bin1, bout0, bout1%
+} {
+    node (#1) [muxFirstLayer]{}%
+    \markcoordinate {#1} {lsl0}  {lpin 5}
+    \markcoordinate {#1} {lsl1}  {lpin 4}
+    \markcoordinate {#1} {lsl2}  {lpin 3}
+    \markcoordinate {#1} {lsl3}  {lpin 2}
+    %%%
+    (#1.rpin 5) coordinate (#1-rsl0)
+    (#1.rpin 4) coordinate (#1-rsl1)
+    (#1.rpin 3) coordinate (#1-rsl2)
+    (#1.rpin 2) coordinate (#1-rsl3)
+    %%%
+    \markcoordinate {#1} {in0}   {tpin 1}
+    \markcoordinate {#1} {in1}   {tpin 2}
+    \markcoordinate {#1} {out0}  {bpin 1}
+    \markcoordinate {#1} {out1}  {bpin 2}
+}
+
+\ctikzsubcircuitactivate{sctkmuxfirstlayer}
+
+\newcommand\sctklabelmuxfirstlayer[2] {
+    (#1.center) node[]{#2}
+}

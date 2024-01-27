@@ -1,0 +1,76 @@
+\ctikzsubcircuitdef{sctkglvlsrflipflop} {
+    clk, s, r, q, qbar,
+    bclk, bs, br, bq, bqbar%
+} {
+    \sctkglvlsrlatch {#1-srl} {s}
+    %%
+    (#1-srl-q-|#1-srl-r)
+    ++(-1,0)
+    node (#1-nor1) [nor port, anchor = out] {}
+    %%
+    (#1-srl-qbar-|#1-nor1.out)
+    node (#1-nor2) [nor port, anchor = out] {}
+    %%
+    %% Connecting nor out to s and r
+    %%
+    (#1-nor1.out)
+    \varcornerrightup {(#1-srl-pr)}
+    -- (#1-srl-r)
+    %%
+    (#1-nor2.out)
+    \varcornerrightdown {(#1-srl-ps)}
+    -- (#1-srl-s)
+    %%
+    %% Markings for clk
+    (#1-srl-center-|#1-nor1.in 1)
+    coordinate (#1-tmp)
+    ++(-0.5,0)
+    coordinate (#1-clkbr)
+    %%
+    %% Drawing clk
+    %%
+    (#1-nor1.in 2)
+    \constcornerleft {(#1-clkbr)}
+    \constcornerdown {(#1-nor2.in 1)}
+    -- (#1-nor2.in 1)
+    %%
+    (#1-clkbr)
+    -- ++(-0.5,0)
+    coordinate (#1-clk)
+    %%
+    %% Drawing inputs
+    %%
+    (#1-nor1.in 1)
+    -- (#1-nor1.in 1-|#1-clk)
+    coordinate (#1-s)
+    %%
+    (#1-nor2.in 2)
+    -- (#1-nor2.in 2-|#1-clk)
+    coordinate (#1-r)
+    %%
+    %% Marking outputs
+    %%
+    (#1-srl-q)
+    coordinate (#1-q)
+    %%
+    (#1-srl-qbar)
+    coordinate (#1-qbar)
+    %%
+    %% Marking b* p*
+    %%
+    \glvlmarkcoordinate {#1} {s} {(1,0)}
+    \glvlmarkcoordinate {#1} {r} {(1,0)}
+    \glvlmarkcoordinate {#1} {clk} {(1,0)}
+    \glvlmarkcoordinate {#1} {q} {(-1,0)}
+    \glvlmarkcoordinate {#1} {qbar} {(-1,0)}
+    %%
+    %% Geo coords
+    %%
+    \markgeocoordinate {#1}
+    {(#1-srl-north)} {(#1-srl-south)}
+    {(#1-s)} {(#1-q)}
+    %%
+    %%
+}
+
+\ctikzsubcircuitactivate{sctkglvlsrflipflop}

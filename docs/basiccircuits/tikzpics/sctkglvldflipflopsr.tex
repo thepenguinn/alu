@@ -1,0 +1,63 @@
+\ctikzsubcircuitdef{sctkglvldflipflopsr} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    d, clk, q, qbar, rst,
+    bd, bclk, bq, bqbar, brst%
+} {
+    \sctkglvldflipfloptst {#1-dff} {clk}
+    (#1-dff-nor2.in 2)
+    ++($(#1-dff-nor2.out)-(#1-dff-srl-nor2.in 2)$)
+    ++ (-1,0)
+    node (#1-rstnor) [nor port, anchor = out] {}
+    %%%% \sctkglvldflipflop {#1-dff} {clk}
+    %%%% (#1-dff-notnor.in 2)
+    %%%% ++($(#1-dff-notnor.out)-(#1-dff-srff-nor2.in 2)$)
+    %%%% node (#1-rstnor) [nor port, anchor = out] {}
+    %%
+    %% Drawing rst
+    %%
+    (#1-rstnor.in 2)
+    \constcornerleft {(#1-rstnor.in 2) ++(-0.75,-1)}
+    -- ++(0,-1)
+    coordinate (#1-rst)
+    %%
+    (#1-rstnor.in 1)
+    -- ++(-1,0)
+    coordinate (#1-d)
+    %%
+    %% Marking the topmost point, so as to make dffsr's geo choords
+    %% symmetric along x axis
+    %%
+    (#1-dff-north)
+    ++($(#1-dff-south)-(#1-dff-south|-#1-rst)$)
+    coordinate (#1-topmostpoint)
+    %%
+    %% Drawing rstnor out to dff d
+    %%
+    (#1-rstnor.out)
+    -- (#1-dff-d)
+    %%
+    (#1-dff-clk)
+    coordinate (#1-clk)
+    %%
+    (#1-dff-q)
+    coordinate (#1-q)
+    %%
+    (#1-dff-qbar)
+    coordinate (#1-qbar)
+    %%
+    \glvlmarkcoordinate {#1} {d} {(1,0)}
+    \glvlmarkcoordinate {#1} {clk} {(1,0)}
+    \glvlmarkcoordinate {#1} {rst} {(0,1)}
+    \glvlmarkcoordinate {#1} {q} {(-1,0)}
+    \glvlmarkcoordinate {#1} {qbar} {(-1,0)}
+    \glvlmarkcoordinate {#1} {topmostpoint} {(0,-1)}
+    %%
+    \markgeocoordinate {#1}
+    {(#1-topmostpoint)} {(#1-rst)}
+    {(#1-d)} {(#1-q)}
+    %%
+}
+
+\ctikzsubcircuitactivate{sctkglvldflipflopsr}

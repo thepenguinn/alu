@@ -1,0 +1,31 @@
+\ctikzsubcircuitdef{sctkglvlnotgate} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    ain, yout,
+    bain, byout%
+} {
+    \markglvlgeocoordinate {#1}
+    %%
+    ($(#1-center)!0.05!(#1-east)$)
+    %%
+    \sctkglvlnotgateright {#1-not} {center}
+    %%
+    %% Input
+    %%
+    (#1-not-in)
+    -- ++(-2,0)
+    coordinate (#1-ain)
+    %%
+    %% Output
+    %%
+    (#1-not-out)
+    -- ++(1.75,0)
+    coordinate (#1-yout)
+    %%
+    \glvlmarkcoordinate {#1} {ain}     {(1,0)}
+    \glvlmarkcoordinate {#1} {yout}    {(-1,0)}
+    %%
+}
+
+\ctikzsubcircuitactivate{sctkglvlnotgate}

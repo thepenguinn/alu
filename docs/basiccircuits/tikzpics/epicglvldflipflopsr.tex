@@ -1,0 +1,21 @@
+\begin{tikzpicture} [american]
+
+    \draw
+(0,0)
+
+    \sctkglvldflipflopsr {dffsr} {s}
+
+    (dffsr-d)    node [ocirc] {}
+    (dffsr-q)    node [ocirc] {}
+    (dffsr-qbar) node [ocirc] {}
+    (dffsr-clk)  node [ocirc] {}
+    (dffsr-rst)  node [ocirc] {}
+
+    (dffsr-d)    node [left = 4pt]             {\texttt{D}}
+    (dffsr-clk)  node [left = 4pt]           {\texttt{CLK}}
+    (dffsr-q)    node [right = 4pt]            {\texttt{Q}}
+    (dffsr-qbar) node [right = 4pt]        {\texttt{\={Q}}}
+    (dffsr-rst)  node [below = 4pt]          {\texttt{RST}}
+
+    ;
+\end{tikzpicture}

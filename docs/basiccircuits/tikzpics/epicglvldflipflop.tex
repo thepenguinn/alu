@@ -1,0 +1,19 @@
+\begin{tikzpicture} [american]
+
+    \draw
+(0,0)
+
+    \sctkglvldflipflop {dff} {s}
+
+    (dff-d)    node [ocirc] {}
+    (dff-q)    node [ocirc] {}
+    (dff-qbar) node [ocirc] {}
+    (dff-clk) node [ocirc]  {}
+
+    (dff-d)    node [left = 4pt]             {\texttt{D}}
+    (dff-clk)  node [left = 4pt]           {\texttt{CLK}}
+    (dff-q)    node [right = 4pt]            {\texttt{Q}}
+    (dff-qbar) node [right = 4pt]        {\texttt{\={Q}}}
+
+    ;
+\end{tikzpicture}

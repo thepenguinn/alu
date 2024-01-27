@@ -1,0 +1,21 @@
+\begin{tikzpicture} [american]
+
+    \draw
+(0,0)
+
+    \sctkglvlsrflipflop {srff} {s}
+
+    (srff-s)    node [ocirc] {}
+    (srff-r)    node [ocirc] {}
+    (srff-q)    node [ocirc] {}
+    (srff-qbar) node [ocirc] {}
+    (srff-clk) node [ocirc] {}
+
+    (srff-s)    node [left = 4pt]             {\texttt{S}}
+    (srff-r)    node [left = 4pt]             {\texttt{R}}
+    (srff-q)    node [right = 4pt]            {\texttt{Q}}
+    (srff-qbar) node [right = 4pt]        {\texttt{\={Q}}}
+    (srff-clk)  node [left = 4pt]           {\texttt{CLK}}
+
+    ;
+\end{tikzpicture}
