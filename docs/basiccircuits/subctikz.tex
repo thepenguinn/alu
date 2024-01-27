@@ -1,4 +1,4 @@
-\ctikzsubcircuitdef{subctkmuxFirstLayer} {
+\ctikzsubcircuitdef{sctkmuxfirstlayer} {
     in0, in1, out0, out1,
     lsl0, lsl1, lsl2, lsl3,
     rsl0, rsl1, rsl2, rsl3,
@@ -22,14 +22,14 @@
     \markcoordinate {#1} {out1}  {bpin 2}
 }
 
-\ctikzsubcircuitactivate{subctkmuxFirstLayer}
+\ctikzsubcircuitactivate{sctkmuxfirstlayer}
 
-\newcommand\muxFirstLayer[3] {
-    \subctkmuxFirstLayer{#1} {#2}
-    (#1.center) node[]{#3}
+\newcommand\sctklabelmuxfirstlayer[2] {
+    (#1.center) node[]{#2}
 }
 
-\ctikzsubcircuitdef{subctkmuxSecondLayer} {
+
+\ctikzsubcircuitdef{sctkmuxsecondlayer} {
     in00, in01, in02, in03, in04, in05, in06, in07,
     in08, in09, in10, in11, in12, in13, in14, in15,
     topfstmid, topsecmid,
@@ -74,14 +74,13 @@
     coordinate (#1-rightmid)
 }
 
-\ctikzsubcircuitactivate{subctkmuxSecondLayer}
+\ctikzsubcircuitactivate{sctkmuxsecondlayer}
 
-\newcommand\muxSecondLayer[3] {
-    \subctkmuxSecondLayer{#1} {#2}
-    (#1.center) node[]{#3}
+\newcommand\sctklabelmuxsecondlayer[2] {
+    (#1.center) node[]{#2}
 }
 
-\ctikzsubcircuitdef{subctkmuxSixteen} {
+\ctikzsubcircuitdef{sctkmuxsixteen} {
     in00, in01, in02, in03, in04, in05, in06, in07,
     in08, in09, in10, in11, in12, in13, in14, in15,
     sl0, sl1, sl2, sl3,
@@ -90,25 +89,25 @@
     center,
     muxlast, out%
 } {
-    \muxFirstLayer {#1-fl07} {in0} {}
+    \sctkmuxfirstlayer {#1-fl07} {in0} {}
     (#1-fl07-in1)
     ++(2,0)
-    \muxFirstLayer {#1-fl06} {in0} {}
+    \sctkmuxfirstlayer {#1-fl06} {in0} {}
     %%
     %% Drawing rest of the mux first layer
     %%
     (#1-fl06-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$)
-    \muxFirstLayer {#1-fl05} {in0} {}
+    \sctkmuxfirstlayer {#1-fl05} {in0} {}
     (#1-fl05-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$)
-    \muxFirstLayer {#1-fl04} {in0} {}
+    \sctkmuxfirstlayer {#1-fl04} {in0} {}
     (#1-fl04-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$) ++(2,0)
-    \muxFirstLayer {#1-fl03} {in0} {}
+    \sctkmuxfirstlayer {#1-fl03} {in0} {}
     (#1-fl03-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$)
-    \muxFirstLayer {#1-fl02} {in0} {}
+    \sctkmuxfirstlayer {#1-fl02} {in0} {}
     (#1-fl02-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$)
-    \muxFirstLayer {#1-fl01} {in0} {}
+    \sctkmuxfirstlayer {#1-fl01} {in0} {}
     (#1-fl01-in0) ++($(#1-fl06-in1)-(#1-fl07-in1)$)
-    \muxFirstLayer {#1-fl00} {in0} {}
+    \sctkmuxfirstlayer {#1-fl00} {in0} {}
     %%
     %% Marking second 4 fls to second layer lines
     %%
@@ -119,7 +118,7 @@
     coordinate (#1-muxfl42midheight)
     %%
     ++(0,-5)
-    \muxSecondLayer {#1-sl} {topfstmid} {}
+    \sctkmuxsecondlayer {#1-sl} {topfstmid} {}
     %%
     %% Drawing that layer
     %%
@@ -439,13 +438,9 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkmuxSixteen}
+\ctikzsubcircuitactivate{sctkmuxsixteen}
 
-\newcommand\muxSixteen[2] {
-    \subctkmuxSixteen{#1} {#2}
-}
-
-\newcommand\labelmuxSixteenFl[9] {
+\newcommand\sctklabelmuxsixteenfl[9] {
     (#1-fl07.center) node [] {#2}
     (#1-fl06.center) node [] {#3}
     (#1-fl05.center) node [] {#4}
@@ -456,11 +451,11 @@
     (#1-fl00.center) node [] {#9}
 }
 
-\newcommand\labelmuxSixteenSl[2] {
+\newcommand\sctklabelmuxsixteensl[2] {
     (#1-sl.center) node [] {#2}
 }
 
-\ctikzsubcircuitdef{subctkgLvlSRLatch} {
+\ctikzsubcircuitdef{sctkglvlsrlatch} {
     s, r, q, qbar,
     bs, br, bq, bqbar%
 } {
@@ -545,17 +540,13 @@
     {(#1-s)} {(#1-q)}
 }
 
-\ctikzsubcircuitactivate{subctkgLvlSRLatch}
+\ctikzsubcircuitactivate{sctkglvlsrlatch}
 
-\newcommand\gLvlSRLatch[2] {
-    \subctkgLvlSRLatch{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlSRFlipFlop} {
+\ctikzsubcircuitdef{sctkglvlsrflipflop} {
     clk, s, r, q, qbar,
     bclk, bs, br, bq, bqbar%
 } {
-    \gLvlSRLatch {#1-srl} {s}
+    \sctkglvlsrlatch {#1-srl} {s}
     %%
     (#1-srl-q-|#1-srl-r)
     ++(-1,0)
@@ -626,20 +617,16 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlSRFlipFlop}
+\ctikzsubcircuitactivate{sctkglvlsrflipflop}
 
-\newcommand\gLvlSRFlipFlop[2] {
-    \subctkgLvlSRFlipFlop{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlDFlipFlopTST} {
+\ctikzsubcircuitdef{sctkglvldflipfloptst} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
     d, clk, q, qbar,
     bd, bclk, bq, bqbar%
 } {
-    \gLvlSRLatch {#1-srl} {s}
+    \sctkglvlsrlatch {#1-srl} {s}
     %%
     (#1-srl-q-|#1-srl-r)
     ++(-1,0)
@@ -732,14 +719,9 @@
     {(#1-d)} {(#1-q)}
 }
 
-\ctikzsubcircuitactivate{subctkgLvlDFlipFlopTST}
+\ctikzsubcircuitactivate{sctkglvldflipfloptst}
 
-\newcommand\gLvlDFlipFlopTST[2] {
-    \subctkgLvlDFlipFlopTST{#1} {#2}
-}
-
-
-\ctikzsubcircuitdef{subctkgLvlNotGateRight} {
+\ctikzsubcircuitdef{sctkglvlnotgateright} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
@@ -779,13 +761,9 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlNotGateRight}
+\ctikzsubcircuitactivate{sctkglvlnotgateright}
 
-\newcommand\gLvlNotGateRight[2] {
-    \subctkgLvlNotGateRight{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlNotGateLeft} {
+\ctikzsubcircuitdef{sctkglvlnotgateleft} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
@@ -820,13 +798,9 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlNotGateLeft}
+\ctikzsubcircuitactivate{sctkglvlnotgateleft}
 
-\newcommand\gLvlNotGateLeft[2] {
-    \subctkgLvlNotGateLeft{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlNotGateUp} {
+\ctikzsubcircuitdef{sctkglvlnotgateup} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
@@ -861,13 +835,9 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlNotGateUp}
+\ctikzsubcircuitactivate{sctkglvlnotgateup}
 
-\newcommand\gLvlNotGateUp[2] {
-    \subctkgLvlNotGateUp{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlNotGateDown} {
+\ctikzsubcircuitdef{sctkglvlnotgatedown} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
@@ -902,21 +872,16 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlNotGateDown}
+\ctikzsubcircuitactivate{sctkglvlnotgatedown}
 
-\newcommand\gLvlNotGateDown[2] {
-    \subctkgLvlNotGateDown{#1} {#2}
-}
-
-
-\ctikzsubcircuitdef{subctkgLvlDFlipFlop} {
+\ctikzsubcircuitdef{sctkglvldflipflop} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
     d, clk, q, qbar,
     bd, bclk, bq, bqbar%
 } {
-    \gLvlSRFlipFlop {#1-srff} {clk}
+    \sctkglvlsrflipflop {#1-srff} {clk}
     %%
     (#1-srff-r)
     %%
@@ -984,25 +949,21 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlDFlipFlop}
+\ctikzsubcircuitactivate{sctkglvldflipflop}
 
-\newcommand\gLvlDFlipFlop[2] {
-    \subctkgLvlDFlipFlop{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlDFlipFlopSR} {
+\ctikzsubcircuitdef{sctkglvldflipflopsr} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
     d, clk, q, qbar, rst,
     bd, bclk, bq, bqbar, brst%
 } {
-    \gLvlDFlipFlopTST {#1-dff} {clk}
+    \sctkglvldflipfloptst {#1-dff} {clk}
     (#1-dff-nor2.in 2)
     ++($(#1-dff-nor2.out)-(#1-dff-srl-nor2.in 2)$)
     ++ (-1,0)
     node (#1-rstnor) [nor port, anchor = out] {}
-    %%%% \gLvlDFlipFlop {#1-dff} {clk}
+    %%%% \sctkglvldflipflop {#1-dff} {clk}
     %%%% (#1-dff-notnor.in 2)
     %%%% ++($(#1-dff-notnor.out)-(#1-dff-srff-nor2.in 2)$)
     %%%% node (#1-rstnor) [nor port, anchor = out] {}
@@ -1052,24 +1013,20 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlDFlipFlopSR}
+\ctikzsubcircuitactivate{sctkglvldflipflopsr}
 
-\newcommand\gLvlDFlipFlopSR[2] {
-    \subctkgLvlDFlipFlopSR{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlMSFlipFlop} {
+\ctikzsubcircuitdef{sctkglvlmsflipflop} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
     d, reclk, feclk, q, qbar, rst,
     bd, breclk, bfeclk, bq, bqbar, brst%
 } {
-    \gLvlDFlipFlopSR {#1-master} {d}
+    \sctkglvldflipflopsr {#1-master} {d}
     %%
     ($(#1-master-q)!0.50!(#1-master-qbar)$)
     ++(1,0)
-    \gLvlSRFlipFlop {#1-slave} {clk}
+    \sctkglvlsrflipflop {#1-slave} {clk}
     %%
     (#1-master-q)
     \varcornerrightup {(#1-slave-ps)}
@@ -1161,11 +1118,7 @@
     {(#1-d)} {(#1-q)}
 }
 
-\ctikzsubcircuitactivate{subctkgLvlMSFlipFlop}
-
-\newcommand\gLvlMSFlipFlop[2] {
-    \subctkgLvlMSFlipFlop{#1} {#2}
-}
+\ctikzsubcircuitactivate{sctkglvlmsflipflop}
 
 %% Gate level implementation of logic gates
 
@@ -1193,7 +1146,7 @@
     coordinate (#1-rightpadding)
 }
 
-\ctikzsubcircuitdef{subctkgLvlXorGate} {
+\ctikzsubcircuitdef{sctkglvlxorgate} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
@@ -1236,13 +1189,9 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlXorGate}
+\ctikzsubcircuitactivate{sctkglvlxorgate}
 
-\newcommand\gLvlXorGate[2] {
-    \subctkgLvlXorGate{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlAndGate} {
+\ctikzsubcircuitdef{sctkglvlandgate} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
@@ -1262,10 +1211,10 @@
     %% Drawing layer 1
     %%
     ($(#1-l1vrt|-#1-north)!0.30!(#1-l1vrt)$)
-    \gLvlNotGateRight {#1-nota} {center}
+    \sctkglvlnotgateright {#1-nota} {center}
     %%
     ($(#1-l1vrt|-#1-south)!0.30!(#1-l1vrt)$)
-    \gLvlNotGateRight {#1-notb} {center}
+    \sctkglvlnotgateright {#1-notb} {center}
     %%
     %% Drawing layer 2
     %%
@@ -1307,13 +1256,9 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlAndGate}
+\ctikzsubcircuitactivate{sctkglvlandgate}
 
-\newcommand\gLvlAndGate[2] {
-    \subctkgLvlAndGate{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlNandGate} {
+\ctikzsubcircuitdef{sctkglvlnandgate} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
@@ -1336,10 +1281,10 @@
     %% Drawing layer 1
     %%
     ($(#1-l1vrt|-#1-north)!0.30!(#1-l1vrt)$)
-    \gLvlNotGateRight {#1-nota} {center}
+    \sctkglvlnotgateright {#1-nota} {center}
     %%
     ($(#1-l1vrt|-#1-south)!0.30!(#1-l1vrt)$)
-    \gLvlNotGateRight {#1-notb} {center}
+    \sctkglvlnotgateright {#1-notb} {center}
     %%
     %% Drawing layer 2
     %%
@@ -1349,7 +1294,7 @@
     %% Drawing layer 3
     %%
     (#1-l3vrt)
-    \gLvlNotGateRight {#1-notout} {center}
+    \sctkglvlnotgateright {#1-notout} {center}
     %%
     %% Connecting l1 and l2
     %%
@@ -1391,13 +1336,9 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlNandGate}
+\ctikzsubcircuitactivate{sctkglvlnandgate}
 
-\newcommand\gLvlNandGate[2] {
-    \subctkgLvlNandGate{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlNorGate} {
+\ctikzsubcircuitdef{sctkglvlnorgate} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
@@ -1446,13 +1387,9 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlNorGate}
+\ctikzsubcircuitactivate{sctkglvlnorgate}
 
-\newcommand\gLvlNorGate[2] {
-    \subctkgLvlNorGate{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlOrGate} {
+\ctikzsubcircuitdef{sctkglvlorgate} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
@@ -1495,7 +1432,7 @@
     %%
     ($(#1-center)!0.3!(#1-east)$)
     %%
-    \gLvlNotGateRight {#1-notout} {center}
+    \sctkglvlnotgateright {#1-notout} {center}
     %%
     %% Connecting nor to not
     %%
@@ -1515,13 +1452,9 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlOrGate}
+\ctikzsubcircuitactivate{sctkglvlorgate}
 
-\newcommand\gLvlOrGate[2] {
-    \subctkgLvlOrGate{#1} {#2}
-}
-
-\ctikzsubcircuitdef{subctkgLvlNotGate} {
+\ctikzsubcircuitdef{sctkglvlnotgate} {
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
@@ -1532,7 +1465,7 @@
     %%
     ($(#1-center)!0.05!(#1-east)$)
     %%
-    \gLvlNotGateRight {#1-not} {center}
+    \sctkglvlnotgateright {#1-not} {center}
     %%
     %% Input
     %%
@@ -1551,8 +1484,4 @@
     %%
 }
 
-\ctikzsubcircuitactivate{subctkgLvlNotGate}
-
-\newcommand\gLvlNotGate[2] {
-    \subctkgLvlNotGate{#1} {#2}
-}
+\ctikzsubcircuitactivate{sctkglvlnotgate}

@@ -44,7 +44,7 @@
             \begin{tikzpicture} [american]
                 \draw
                 (0,0)
-                \gLvlSRLatch {srl} {s}
+                \sctkglvlsrlatch {srl} {s}
                 (srl-s)    node [ocirc] {}
                 (srl-r)    node [ocirc] {}
                 (srl-q)    node [ocirc] {}
@@ -107,7 +107,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
                 \draw
                 (0,0)
 
-                \gLvlSRFlipFlop {srff} {s}
+                \sctkglvlsrflipflop {srff} {s}
 
                 (srff-s)    node [ocirc] {}
                 (srff-r)    node [ocirc] {}
@@ -187,7 +187,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
                 \draw
                 (0,0)
 
-                \gLvlDFlipFlop {dff} {s}
+                \sctkglvldflipflop {dff} {s}
 
                 (dff-d)    node [ocirc] {}
                 (dff-q)    node [ocirc] {}
@@ -263,7 +263,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
                 \draw
                 (0,0)
 
-                \gLvlDFlipFlopSR {dffsr} {s}
+                \sctkglvldflipflopsr {dffsr} {s}
 
                 (dffsr-d)    node [ocirc] {}
                 (dffsr-q)    node [ocirc] {}
@@ -338,7 +338,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
             \draw
             (0,0)
 
-            \gLvlMSFlipFlop {msff} {s}
+            \sctkglvlmsflipflop {msff} {s}
 
             (msff-d)     node [ocirc] {}
             (msff-rst)   node [ocirc] {}
@@ -579,9 +579,9 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
             % \draw [thick, color = {rgb:red,100;green,50;blue,20}]
             % \draw [thick, color = \color{draculafg}]
             (0,0)
-            \muxSixteen {mux} {out}
+            \sctkmuxsixteen {mux} {out}
 
-            \labelmuxSixteenFl {mux}
+            \sctklabelmuxsixteenfl {mux}
             {\texttt{FL 07}}
             {\texttt{FL 06}}
             {\texttt{FL 05}}
@@ -591,7 +591,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
             {\texttt{FL 01}}
             {\texttt{FL 00}}
 
-            \labelmuxSixteenSl {mux}
+            \sctklabelmuxsixteensl {mux}
             {\texttt{SECOND LAYER}}
 
             (mux-in00) node [ocirc] {}
@@ -713,7 +713,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
                 \draw
                 (0,0)
 
-                \gLvlXorGate {xor} {ain}
+                \sctkglvlxorgate {xor} {ain}
 
                 (xor-ain)     node [ocirc] {}
                 (xor-bin)     node [ocirc] {}
@@ -779,7 +779,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
                 \draw
                 (0,0)
 
-                \gLvlAndGate {and} {ain}
+                \sctkglvlandgate {and} {ain}
 
                 (and-ain)     node [ocirc] {}
                 (and-bin)     node [ocirc] {}
@@ -843,7 +843,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
                 \draw
                 (0,0)
 
-                \gLvlOrGate {or} {ain}
+                \sctkglvlorgate {or} {ain}
 
                 (or-ain)     node [ocirc] {}
                 (or-bin)     node [ocirc] {}
@@ -906,7 +906,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
                 \draw
                 (0,0)
 
-                \gLvlNotGate {not} {ain}
+                \sctkglvlnotgate {not} {ain}
 
                 (not-ain)     node [ocirc] {}
                 (not-yout)    node [ocirc] {}
@@ -962,7 +962,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
                 \draw
                 (0,0)
 
-                \gLvlNorGate {nor} {ain}
+                \sctkglvlnorgate {nor} {ain}
 
                 (nor-ain)     node [ocirc] {}
                 (nor-bin)     node [ocirc] {}
@@ -1022,7 +1022,7 @@ Table: \ref{tbl:ttsrlatch} and Figure: \ref{fig:glvlsrlatch}
                 \draw
                 (0,0)
 
-                \gLvlNandGate {nand} {ain}
+                \sctkglvlnandgate {nand} {ain}
 
                 (nand-ain)     node [ocirc] {}
                 (nand-bin)     node [ocirc] {}
