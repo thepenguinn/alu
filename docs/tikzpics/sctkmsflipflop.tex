@@ -1,0 +1,33 @@
+\tikzset{msFlipFlop/.style = {muxdemux, muxdemux def = {
+    NL = 2, NR = 2, NB = 2, NT = 6,
+    Lh = 3, Rh = 3,
+    w = 5
+    },
+    draw only left pins = {2},
+    draw only top pins = {1,2},
+    draw only bottom pins = {2},
+    }
+}
+
+\ctikzsubcircuitdef{sctkmsflipflop} {
+    d, rst, reclk, feclk, q, qbar,
+    bd, brst, breclk, bfeclk, bq, bqbar%
+} {
+    node (#1) [msFlipFlop, anchor = lpin 1]{}%
+    \markcoordinate {#1} {d}     {lpin 2}
+    \markcoordinate {#1} {rst}   {bpin 2}
+    \markcoordinate {#1} {reclk}  {tpin 1}
+    \markcoordinate {#1} {feclk} {tpin 2}
+    \markcoordinate {#1} {q}     {rpin 1}
+    \markcoordinate {#1} {qbar}  {rpin 2}%
+    (#1-bd) node[circleinv, fill = circleinvfillcolor, anchor = apex] {}
+    (#1-breclk) node[circleinv, fill = circleinvfillcolor, anchor = bottom] {}
+    (#1-bfeclk) node[circleinv, fill = circleinvfillcolor, anchor = bottom] {}
+    (#1-bqbar) node[circleinv, fill = circleinvfillcolor, anchor = left] {}
+}
+
+\ctikzsubcircuitactivate{sctkmsflipflop}
+
+\newcommand\sctklabelmsflipflop[2] {
+    (#1.center) node[]{#2}
+}

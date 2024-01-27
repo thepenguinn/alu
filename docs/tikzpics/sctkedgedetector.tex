@@ -1,0 +1,23 @@
+\tikzset{edgeDetector/.style = {muxdemux, muxdemux def = {
+    NL = 1, NR = 1, NB = 0, NT = 0,
+    Lh = 1, Rh = 1,
+    w = 2
+    },
+    }
+}
+
+\ctikzsubcircuitdef{sctkedgedetector} {
+    clk, reclk,
+    bclk, breclk%
+} {
+    node (#1) [edgeDetector, anchor = lpin 1]{}%
+    \markcoordinate {#1} {clk}     {lpin 1}
+    \markcoordinate {#1} {reclk}   {rpin 1}
+    (#1-breclk) node[circleinv, fill = circleinvfillcolor, anchor = left] {}
+}
+
+\ctikzsubcircuitactivate{sctkedgedetector}
+
+\newcommand\sctklabeledgedetector[2] {
+    (#1.center) node[]{#2}
+}
