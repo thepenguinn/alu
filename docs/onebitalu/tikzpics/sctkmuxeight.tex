@@ -1,0 +1,43 @@
+\tikzset{mux08/.style = {muxdemux, muxdemux def = {
+    NL = 10, NR = 3, NB = 5, NT = 0,
+    % Lh = 13, Rh = 7.8,
+    Lh = 10, Rh = 6.5,
+    % inset Lh = 4.5, inset Rh = 2.75,
+    inset Lh = 3.5, inset Rh = 1.75,
+    inset w = 1,
+    % w = 4.5,
+    w = 3.25,
+    square pins = 1
+    },
+    draw only left pins={2,4-5,6-9},
+    draw only right pins={1-2},
+    draw only bottom pins={2-4}
+    }
+}
+\ctikzsubcircuitdef{sctkmuxeight} {
+    in0, in2, in3, in4, in5, in6, in7, sl0, sl1, sl2, out, and01,
+    bin0, bin2, bin3, bin4, bin5, bin6, bin7, bsl0, bsl1, bsl2, bout, band01,
+    pin0, pin2, pin3, pin4, pin5, pin6, pin7, psl0, psl1, psl2, pout, pand01%
+} {
+    node (#1) [mux08, anchor = lpin 1] {}%
+    \markcoordinate {#1}   {in0} {lpin 2}
+    \markcoordinate {#1}   {in2} {lpin 4}
+    \markcoordinate {#1}   {in3} {lpin 5}
+    \markcoordinate {#1}   {in4} {lpin 6}
+    \markcoordinate {#1}   {in5} {lpin 7}
+    \markcoordinate {#1}   {in6} {lpin 8}
+    \markcoordinate {#1}   {in7} {lpin 9}%
+    \markcoordinate {#1}   {sl0} {bpin 4}
+    \markcoordinate {#1}   {sl1} {bpin 3}
+    \markcoordinate {#1}   {sl2} {bpin 2}%
+    \markcoordinate {#1} {and01} {rpin 1}
+    \markcoordinate {#1}   {out} {rpin 2}
+    (#1-bout) node [circleinv, fill = circleinvfillcolor, anchor = left] {}
+    (#1-band01) node [circleinv, fill = circleinvfillcolor, anchor = left] {}
+}
+
+\ctikzsubcircuitactivate{sctkmuxeight}
+
+\newcommand\muxEight[2] {
+    (#1.narrow center) node[]{#2}
+}

@@ -1,0 +1,28 @@
+\tikzset{aluInit/.style = {muxdemux, muxdemux def = {
+    NL = 2, NR = 2, NB = 6, NT = 2,
+    Lh = 3, Rh = 3,
+    % Lh = 5.35, Rh = 3,
+    w = 5 },
+draw only top pins = {1},
+draw only bottom pins = {5}, }
+}
+
+\ctikzsubcircuitdef{sctkaluinit} {
+    b, cin, op, rst, bout, cout,
+    bb, bcin, bop, brst, bbout, bcout%
+} {
+    node (#1) [aluInit, anchor = lpin 1]{}%
+    \markcoordinate {#1} {b}    {lpin 1}
+    \markcoordinate {#1} {cin}  {lpin 2}
+    \markcoordinate {#1} {bout} {rpin 1}
+    \markcoordinate {#1} {cout} {rpin 2}
+    \markcoordinate {#1} {op}   {bpin 5}
+    \markcoordinate {#1} {rst}  {tpin 1}%
+    (#1-bcout) node [circleinv, fill = circleinvfillcolor, anchor = left] {}
+}
+
+\ctikzsubcircuitactivate{sctkaluinit}
+
+\newcommand\sctklabelaluinit[2] {
+    (#1.center) node[]{#2}
+}

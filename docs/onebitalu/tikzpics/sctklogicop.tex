@@ -1,0 +1,25 @@
+\tikzset{logicOp/.style = {muxdemux, muxdemux def = {
+    NL = 3, NR = 2, NB = 0, NT = 0,
+    Lh = 2.5, Rh = 2.5,
+    w = 4
+    },
+    draw only left pins = {2,3},
+    draw only right pins = {1},
+    }
+}
+
+\ctikzsubcircuitdef{sctklogicop} {
+    ain, bin, out,
+    bain, bbin, bout%
+} {
+    node (#1) [logicOp, anchor = lpin 1]{}%
+    \markcoordinate {#1} {ain} {lpin 2}
+    \markcoordinate {#1} {bin} {lpin 3}
+    \markcoordinate {#1} {out} {rpin 1}%
+}
+
+\ctikzsubcircuitactivate{sctklogicop}
+
+\newcommand\sctklabellogicop[2] {
+    (#1.center) node[]{#2}
+}

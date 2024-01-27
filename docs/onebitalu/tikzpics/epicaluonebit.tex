@@ -1,0 +1,57 @@
+\begin{tikzpicture}[american]
+
+    \draw [line join = round]
+
+    \sctkaluonebit {alu} {ain}
+
+    \sctklabelaluonebit {alu}
+    {\texttt{ADDER}}
+    {\texttt{ALU INIT}}
+    {\texttt{MS FLIPFLOP}}
+    {\texttt{MUX}}
+
+    \sctklabelaluonebitlogicop {alu}
+    {\texttt{XOR}}
+    {\texttt{AND}}
+    {\texttt{NOT}}
+    {\texttt{OR}}
+    {\texttt{NOR}}
+    {\texttt{NAND}}
+
+    (alu-ain) node[ocirc] {}
+    (alu-ain) node[left = 4pt] {$A_{in}$}
+
+    (alu-bin) node[ocirc] {}
+    (alu-bin) node[left = 4pt] {$B_{in}$}
+
+    (alu-regout) node[ocirc] {}
+    (alu-regout) node[right = 4pt] {$Regout$}
+
+    (alu-aluout) node[ocirc] {}
+    (alu-aluout) node[right = 4pt] {$Aluout$}
+
+    % OP
+
+    (alu-op0) node[ocirc] {}
+    (alu-op0) node[below = 4pt] {$Op_{0}$}
+
+    (alu-op1) node[ocirc] {}
+    (alu-op1) node[below = 4pt] {$Op_{1}$}
+
+    (alu-op2) node[ocirc] {}
+    (alu-op2) node[below = 4pt] {$Op_{2}$}
+
+    % CLK
+
+    (alu-reclk) node[ocirc] {}
+    (alu-reclk) node[above = 4pt] {$Reclk$}
+
+    (alu-feclk) node[ocirc] {}
+    (alu-feclk) node[above = 4pt] {$Feclk$}
+
+    (alu-rst) node[ocirc] {}
+    (alu-rst) node[above = 4pt] {$Rst$}
+
+    ;
+
+\end{tikzpicture}
