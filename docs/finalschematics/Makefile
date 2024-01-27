@@ -5,11 +5,11 @@ TEXFILES = ../catppuccin-latte.sty ../catppuccin-mocha.sty ../colorthemes.sty \
 		   ../cornercommands.sty ../generalcommands.sty ../generalsubctikz.sty \
 		   ../generaltikzset.sty ../abstract.tex ../main.tex ../preamble.tex
 
-FINALSCHEMATICS = section.tex tikzset.tex subctikz.tex
-ONEBITALU = ../onebitalu/section.tex ../onebitalu/tikzset.tex ../onebitalu/subctikz.tex
-COUNTER = ../counter/section.tex ../counter/tikzset.tex ../counter/subctikz.tex
-INITIALIZER = ../initializer/section.tex ../initializer/tikzset.tex ../initializer/subctikz.tex
-MEMORYUNIT = ../memoryunit/section.tex ../memoryunit/tikzset.tex ../memoryunit/subctikz.tex
+FINALSCHEMATICS = section.tex
+ONEBITALU = ../onebitalu/section.tex
+COUNTER = ../counter/section.tex
+INITIALIZER = ../initializer/section.tex
+MEMORYUNIT = ../memoryunit/section.tex
 
 section: viewpdf
 
