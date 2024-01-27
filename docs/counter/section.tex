@@ -2,8 +2,8 @@
 
 
 \ifSubfilesClassLoaded{
-    \input{tikzset}
-    \input{subctikz}
+    % \input{tikzset}
+    % \input{subctikz}
     % \tikzexternalize[prefix=figcache/]
     % \tikzset{external/force remake=true}
 } {
@@ -100,53 +100,7 @@
 \begin{figure}[!h]
     \centering
     \resizebox{\textwidth}{!}{
-        \begin{tikzpicture}[american]
-
-            \draw [line join = round]
-            (0,0)
-
-            \counterFour {counter} {reclk}
-
-            \labelcounterFourMSFF {counter}
-            {\texttt{MS FLIPFLOP}}
-            {\texttt{MS FLIPFLOP}}
-            {\texttt{MS FLIPFLOP}}
-            {\texttt{MS FLIPFLOP}}
-
-            \labelcounterFourEdMux {counter}
-            {\texttt{ED}}
-            {\texttt{ED}}
-            {\texttt{ED}}
-            {\texttt{MX}}
-            {\texttt{MX}}
-            {\texttt{MX}}
-
-            (counter-feclk) node[ocirc] {}
-            (counter-feclk) node[left = 4pt] {$Feclk$}
-
-            (counter-reclk) node[ocirc] {}
-            (counter-reclk) node[left = 4pt] {$Reclk$}
-
-            (counter-rst) node[ocirc] {}
-            (counter-rst) node[left = 4pt] {$Rst$}
-
-            %% OUTPUT
-
-            (counter-q0) node[ocirc] {}
-            (counter-q0) node[right = 4pt] {$Q_{0}$}
-
-            (counter-q1) node[ocirc] {}
-            (counter-q1) node[right = 4pt] {$Q_{1}$}
-
-            (counter-q2) node[ocirc] {}
-            (counter-q2) node[right = 4pt] {$Q_{2}$}
-
-            (counter-q3) node[ocirc] {}
-            (counter-q3) node[right = 4pt] {$Q_{3}$}
-
-            ;
-
-        \end{tikzpicture}
+        \includegraphics{tikzpics/epiccounterfour.pdf}
     }
     \caption{Schematic of a 4 bit counter}
 \end{figure}

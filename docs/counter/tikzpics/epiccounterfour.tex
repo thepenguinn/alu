@@ -1,0 +1,47 @@
+\begin{tikzpicture}[american]
+
+    \draw [line join = round]
+    (0,0)
+
+    \sctkcounterfour {counter} {reclk}
+
+    \sctklabelcounterfourmsff {counter}
+    {\texttt{MS FLIPFLOP}}
+    {\texttt{MS FLIPFLOP}}
+    {\texttt{MS FLIPFLOP}}
+    {\texttt{MS FLIPFLOP}}
+
+    \sctklabelcounterfouredmux {counter}
+    {\texttt{ED}}
+    {\texttt{ED}}
+    {\texttt{ED}}
+    {\texttt{MX}}
+    {\texttt{MX}}
+    {\texttt{MX}}
+
+    (counter-feclk) node[ocirc] {}
+    (counter-feclk) node[left = 4pt] {$Feclk$}
+
+    (counter-reclk) node[ocirc] {}
+    (counter-reclk) node[left = 4pt] {$Reclk$}
+
+    (counter-rst) node[ocirc] {}
+    (counter-rst) node[left = 4pt] {$Rst$}
+
+    %% OUTPUT
+
+    (counter-q0) node[ocirc] {}
+    (counter-q0) node[right = 4pt] {$Q_{0}$}
+
+    (counter-q1) node[ocirc] {}
+    (counter-q1) node[right = 4pt] {$Q_{1}$}
+
+    (counter-q2) node[ocirc] {}
+    (counter-q2) node[right = 4pt] {$Q_{2}$}
+
+    (counter-q3) node[ocirc] {}
+    (counter-q3) node[right = 4pt] {$Q_{3}$}
+
+    ;
+
+\end{tikzpicture}
