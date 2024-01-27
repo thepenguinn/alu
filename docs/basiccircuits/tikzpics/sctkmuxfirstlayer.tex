@@ -1,3 +1,13 @@
+\tikzset{muxFirstLayer/.style = {muxdemux, muxdemux def = {
+    NL = 6, NR = 6, NB = 2, NT = 2,
+    Lh = 5, Rh = 5,
+    % Lh = 5.35, Rh = 3,
+    w = 3 },
+    draw only left pins = {2-5},
+    draw only right pins = {}
+    }
+}
+
 \ctikzsubcircuitdef{sctkmuxfirstlayer} {
     in0, in1, out0, out1,
     lsl0, lsl1, lsl2, lsl3,
