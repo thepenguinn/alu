@@ -5,12 +5,19 @@ TEXFILES = ../catppuccin-latte.sty ../catppuccin-mocha.sty ../colorthemes.sty \
 		   ../cornercommands.sty ../generalcommands.sty ../generalsubctikz.sty \
 		   ../generaltikzset.sty ../abstract.tex ../main.tex ../preamble.tex
 
-INTRODUCTION = section.tex
+INTRODUCTION = chapter.tex
 
-section: viewpdf
+chapter: _viewpdf
 
-viewpdf: section.pdf
-	viewpdf section.pdf
+viewpdf:
+	[ -e chapter.pdf ] && viewpdf chapter.pdf || printf "chapter.pdf doesn't exist, run make\n"
+
+_viewpdf: runlunatikz chapter.pdf
+	viewpdf chapter.pdf
+
+runlunatikz:
+	lunatikz --style-root-path --style-file colorthemes.sty --style-macro usepackage \
+		--touch-file need_to_build chapter.tex
 
 .SUFFIXES: .tex .pdf
 
@@ -19,6 +26,6 @@ viewpdf: section.pdf
 	touch  $(addsuffix .pdf, $(basename $<))
 
 
-section.pdf: $(TEXFILES) $(INTRODUCTION)
+chapter.pdf: $(TEXFILES) $(INTRODUCTION) tikzpics/need_to_build
 
-.PHONY: section viewpdf
+.PHONY: chapter viewpdf _viewpdf runlunatikz

@@ -12,6 +12,8 @@ testbench/test.c
 testbench/true.c
 */tikzpics/dep_cache.lua
 figcache/
+*/*/tikzpics/need_to_build
+*/tikzpics/need_to_build
 _minted*
 *.toc
 *.aux
