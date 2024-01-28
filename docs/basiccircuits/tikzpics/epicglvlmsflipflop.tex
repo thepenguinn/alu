@@ -1,7 +1,7 @@
 \begin{tikzpicture} [american]
 
     \draw
-(0,0)
+    (0,0)
 
     \sctkglvlmsflipflop {msff} {s}
 
@@ -21,49 +21,49 @@
 
     ;
 
-%% Drawing a table to indicate the active state of
-%% inputs
+    %% Drawing a table to indicate the active state of
+    %% inputs
 
     \draw
-(msff-northeast)
+    (msff-northeast)
 
     node (mgla1) [align = center, anchor = north east] {
 
         \begin{tabularx} {0.33\textwidth} {*{2}{>{\raggedleft\arraybackslash}X}}
-        &       \texttt{INPUTS} \\
+            &       \texttt{INPUTS} \\
             \midrule
             \texttt{D}      &   \texttt{ACTIVE LOW} \\
             \texttt{RST}    &  \texttt{ACTIVE HIGH} \\
             \texttt{RECLK}  &   \texttt{ACTIVE LOW} \\
             \texttt{FECLK}  &   \texttt{ACTIVE LOW} \\
-            \end{tabularx}
+        \end{tabularx}
 
     }
 
-(msff-southwest)
+    (msff-southwest)
 
     node (mgla2) [align = center, anchor = south west] {
 
         \begin{tabularx} {0.33\textwidth} {*{1}{>{\raggedright\arraybackslash}p{0.4cm}}*{1}{>{\raggedright\arraybackslash}X}}
-        \multicolumn{2}{l}{\texttt{OUTPUTS}}     \\
+            \multicolumn{2}{l}{\texttt{OUTPUTS}}     \\
             \midrule
             \texttt{Q}       & \texttt{ACTIVE HIGH}  \\
             \texttt{\={Q}}   & \texttt{ACTIVE LOW}  \\
-            \end{tabularx}
+        \end{tabularx}
 
     }
 
-;
+    ;
 
-%% TEST Marking some points
+    %% TEST Marking some points
 
     \draw [dashed, catppuccinfg!70!catppuccinbg, thin,]
     (msff-slave-s)
     circle(0.35cm)
     (msff-slave-s)
-++(0,0.25)
+    ++(0,0.35)
     \constcornerdown {++(1,1.5)}
--- ++(2,0)
+    -- ++(2,0)
     node (msff-label-master-q) [right = 4pt] {\texttt{MASTER Q}}
     ;
 
