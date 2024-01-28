@@ -5,17 +5,17 @@ TEXFILES = catppuccin-latte.sty catppuccin-mocha.sty colorthemes.sty \
 		   cornercommands.sty generalcommands.sty generalsubctikz.sty \
 		   generaltikzset.sty abstract.tex main.tex preamble.tex
 
-# PDFFILES = onebitalu/section.pdf counter/section.pdf
+# PDFFILES = onebitalu/chapter.pdf counter/chapter.pdf
 #
 
-BASICCIRUITS = basiccircuits/section.tex
-COUNTER = counter/section.tex
-FINALSCHEMATICS = finalschematics/section.tex
-INITIALIZER = initializer/section.tex
-INTRODUCTION = introduction/section.tex
-MEMORYUNIT = memoryunit/section.tex
-ONEBITALU = onebitalu/section.tex
-TESTBENCH = testbench/section.tex
+BASICCIRUITS = basiccircuits/chapter.tex
+COUNTER = counter/chapter.tex
+FINALSCHEMATICS = finalschematics/chapter.tex
+INITIALIZER = initializer/chapter.tex
+INTRODUCTION = introduction/chapter.tex
+MEMORYUNIT = memoryunit/chapter.tex
+ONEBITALU = onebitalu/chapter.tex
+TESTBENCH = testbench/chapter.tex
 
 main: _viewpdf
 
@@ -39,7 +39,7 @@ runlunatikz:
 
 main.pdf: $(TEXFILES) $(COUNTER) $(BASICCIRUITS) $(FINALSCHEMATICS) $(INITIALIZER) $(INTRODUCTION) $(MEMORYUNIT) $(ONEBITALU) $(TESTBENCH) tikzpics/need_to_build
 
-# onebitalu/section.pdf: $(TEXFILES) $(ONEBITALU)
-# counter/section.pdf: $(TEXFILES) $(COUNTER)
+# onebitalu/chapter.pdf: $(TEXFILES) $(ONEBITALU)
+# counter/chapter.pdf: $(TEXFILES) $(COUNTER)
 
 .PHONY: main viewpdf runlunatikz _viewpdf
