@@ -1,7 +1,7 @@
 # Makefile
 #
 
-TEXFILES = ../catppuccin-latte.sty ../catppuccin-mocha.sty ../colorthemes.sty \
+TEXFILES = ../catppuccin-latte.sty ../catppuccin-mocha.sty ../colorscheme.sty \
 		   ../cornercommands.sty ../generalcommands.sty ../generalsubctikz.sty \
 		   ../generaltikzset.sty ../abstract.tex ../main.tex ../preamble.tex
 
@@ -17,7 +17,7 @@ _viewpdf: runlunatikz chapter.pdf
 	viewpdf chapter.pdf
 
 runlunatikz:
-	lunatikz --style-root-path --style-file colorthemes.sty --style-macro usepackage \
+	lunatikz --style-root-path --style-file colorscheme.sty --style-macro usepackage \
 		--touch-file need_to_build chapter.tex
 
 .SUFFIXES: .tex .pdf

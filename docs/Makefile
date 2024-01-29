@@ -1,7 +1,7 @@
 # Makefile
 #
 
-TEXFILES = catppuccin-latte.sty catppuccin-mocha.sty colorthemes.sty \
+TEXFILES = catppuccin-latte.sty catppuccin-mocha.sty colorscheme.sty \
 		   cornercommands.sty generalcommands.sty generalsubctikz.sty \
 		   generaltikzset.sty abstract.tex main.tex preamble.tex
 
@@ -23,12 +23,12 @@ _viewpdf: runlunatikz main.pdf
 	viewpdf main.pdf
 
 viewpdf:
-	[ -e main.pdf ] && vewpdf main.pdf || printf "main.pdf doesn't exist, run make\n"
+	[ -e main.pdf ] && viewpdf main.pdf || printf "main.pdf doesn't exist, run make\n"
 
 .SUFFIXES: .tex .pdf
 
 runlunatikz:
-	lunatikz --style-root-path --style-file colorthemes.sty --style-macro usepackage \
+	lunatikz --style-root-path --style-file colorscheme.sty --style-macro usepackage \
 		--touch-file need_to_build main.tex
 
 .tex.pdf:
