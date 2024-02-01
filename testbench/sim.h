@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #define FILE_NAME_TB  "alutester_tb_file.v"
-#define FILE_NAME_ALU "alu_redesign.v"
+#define FILE_NAME_ALU "alu.v"
 #define FILE_NAME_VVP "alutester_vvp_file"
 
 #define XTOSTR(x)         #x

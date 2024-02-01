@@ -100,211 +100,329 @@ module ring_oscillator(input logic en,
 endmodule
 
 module edge_detector(input logic clk,
-    output logic eclk);
+    output logic feclk);
+
+    /*
+     * Falling edge detector
+     * */
 
     wire notclk;
-    wire nct, nnct;
-
-    nor #200 (notclk, clk, clk);
-    nor      (nct, clk, clk);
-    nor      (nnct, notclk, notclk);
-    nor      (eclk, nct, nnct);
-
-endmodule
-
-module edge_detector_half(input logic clk,
-    output logic eclk);
-
-    wire notclk;
-    wire nct, nnct;
-
-    nor #500 (notclk, clk, clk);
-    nor     (nct, clk, clk);
-    nor     (nnct, notclk, notclk);
-    nor     (eclk, nct, nnct);
-
-endmodule
-
-module edge_detector_short(input logic clk,
-    output logic eclk);
-
-    wire notclk;
-    wire nct, nnct;
 
     nor #30 (notclk, clk, clk);
-    nor     (nct, clk, clk);
-    nor     (nnct, notclk, notclk);
-    nor     (eclk, nct, nnct);
+    nor #3 (feclk, notclk, clk);
+
+endmodule
+
+module edge_detector_inv(input logic clk,
+    output logic notfeclk);
+
+    /*
+     * Falling edge detector,
+     * with inverted output
+     * */
+
+    wire notclk;
+    wire feclk;
+
+    nor #30 (notclk, clk, clk);
+    nor #3 (feclk, notclk, clk);
+    nor #3 (notfeclk, feclk, feclk);
 
 endmodule
 
 module sr_latch(input logic set, reset,
     output logic q, qbar);
 
-    nor #3 (q, reset, qbar);
-    nor #3 (qbar, set, q);
+    nor #3 (q, qbar, reset);
+    nor #3 (qbar, q, set);
 
 endmodule
 
-module d_latch(input logic clk, rst, data,
+module sr_flipflop(input logic set, reset, clk,
     output logic q, qbar);
 
+    /*
+     * With active low clk
+     * */
+
+    wire srlset, srlreset;
+
+    sr_latch srl (
+        .set(srlset),
+        .reset(srlreset),
+        .q(q),
+        .qbar(qbar)
+    );
+
+    nor #3 (srlreset, set, clk);
+    nor #3 (srlset, reset, clk);
+
+endmodule
+
+module d_flipflop(input logic data, clk,
+    output logic q, qbar);
+
+    /*
+     * With active low clk
+     * */
+
+    wire notdata;
+
+    sr_flipflop srff (
+        .set(data),
+        .reset(notdata),
+        .clk(clk),
+        .q(q),
+        .qbar(qbar)
+    );
+
+    nor #3 (notdata, data, data);
+
+endmodule
+
+module d_flipflop_ar(input logic data, clk, rst,
+    output logic q, qbar);
+
+    /*
+     * With active high clk, async rst,
+     * make sure to never let data and clk high
+     * when rst is high
+     * */
+
+    wire notdata;
     wire set, reset;
-    wire notclk, bfreset;
-    wire acdata, notacdata, notdata;
-    wire norreset;
+    wire acreset, notacreset;
+    wire acclk;
 
     sr_latch srl (
         .set(set),
-        .reset(reset),
+        .reset(acreset),
         .q(q),
         .qbar(qbar)
     );
 
-    /*
-     * if data, clk and rst are high at the same time
-     * the set and reset of the sr latch could get a
-     * high at the same time. So we are anding data and
-     * notrst
-     * */
+    nor #3 (acclk, clk, clk);
     nor #3 (notdata, data, data);
-    nor #3 (acdata, notdata, rst);
 
-    nor #3 (notacdata, acdata, acdata);
-    nor #3 (notclk, clk, clk);
-    nor #3 (set, notclk, notacdata);
-    nor #3 (bfreset, notclk, acdata);
+    nor #3 (reset, data, acclk);
+    nor #3 (set, notdata, acclk);
 
-    /*
-     * asynchronosly resetting the sr latch
-     * */
-    nor #3 (norreset, bfreset, rst);
-    nor #3 (reset, norreset, norreset);
+    nor #3 (notacreset, reset, rst);
+    nor #3 (acreset, notacreset, notacreset);
 
 endmodule
 
-module ms_flipflop(input logic eclk, ieclk, rst, data,
+module d_flipflop_sr(input logic data, rst, clk,
     output logic q, qbar);
 
-    wire mout;
+    /*
+     * With active low clk and active low data
+     * */
 
-    d_latch master (
-        .clk(eclk),
-        .rst(rst),
-        .data(data),
-        .q(mout)
+    wire acdata;
+
+    d_flipflop dl (
+        .data(acdata),
+        .clk(clk),
+        .q(q),
+        .qbar(qbar)
     );
 
-    d_latch slave (
-        .clk(ieclk),
-        .rst(rst),
-        .data(mout),
+    nor #3 (acdata, data, rst);
+
+endmodule
+
+module ms_flipflop(input logic data, rst, reclk, feclk,
+    output logic q, qbar);
+
+    /*
+     * With synchronous reset, active low data,
+     * active high reclk, and feclk
+     * */
+
+    wire sdata, notsdata;
+
+    d_flipflop_sr master (
+        .data(data),
+        .clk(reclk),
+        .q(sdata),
+        .qbar(notsdata),
+        .rst(rst)
+    );
+
+    sr_flipflop slave (
+        .set(sdata),
+        .reset(notsdata),
+        .clk(feclk),
         .q(q),
         .qbar(qbar)
     );
 
 endmodule
 
-module counter(input logic eclk, ieclk, rst,
+module counter(input logic reclk, feclk, rst,
     output logic [3:0] count);
 
-    wire q0, q1, q2, q3;
-    wire qb0, qb1, qb2, qb3;
-    wire d0, d1, d2, d3;
-    wire eclk1, eclk2, eclk3;
-    wire ieclk1, ieclk2, ieclk3;
+    wire feclk1, feclk2, feclk3;
 
-    ms_flipflop msff0 (
-        .eclk(eclk),
-        .ieclk(ieclk),
+    wire acfeclk1, acfeclk2, acfeclk3;
+    wire mux11, mux12, mux21, mux22, mux31, mux32;
+    wire notrst;
+
+    nor #3 (notrst, rst, rst);
+
+    ms_flipflop msff00 (
+        .data(count[0]),
         .rst(rst),
-        .data(qb0),
-        .q(count[0]),
-        .qbar(qb0)
+        .reclk(reclk),
+        .feclk(feclk),
+        .q(count[0])
     );
 
-    edge_detector ed1 (
+    edge_detector_inv ed01 (
         .clk(count[0]),
-        .eclk(eclk1)
+        .notfeclk(feclk1)
     );
 
-    edge_detector ied1 (
-        .clk(qb0),
-        .eclk(ieclk1)
-    );
+    nor #3 (mux11, rst, feclk1);
+    nor #3 (mux12, notrst, feclk);
+    nor #3 (acfeclk1, mux11, mux12);
 
-    ms_flipflop msff1 (
-        .eclk(eclk1),
-        .ieclk(ieclk1),
+    ms_flipflop msff01 (
+        .data(count[1]),
         .rst(rst),
-        .data(qb1),
-        .q(count[1]),
-        .qbar(qb1)
+        .reclk(reclk),
+        .feclk(acfeclk1),
+        .q(count[1])
     );
 
-    edge_detector ed2 (
+    edge_detector_inv ed02 (
         .clk(count[1]),
-        .eclk(eclk2)
+        .notfeclk(feclk2)
     );
 
-    edge_detector ied2 (
-        .clk(qb1),
-        .eclk(ieclk2)
-    );
+    nor #3 (mux21, rst, feclk2);
+    nor #3 (mux22, notrst, feclk);
+    nor #3 (acfeclk2, mux21, mux22);
 
-    ms_flipflop msff2 (
-        .eclk(eclk2),
-        .ieclk(ieclk2),
+    ms_flipflop msff02 (
+        .data(count[2]),
         .rst(rst),
-        .data(qb2),
-        .q(count[2]),
-        .qbar(qb2)
+        .reclk(reclk),
+        .feclk(acfeclk2),
+        .q(count[2])
     );
 
-    edge_detector ed3 (
+    edge_detector_inv ed03 (
         .clk(count[2]),
-        .eclk(eclk3)
+        .notfeclk(feclk3)
     );
 
-    edge_detector ied3 (
-        .clk(qb2),
-        .eclk(ieclk3)
-    );
+    nor #3 (mux31, rst, feclk3);
+    nor #3 (mux32, notrst, feclk);
+    nor #3 (acfeclk3, mux31, mux32);
 
-    ms_flipflop msff3 (
-        .eclk(eclk3),
-        .ieclk(ieclk3),
+    ms_flipflop msff03 (
+        .data(count[3]),
         .rst(rst),
-        .data(qb3),
-        .q(count[3]),
-        .qbar(qb3)
+        .reclk(reclk),
+        .feclk(acfeclk3),
+        .q(count[3])
     );
+
 
 endmodule
 
-module and5in(input logic in0, in1, in2, in3, in4,
+module nor5input(input logic in0, in1, in2, in3, in4,
     output logic out, f4high);
 
-    /*
-     * in[0-4] takes the inverted values for input signals
-     * ie, for 00101 give 11010, because we are using nor gates.
-     * */
+    wire nor01, nor23;
+    wire or01, or23;
+    wire nor0123;
+    wire or0123;
 
-    wire nor0, nor1, nor2;
-    wire notnor0, notnor1, notnor2;
+    nor #3 (nor01, in0, in1);
+    nor #3 (or01, nor01, nor01);
 
-    nor #3 (nor0, in0, in1);
-    nor #3 (notnor0, nor0, nor0);
+    nor #3 (nor23, in2, in3);
+    nor #3 (or23, nor23, nor23);
 
-    nor #3 (nor1, notnor0, in2);
-    nor #3 (notnor1, nor1, nor1);
+    nor #3 (nor0123, or01, or23);
+    nor #3 (or0123, nor0123, nor0123);
 
-    nor #3 (nor2, notnor1, in3);
-    nor #3 (notnor2, nor2, nor2);
+    nor #3 (out, or0123, in4);
 
-    nor #3 (out, notnor2, in4);
+    assign f4high = or0123;
 
-    assign f4high = nor2;
+endmodule
+
+module nor4input(input logic in0, in1, in2, in3,
+    output logic out);
+
+    wire nor01, nor23;
+    wire or01, or23;
+
+    nor #3 (nor01, in0, in1);
+    nor #3 (or01, nor01, nor01);
+
+    nor #3 (nor23, in2, in3);
+    nor #3 (or23, nor23, nor23);
+
+    nor #3 (out, or01, or23);
+
+endmodule
+
+module mux16(input logic [15:0] in, input logic [3:0] sl,
+    output logic out, muxlast);
+
+    wire sl00, sl01, sl02, sl03; // original select lines
+    wire sl10, sl11, sl12, sl13; // inverted select lines
+
+    assign sl00 = sl[0];
+    assign sl01 = sl[1];
+    assign sl02 = sl[2];
+    assign sl03 = sl[3];
+
+    nor #3 (sl10, sl00, sl00);
+    nor #3 (sl11, sl01, sl01);
+    nor #3 (sl12, sl02, sl02);
+    nor #3 (sl13, sl03, sl03);
+
+    wire nor00, nor01, nor02, nor03, nor04, nor05, nor06, nor07,
+        nor08, nor09, nor10, nor11, nor12, nor13, nor14, nor15;
+
+    nor5input nor500 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl00), .in4(in[00]), .out(nor00));
+    nor5input nor501 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl10), .in4(in[01]), .out(nor01));
+    nor5input nor502 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl00), .in4(in[02]), .out(nor02));
+    nor5input nor503 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl10), .in4(in[03]), .out(nor03));
+    nor5input nor504 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl00), .in4(in[04]), .out(nor04));
+    nor5input nor505 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl10), .in4(in[05]), .out(nor05));
+    nor5input nor506 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl00), .in4(in[06]), .out(nor06));
+    nor5input nor507 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl10), .in4(in[07]), .out(nor07));
+    nor5input nor508 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl00), .in4(in[08]), .out(nor08));
+    nor5input nor509 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl10), .in4(in[09]), .out(nor09));
+    nor5input nor510 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl00), .in4(in[10]), .out(nor10));
+    nor5input nor511 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl10), .in4(in[11]), .out(nor11));
+    nor5input nor512 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl00), .in4(in[12]), .out(nor12));
+    nor5input nor513 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl10), .in4(in[13]), .out(nor13));
+    nor5input nor514 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl00), .in4(in[14]), .out(nor14));
+    nor5input nor515 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(in[15]), .out(nor15),
+        .f4high(muxlast));
+
+    wire fnor0, fnor1, fnor2, fnor3;
+    wire for0, for1, for2, for3;
+
+    nor #3 (for0, fnor0, fnor0);
+    nor #3 (for1, fnor1, fnor1);
+    nor #3 (for2, fnor2, fnor2);
+    nor #3 (for3, fnor3, fnor3);
+
+    nor4input nor400 (.in0(nor00), .in1(nor01), .in2(nor02), .in3(nor03), .out(fnor0));
+    nor4input nor401 (.in0(nor04), .in1(nor05), .in2(nor06), .in3(nor07), .out(fnor1));
+    nor4input nor402 (.in0(nor08), .in1(nor09), .in2(nor10), .in3(nor11), .out(fnor2));
+    nor4input nor403 (.in0(nor12), .in1(nor13), .in2(nor14), .in3(nor15), .out(fnor3));
+
+    nor4input nor404 (.in0(for0), .in1(for1), .in2(for2), .in3(for3), .out(out));
 
 endmodule
 
@@ -312,11 +430,11 @@ module demux16(input logic in, input logic [3:0] sl,
     output logic [15:0] out);
 
     /*
-     * propagation delay -> 25 units
+     * Active low in
      * */
-    reg sl00, sl01, sl02, sl03;
-    wire sl10, sl11, sl12, sl13;
-    wire notin;
+
+    wire sl00, sl01, sl02, sl03; // original select lines
+    wire sl10, sl11, sl12, sl13; // inverted select lines
 
     assign sl00 = sl[0];
     assign sl01 = sl[1];
@@ -327,265 +445,373 @@ module demux16(input logic in, input logic [3:0] sl,
     nor #3 (sl11, sl01, sl01);
     nor #3 (sl12, sl02, sl02);
     nor #3 (sl13, sl03, sl03);
-
-    nor #3 (notin, in, in);
-
-    /*
-     * I know this is a mess, but why not ? :)
-     * */
-    and5in and00 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl00), .in4(notin), .out(out[0]));
-    and5in and01 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl10), .in4(notin), .out(out[1]));
-    and5in and02 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl00), .in4(notin), .out(out[2]));
-    and5in and03 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl10), .in4(notin), .out(out[3]));
-    and5in and04 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl00), .in4(notin), .out(out[4]));
-    and5in and05 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl10), .in4(notin), .out(out[5]));
-    and5in and06 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl00), .in4(notin), .out(out[6]));
-    and5in and07 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl10), .in4(notin), .out(out[7]));
-    and5in and08 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl00), .in4(notin), .out(out[8]));
-    and5in and09 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl10), .in4(notin), .out(out[9]));
-    and5in and10 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl00), .in4(notin), .out(out[10]));
-    and5in and11 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl10), .in4(notin), .out(out[11]));
-    and5in and12 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl00), .in4(notin), .out(out[12]));
-    and5in and13 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl10), .in4(notin), .out(out[13]));
-    and5in and14 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl00), .in4(notin), .out(out[14]));
-    and5in and15 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(notin), .out(out[15]));
-
-
-endmodule
-
-module mux16(input logic [15:0] in, input logic [3:0] sl,
-    output logic out, last);
-
-    /*
-     * propagation delay -> 112 units
-     * */
-    reg sl00, sl01, sl02, sl03; // the actual sl values
-    wire sl10, sl11, sl12, sl13; // the inverted sl values
-    wire notin00, notin01, notin02, notin03, notin04, notin05, notin06,
-        notin07, notin08, notin09, notin10, notin11, notin12, notin13,
-        notin14, notin15;
-    wire out00, out01, out02, out03, out04, out05, out06, out07,
-        out08, out09, out10, out11, out12, out13, out14, out15;
-
-    assign sl00 = sl[0];
-    assign sl01 = sl[1];
-    assign sl02 = sl[2];
-    assign sl03 = sl[3];
-
-    nor #3 (sl10, sl00, sl00);
-    nor #3 (sl11, sl01, sl01);
-    nor #3 (sl12, sl02, sl02);
-    nor #3 (sl13, sl03, sl03);
-
-    nor #3 (notin00, in[0], in[0]);
-    nor #3 (notin01, in[1], in[1]);
-    nor #3 (notin02, in[2], in[2]);
-    nor #3 (notin03, in[3], in[3]);
-    nor #3 (notin04, in[4], in[4]);
-    nor #3 (notin05, in[5], in[5]);
-    nor #3 (notin06, in[6], in[6]);
-    nor #3 (notin07, in[7], in[7]);
-    nor #3 (notin08, in[8], in[8]);
-    nor #3 (notin09, in[9], in[9]);
-    nor #3 (notin10, in[10], in[10]);
-    nor #3 (notin11, in[11], in[11]);
-    nor #3 (notin12, in[12], in[12]);
-    nor #3 (notin13, in[13], in[13]);
-    nor #3 (notin14, in[14], in[14]);
-    nor #3 (notin15, in[15], in[15]);
-
-    /*
-     * I know this is a mess, but why not ? :)
-     * */
-    and5in and00 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl00), .in4(notin00), .out(out00));
-    and5in and01 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl10), .in4(notin01), .out(out01));
-    and5in and02 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl00), .in4(notin02), .out(out02));
-    and5in and03 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl10), .in4(notin03), .out(out03));
-    and5in and04 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl00), .in4(notin04), .out(out04));
-    and5in and05 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl10), .in4(notin05), .out(out05));
-    and5in and06 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl00), .in4(notin06), .out(out06));
-    and5in and07 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl10), .in4(notin07), .out(out07));
-    and5in and08 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl00), .in4(notin08), .out(out08));
-    and5in and09 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl10), .in4(notin09), .out(out09));
-    and5in and10 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl00), .in4(notin10), .out(out10));
-    and5in and11 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl10), .in4(notin11), .out(out11));
-    and5in and12 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl00), .in4(notin12), .out(out12));
-    and5in and13 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl10), .in4(notin13), .out(out13));
-    and5in and14 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl00), .in4(notin14), .out(out14));
-    and5in and15 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(notin15), .out(out15), .f4high(last));
 
     wire nor00, nor01, nor02, nor03, nor04, nor05, nor06, nor07,
-        nor08, nor09, nor10, nor11, nor12, nor13, nor14;
+        nor08, nor09, nor10, nor11, nor12, nor13, nor14, nor15;
 
-    wire or00, or01, or02, or03, or04, or05, or06, or07,
-        or08, or09, or10, or11, or12, or13;
-
-        nor #3 (or00, nor00, nor00);
-        nor #3 (or01, nor01, nor01);
-        nor #3 (or02, nor02, nor02);
-        nor #3 (or03, nor03, nor03);
-        nor #3 (or04, nor04, nor04);
-        nor #3 (or05, nor05, nor05);
-        nor #3 (or06, nor06, nor06);
-        nor #3 (or07, nor07, nor07);
-        nor #3 (or08, nor08, nor08);
-        nor #3 (or09, nor09, nor09);
-        nor #3 (or10, nor10, nor10);
-        nor #3 (or11, nor11, nor11);
-        nor #3 (or12, nor12, nor12);
-        nor #3 (or13, nor13, nor13);
-
-        nor #3 (out, nor14, nor14);
-
-        nor #3 (nor00, out00, out01);
-        nor #3 (nor01, out02, or00);
-        nor #3 (nor02, out03, or01);
-        nor #3 (nor03, out04, or02);
-        nor #3 (nor04, out05, or03);
-        nor #3 (nor05, out06, or04);
-        nor #3 (nor06, out07, or05);
-        nor #3 (nor07, out08, or06);
-        nor #3 (nor08, out09, or07);
-        nor #3 (nor09, out10, or08);
-        nor #3 (nor10, out11, or09);
-        nor #3 (nor11, out12, or10);
-        nor #3 (nor12, out13, or11);
-        nor #3 (nor13, out14, or12);
-        nor #3 (nor14, out15, or13);
+    nor5input nor500 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl00), .in4(in), .out(out[00]));
+    nor5input nor501 (.in0(sl03), .in1(sl02), .in2(sl01), .in3(sl10), .in4(in), .out(out[01]));
+    nor5input nor502 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl00), .in4(in), .out(out[02]));
+    nor5input nor503 (.in0(sl03), .in1(sl02), .in2(sl11), .in3(sl10), .in4(in), .out(out[03]));
+    nor5input nor504 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl00), .in4(in), .out(out[04]));
+    nor5input nor505 (.in0(sl03), .in1(sl12), .in2(sl01), .in3(sl10), .in4(in), .out(out[05]));
+    nor5input nor506 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl00), .in4(in), .out(out[06]));
+    nor5input nor507 (.in0(sl03), .in1(sl12), .in2(sl11), .in3(sl10), .in4(in), .out(out[07]));
+    nor5input nor508 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl00), .in4(in), .out(out[08]));
+    nor5input nor509 (.in0(sl13), .in1(sl02), .in2(sl01), .in3(sl10), .in4(in), .out(out[09]));
+    nor5input nor510 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl00), .in4(in), .out(out[10]));
+    nor5input nor511 (.in0(sl13), .in1(sl02), .in2(sl11), .in3(sl10), .in4(in), .out(out[11]));
+    nor5input nor512 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl00), .in4(in), .out(out[12]));
+    nor5input nor513 (.in0(sl13), .in1(sl12), .in2(sl01), .in3(sl10), .in4(in), .out(out[13]));
+    nor5input nor514 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl00), .in4(in), .out(out[14]));
+    nor5input nor515 (.in0(sl13), .in1(sl12), .in2(sl11), .in3(sl10), .in4(in), .out(out[15]));
 
 endmodule
 
-module and4in(input logic in0, in1, in2, in3,
-    output logic out);
+module shiftreg(input logic sin, rst, reclk, feclk,
+    output logic [15:0] pout);
 
-    /*
-     * in[0-3] takes the inverted values for input signals
-     * ie, for 0010 give 1101, because we are using nor gates.
-     * */
+    wire [14:0] qbout;
 
-    wire nor0, nor1;
-    wire notnor0, notnor1;
+    wire acsin;
 
-    nor #3 (nor0, in0, in1);
-    nor #3 (notnor0, nor0, nor0);
+    nor #3 (acsin, sin, sin);
 
-    nor #3 (nor1, notnor0, in2);
-    nor #3 (notnor1, nor1, nor1);
-
-    nor #3 (out, notnor1, in3);
+    ms_flipflop msff00 ( .data(qbout[14]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[00])                   );
+    ms_flipflop msff01 ( .data(qbout[13]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[01]), .qbar(qbout[14]) );
+    ms_flipflop msff02 ( .data(qbout[12]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[02]), .qbar(qbout[13]) );
+    ms_flipflop msff03 ( .data(qbout[11]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[03]), .qbar(qbout[12]) );
+    ms_flipflop msff04 ( .data(qbout[10]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[04]), .qbar(qbout[11]) );
+    ms_flipflop msff05 ( .data(qbout[09]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[05]), .qbar(qbout[10]) );
+    ms_flipflop msff06 ( .data(qbout[08]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[06]), .qbar(qbout[09]) );
+    ms_flipflop msff07 ( .data(qbout[07]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[07]), .qbar(qbout[08]) );
+    ms_flipflop msff08 ( .data(qbout[06]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[08]), .qbar(qbout[07]) );
+    ms_flipflop msff09 ( .data(qbout[05]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[09]), .qbar(qbout[06]) );
+    ms_flipflop msff10 ( .data(qbout[04]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[10]), .qbar(qbout[05]) );
+    ms_flipflop msff11 ( .data(qbout[03]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[11]), .qbar(qbout[04]) );
+    ms_flipflop msff12 ( .data(qbout[02]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[12]), .qbar(qbout[03]) );
+    ms_flipflop msff13 ( .data(qbout[01]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[13]), .qbar(qbout[02]) );
+    ms_flipflop msff14 ( .data(qbout[00]), .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[14]), .qbar(qbout[01]) );
+    ms_flipflop msff15 ( .data(acsin),     .rst(rst),    .reclk(reclk),
+                         .feclk(feclk),    .q(pout[15]), .qbar(qbout[00]) );
 
 endmodule
 
-module alu(input logic eclk, ieclk, ina, inb, rst,
-    input logic [2:0] op,
-    output logic out, regout);
+module memoryunit_mux(input logic data, reclk, rst, input logic [3:0] sl,
+    output logic [15:0] out);
 
-    wire op00, op01, op02;
-    wire op10, op11, op12;
+    wire [15:0] dmout;
+    wire notdata;
 
-    wire opout02, opout03, opout04, opout05, opout06, opout07;
-    wire out02, out03, out04, out05, out06, out07;
-    wire out00and01;
-
-    assign op00 = op[0];
-    assign op01 = op[1];
-    assign op02 = op[2];
-
-    nor #3 (op10, op00, op00);
-    nor #3 (op11, op01, op01);
-    nor #3 (op12, op02, op02);
-
-    wire op1and2, notop1and2;
-    wire cout, notcout;
-    wire sum, notsum;
-    wire dwrst, notdwrst;
-    wire notrst;
-    wire andrstd0, andrstd1;
-    wire data, notdata;
-
-    nor #3 (op1and2, op01, op02);
-    nor #3 (notop1and2, op1and2, op1and2);
-
-    nor #3 (notsum, sum, sum);
-    nor #3 (out00and01, notsum, notop1and2);
-
-    nor #3 (dwrst, notop1and2, op10);
-    nor #3 (notdwrst, dwrst, dwrst);
-
-    nor #3 (notrst, rst, rst);
-    nor #3 (notcout, cout, cout);
-    nor #3 (andrstd0, notrst, notdwrst);
-    nor #3 (andrstd1, notcout, rst);
-
-    nor #3 (notdata, andrstd0, andrstd1);
-    nor #3 (data, notdata, notdata);
-
-    // inverting inb for SUB
-
-    wire fxor, sxor0, sxor1, lxnor, inbforfa;
-
-    nor #3 (fxor, dwrst, inb);
-    nor #3 (sxor0, dwrst, fxor);
-    nor #3 (sxor1, fxor, inb);
-    nor #3 (lxnor, sxor0, sxor1);
-    nor #3 (inbforfa, lxnor, lxnor);
-
-    ms_flipflop coutreg (
-        .eclk(eclk),
-        .ieclk(ieclk),
-        .data(data),
-        .rst(notop1and2),
-        .q(regout)
+    demux16 demux(
+        .in(reclk),
+        .sl(sl),
+        .out(dmout)
     );
 
-    full_adder fadder (
-        .a(ina),
-        .b(inbforfa),
+    nor #3 (notdata, data, data);
+
+    d_flipflop_ar dlsr00 (.data(notdata), .rst(rst), .clk(dmout[00]), .q(out[00]));
+    d_flipflop_ar dlsr01 (.data(notdata), .rst(rst), .clk(dmout[01]), .q(out[01]));
+    d_flipflop_ar dlsr02 (.data(notdata), .rst(rst), .clk(dmout[02]), .q(out[02]));
+    d_flipflop_ar dlsr03 (.data(notdata), .rst(rst), .clk(dmout[03]), .q(out[03]));
+    d_flipflop_ar dlsr04 (.data(notdata), .rst(rst), .clk(dmout[04]), .q(out[04]));
+    d_flipflop_ar dlsr05 (.data(notdata), .rst(rst), .clk(dmout[05]), .q(out[05]));
+    d_flipflop_ar dlsr06 (.data(notdata), .rst(rst), .clk(dmout[06]), .q(out[06]));
+    d_flipflop_ar dlsr07 (.data(notdata), .rst(rst), .clk(dmout[07]), .q(out[07]));
+    d_flipflop_ar dlsr08 (.data(notdata), .rst(rst), .clk(dmout[08]), .q(out[08]));
+    d_flipflop_ar dlsr09 (.data(notdata), .rst(rst), .clk(dmout[09]), .q(out[09]));
+    d_flipflop_ar dlsr10 (.data(notdata), .rst(rst), .clk(dmout[10]), .q(out[10]));
+    d_flipflop_ar dlsr11 (.data(notdata), .rst(rst), .clk(dmout[11]), .q(out[11]));
+    d_flipflop_ar dlsr12 (.data(notdata), .rst(rst), .clk(dmout[12]), .q(out[12]));
+    d_flipflop_ar dlsr13 (.data(notdata), .rst(rst), .clk(dmout[13]), .q(out[13]));
+    d_flipflop_ar dlsr14 (.data(notdata), .rst(rst), .clk(dmout[14]), .q(out[14]));
+    d_flipflop_ar dlsr15 (.data(notdata), .rst(rst), .clk(dmout[15]), .q(out[15]));
+
+endmodule
+
+module alu_init(input logic bin, cin, rst, op,
+    output logic bout, cout);
+
+    wire bxnorfl, bxnorslt, bxnorslb, bxnortl;
+
+    // inveting bin for subtraction
+    nor #3 (bxnorfl, bin, op);
+
+    nor #3 (bxnorslt, bin, bxnorfl);
+    nor #3 (bxnorslb, op, bxnorfl);
+
+    nor #3 (bxnortl, bxnorslt, bxnorslb);
+
+    nor #3 (bout, bxnortl, bxnortl);
+
+    wire notrst;
+    wire muxfl1, muxfl2, muxsl;
+
+    // resetting msff
+    nor #3 (notrst, rst, rst);
+
+    nor #3 (muxfl1, rst, cin);
+    nor #3 (muxfl2, notrst, op);
+
+    nor #3 (muxsl, muxfl1, muxfl2);
+
+    nor #3 (cout, muxsl, muxsl);
+
+endmodule
+
+module mux7(input logic [6:0] in, input logic [2:0] sl,
+    output logic slf00, out);
+
+    wire sl00, sl01, sl02; // original select lines
+    wire sl10, sl11, sl12; // inverted select lines
+
+    assign sl00 = sl[0];
+    assign sl01 = sl[1];
+    assign sl02 = sl[2];
+
+    nor #3 (sl10, sl00, sl00);
+    nor #3 (sl11, sl01, sl01);
+    nor #3 (sl12, sl02, sl02);
+
+    wire [6:0] muxfl;
+    wire norfl, orfl;
+
+    nor #3 (norfl, sl02, sl01);
+    nor #3 (orfl, norfl, norfl);
+    nor #3 (muxfl[0], orfl, in[0]);
+
+    // for rst to msff inside alu
+    assign slf00 = orfl;
+
+    nor4input nor402 ( .in0(sl02), .in1(sl11), .in2(sl00), .in3(in[1]), .out(muxfl[1]) );
+    nor4input nor403 ( .in0(sl02), .in1(sl11), .in2(sl10), .in3(in[2]), .out(muxfl[2]) );
+    nor4input nor404 ( .in0(sl12), .in1(sl01), .in2(sl00), .in3(in[3]), .out(muxfl[3]) );
+    nor4input nor405 ( .in0(sl12), .in1(sl01), .in2(sl10), .in3(in[4]), .out(muxfl[4]) );
+    nor4input nor406 ( .in0(sl12), .in1(sl11), .in2(sl00), .in3(in[5]), .out(muxfl[5]) );
+    nor4input nor407 ( .in0(sl12), .in1(sl11), .in2(sl10), .in3(in[6]), .out(muxfl[6]) );
+
+    wire mlnor01, mlor01, mlnor012, mlor012;
+    wire mlnor3456, mlor3456;
+
+    nor #3 (mlnor01, muxfl[0], muxfl[1]);
+    nor #3 (mlor01, mlnor01, mlnor01);
+
+    nor #3 (mlnor012, mlor01, muxfl[2]);
+    nor #3 (mlor012, mlnor012, mlnor012);
+
+    nor4input nor4last  (
+        .in0(muxfl[3]), .in1(muxfl[4]),
+        .in2(muxfl[5]), .in3(muxfl[6]),
+        .out(mlnor3456)
+    );
+
+    nor #3 (mlor3456, mlnor3456, mlnor3456);
+
+    nor #3 (out, mlor012, mlor3456);
+
+
+endmodule
+
+module alu( input logic [2:0] op,
+    input logic ain, bin, rst, reclk, feclk,
+    output logic aluout, regout);
+
+    wire [6:0] muxin;
+    wire bout;
+    wire cout;
+    wire regin;
+    wire slf00;
+
+    full_adder flad (
+        .a(ain),
+        .b(bout),
         .cin(regout),
-        .sum(sum),
+        .sum(muxin[0]),
         .cout(cout)
     );
 
-    xor_gate gxor   ( .a(ina), .b(inb), .y(opout02));
-    and_gate gand   ( .a(ina), .b(inb), .y(opout03));
-    not_gate gnot   ( .a(ina),          .y(opout04));
-    or_gate  gor    ( .a(ina), .b(inb), .y(opout05));
-    nor_gate gnor   ( .a(ina), .b(inb), .y(opout06));
-    nand_gate gnand ( .a(ina), .b(inb), .y(opout07));
+    alu_init ainit (
+        .bin(bin),
+        .cin(cout),
+        .rst(rst),
+        .op(op[0]),
+        .bout(bout),
+        .cout(regin)
+    );
 
-    wire notopout02, notopout03, notopout04, notopout05, notopout06, notopout07;
+    ms_flipflop msff (
+        .data(regin),
+        .rst(slf00),
+        .reclk(reclk),
+        .feclk(feclk),
+        .q(regout)
+    );
 
-    nor #3 (notopout02, opout02, opout02);
-    nor #3 (notopout03, opout03, opout03);
-    nor #3 (notopout04, opout04, opout04);
-    nor #3 (notopout05, opout05, opout05);
-    nor #3 (notopout06, opout06, opout06);
-    nor #3 (notopout07, opout07, opout07);
+    mux7 mux (
+        .sl(op),
+        .in(muxin),
+        .out(aluout),
+        .slf00(slf00)
+    );
 
-    and4in and2 (.in0(op02), .in1(op11), .in2(op00), .in3(notopout02), .out(out02));
-    and4in and3 (.in0(op02), .in1(op11), .in2(op10), .in3(notopout03), .out(out03));
-    and4in and4 (.in0(op12), .in1(op01), .in2(op00), .in3(notopout04), .out(out04));
-    and4in and5 (.in0(op12), .in1(op01), .in2(op10), .in3(notopout05), .out(out05));
-    and4in and6 (.in0(op12), .in1(op11), .in2(op00), .in3(notopout06), .out(out06));
-    and4in and7 (.in0(op12), .in1(op11), .in2(op10), .in3(notopout07), .out(out07));
+    xor_gate  gxor   ( .a(ain), .b(bin), .y(muxin[1]) );
+    and_gate  gand   ( .a(ain), .b(bin), .y(muxin[2]) );
+    not_gate  gnot   ( .a(ain),          .y(muxin[3]) );
+    or_gate   gor    ( .a(ain), .b(bin), .y(muxin[4]) );
+    nor_gate  gnor   ( .a(ain), .b(bin), .y(muxin[5]) );
+    nand_gate gnand  ( .a(ain), .b(bin), .y(muxin[6]) );
 
-    wire nor00, nor01, nor02, nor03, nor04, nor05;
-    wire or00, or01, or02, or03, or04;
+endmodule
 
-    nor #3 (or00, nor00, nor00);
-    nor #3 (or01, nor01, nor01);
-    nor #3 (or02, nor02, nor02);
-    nor #3 (or03, nor03, nor03);
-    nor #3 (or04, nor04, nor04);
+module clk_gen(input logic clk,
+    output logic notfeclk, notdfeclk, notdreclk, notreclk);
 
-    nor #3 (out, nor05, nor05);
+    wire notclk;
+    wire reclk;
 
-    nor #3 (nor00, out00and01, out02);
-    nor #3 (nor01, out03, or00);
-    nor #3 (nor02, out04, or01);
-    nor #3 (nor03, out05, or02);
-    nor #3 (nor04, out06, or03);
-    nor #3 (nor05, out07, or04);
+    nor #3 (notclk, clk, clk);
+
+    edge_detector ed0 (
+        .clk(clk),
+        .feclk(feclk)
+    );
+
+    edge_detector ed1 (
+        .clk(notclk),
+        .feclk(reclk)
+    );
+
+    wire dsfe0;
+
+    nor #3  (notreclk, reclk, reclk);
+
+    nor #30 (notdreclk, reclk, reclk);
+
+    nor #3 (notfeclk, feclk, feclk);
+
+    nor #15 (dsfe0, notfeclk, notfeclk);
+    nor #15 (notdfeclk, dsfe0, dsfe0);
+
+endmodule
+
+module rst_gen(input logic on, notreclk, notdfeclk,
+    output logic fsrq, rstsig);
+
+    wire feon;
+    wire ssrset, srreset;
+    wire ssrlqbar, fsrqbar;
+
+    edge_detector ed0 (
+        .clk(on),
+        .feclk(feon)
+    );
+
+    sr_latch fsrl (
+        .set(feon),
+        .reset(srreset),
+        .q(fsrq),
+        .qbar(fsrqbar)
+    );
+
+    nor #3 (ssrset, fsrqbar, notreclk);
+
+    sr_latch ssrl (
+        .set(ssrset),
+        .reset(srreset),
+        .q(rstsig),
+        .qbar(ssrqbar)
+    );
+
+    wire resetfl, rflnoron;
+
+    nor #3 (resetfl, notdfeclk, ssrqbar);
+    nor #3 (rflnoron, resetfl, on);
+    nor #3 (srreset, rflnoron, rflnoron);
+
+endmodule
+
+module halt_unit(input logic muxlast, rgfsrq, notfeclk, notreclk, notdreclk,
+    output logic notreclkout);
+
+    wire fsrset, fsrqbar;
+
+    sr_latch fsrl (
+        .set(fsrset),
+        .reset(rgfsrq),
+        .qbar(fsrqbar)
+    );
+
+    wire muxnorq, notmuxnorq;
+
+    nor #3 (muxnorq, muxlast, rgfsrq);
+    nor #3 (notmuxnorq, muxnorq, muxnorq);
+
+    nor #3 (fsrset, notmuxnorq, notreclk);
+
+    wire ssrset, ssrq;
+
+    sr_latch ssrl (
+        .set(ssrset),
+        .reset(rgfsrq),
+        .q(ssrq)
+    );
+
+    nor #3 (ssrset, fsrqbar, notfeclk);
+
+    wire dreclk;
+
+    nor #3 (dreclk, ssrq, notdreclk);
+    nor #3 (notreclkout, dreclk, dreclk);
+
+endmodule
+
+module init(input logic clk, on, muxlast,
+    output logic notreclkout, notfeclkout, rstsig);
+
+    wire notdfeclk, notdreclk, notreclk;
+    wire rgfsrq;
+
+    clk_gen cg (
+        .clk(clk),
+        .notfeclk(notfeclkout),
+        .notdfeclk(notdfeclk),
+        .notdreclk(notdreclk),
+        .notreclk(notreclk)
+    );
+
+    rst_gen rg (
+        .on(on),
+        .notreclk(notreclk),
+        .notdfeclk(notdfeclk),
+        .fsrq(rgfsrq),
+        .rstsig(rstsig)
+    );
+
+    halt_unit hu (
+        .muxlast(muxlast),
+        .rgfsrq(rgfsrq),
+        /* since we don't have notfeclk, notdfeclk will be just fine */
+        .notfeclk(notdfeclk),
+        .notreclk(notreclk),
+        .notdreclk(notdreclk),
+        .notreclkout(notreclkout)
+    );
 
 endmodule
 
@@ -595,110 +821,59 @@ module alu16(input logic clk, on,
     output logic [16:0] out,
     output logic [3:0] count);
 
-    wire eclk, ieclk, notclk;
+    wire muxlast, reclk, feclk, rstsig;
 
-    nor #3 (notclk, clk, clk);
-
-    edge_detector ed00 (
+    init in (
         .clk(clk),
-        .eclk(eclk)
+        .on(on),
+        .muxlast(muxlast),
+        .notreclkout(reclk),
+        .notfeclkout(feclk),
+        .rstsig(rstsig)
     );
 
-    edge_detector ed01 (
-        .clk(notclk),
-        .eclk(ieclk)
-    );
-
-    wire noton, longon, notlongon;
-    wire shorteclk, notshorteclk;
-    wire dldata, dlout;
-    wire rstsig;
-    wire longonlq, notlongonlq;
-
-    nor #3 (noton, on, on);
-
-    edge_detector_short edshort (
-        .clk(clk),
-        .eclk(shorteclk)
-    );
-
-    nor #3 (notshorteclk, shorteclk, shorteclk);
-    nor #3 (dldata, notshorteclk, on);
-
-    wire srlq;
-
-    sr_latch srl ( // ahhhhh, race conditionsss!!!!
-        .reset(on),
-        .set(dldata),
-        .q(srlq)
-    );
-
-    edge_detector_half edhalf (
-        .clk(srlq),
-        .eclk(rstsig)
-    );
-
-    wire noteclk, lastcount;
-
-    nor #3 (noteclk, eclk, eclk);
-    nor #3 (eclkcounter, noteclk, lastcount);
-
-    wire [15:0] dmout;
-    wire muxaout, muxbout;
-    wire aluout;
-
-    counter counter (
-        .eclk(eclkcounter),
-        .ieclk(ieclk),
+    counter cc (
+        .reclk(reclk),
+        .feclk(feclk),
         .rst(rstsig),
         .count(count)
     );
 
+    wire muxaout, muxbout;
+
     mux16 muxa (
         .in(ina),
         .sl(count),
-        .out(muxaout),
-        .last(lastcount)
+        .out(muxaout)
     );
 
     mux16 muxb (
         .in(inb),
         .sl(count),
-        .out(muxbout)
+        .out(muxbout),
+        .muxlast(muxlast)
     );
 
+    wire aluout;
+
     alu alu (
-        .eclk(eclk),
-        .ieclk(ieclk),
-        .ina(muxaout),
-        .inb(muxbout),
+        .reclk(reclk),
+        .feclk(feclk),
         .rst(rstsig),
         .op(op),
-        .out(aluout),
+        .ain(muxaout),
+        .bin(muxbout),
+        .aluout(aluout),
         .regout(out[16])
     );
 
-    demux16 demux(
-        .in(eclk), // some clock
-        .sl(count),
-        .out(dmout)
+    shiftreg sreg (
+        .rst(rstsig),
+        .reclk(reclk),
+        .feclk(feclk),
+        .sin(aluout),
+        .pout(out[15:0])
     );
 
-    ms_flipflop msff00 (.eclk(dmout[00]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[00]));
-    ms_flipflop msff01 (.eclk(dmout[01]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[01]));
-    ms_flipflop msff02 (.eclk(dmout[02]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[02]));
-    ms_flipflop msff03 (.eclk(dmout[03]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[03]));
-    ms_flipflop msff04 (.eclk(dmout[04]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[04]));
-    ms_flipflop msff05 (.eclk(dmout[05]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[05]));
-    ms_flipflop msff06 (.eclk(dmout[06]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[06]));
-    ms_flipflop msff07 (.eclk(dmout[07]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[07]));
-    ms_flipflop msff08 (.eclk(dmout[08]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[08]));
-    ms_flipflop msff09 (.eclk(dmout[09]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[09]));
-    ms_flipflop msff10 (.eclk(dmout[10]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[10]));
-    ms_flipflop msff11 (.eclk(dmout[11]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[11]));
-    ms_flipflop msff12 (.eclk(dmout[12]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[12]));
-    ms_flipflop msff13 (.eclk(dmout[13]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[13]));
-    ms_flipflop msff14 (.eclk(dmout[14]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[14]));
-    ms_flipflop msff15 (.eclk(dmout[15]), .ieclk(ieclk), .rst(rstsig), .data(aluout), .q(out[15]));
 
 endmodule

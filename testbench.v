@@ -9,7 +9,7 @@ module testbench;
     wire [3:0] alucount;
     wire [16:0] aluout;
 
-    integer i = 0;
+    integer i, j;
 
 
     ring_oscillator rosci (
@@ -33,8 +33,8 @@ module testbench;
         #900;
         en = 1'b1;
 
-        aluina = 16'b0111_0000_0000_0010;
-        aluinb = 16'b1000_0000_0000_0011;
+        aluina = 16'b0000_0000_0000_0111;
+        aluinb = 16'b0000_0000_0000_0001;
 
         aluop = 3'b000;
 
@@ -44,13 +44,20 @@ module testbench;
         #100;
         aluon = 1'b0;
 
+        j = 0;
+        i = 0;
+
+    end
+
+    initial begin
+        $display("  Count  Aluout                          Time");
     end
 
     always @(posedge clkout) begin
         if (aluon == 1'b0) begin
-            if (i < 18) begin
+            if (i < 32) begin
                 i++;
-                #20 $display("%b %b %b", clkout, alucount, aluout);
+                #20 $display("%b %b %b %t", clkout, alucount, aluout, $time);
             end else begin
                 $finish;
             end
