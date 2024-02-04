@@ -213,8 +213,8 @@ This will compile the `alutester` and runs it.
 
 ### Using alutester
 
-Basically while you are in `alutester`, you in different modes (just like in
-vim). Currenty there are two modes implemented: `Normal Mode` and `Bit Mode`
+Basically while you are in `alutester`, you are in different modes (just like in
+vim). Currently there are two modes implemented: `Normal Mode` and `Bit Mode`
 
 #### Normal Mode
 
@@ -242,23 +242,23 @@ escape or Ctrl[.
 
 #### Running Simulation
 
-Once you finished choosing the oparands and opcodes, you can press `r` while
+Once you finished choosing the operands and opcodes, you can press `r` while
 you are in `Normal Mode`. `alutester` will compile and simulate the ALU for
 you. Once that's done, you can see the bit at the top left corner changes to
 `0` from `X` (if you are running for the first time). Its the clock state. Now
 you can press `n` to step forward through half clock cycle. This will toggle
 the clock, and you can see the output changing as you step through. Similarly,
-`p` step backwards.
+`p` steps backwards.
 
 - r -> runs the simulation
-- n -> step forewards
-- p -> step backwards
+- n -> steps forewards
+- p -> steps backwards
 
 #### Quitting alutester
 
 <details>
 <summary>Please turn off your computer.</summary>
-Just kidding press `q` while you are in `Normal Mode`
+Just kidding press <code>q</code> while you are in <code>Normal Mode</code>
 </details>
 
 # Rest of the README
