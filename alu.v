@@ -875,5 +875,4 @@ module alu16(input logic clk, on,
         .pout(out[15:0])
     );
 
-
 endmodule
