@@ -256,7 +256,10 @@ the clock, and you can see the output changing as you step through. Similarly,
 
 #### Quitting alutester
 
-Please plug off your computer.>! Just kidding press `q` while you are in `Normal Mode`
+<details>
+<summary>Please turn off your computer.</summary>
+Just kidding press `q` while you are in `Normal Mode`
+</details>
 
 # Rest of the README
 
