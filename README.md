@@ -74,7 +74,7 @@ This will install `iverilog` and `vvp` on your machine.
 
 You also need `make`, that is the build system we are using, and `git`. And if
 you wish to use the `alutester` you need the `ncurses` library and a C
-compiler. Use `gcc`. (You might alsoe need the `build-essential` package)
+compiler. Use `gcc`. (You might also need the `build-essential` package)
 
 ```sh
 apt install make git gcc build-essential
@@ -151,7 +151,7 @@ Clk  Count            Aluout         Time
   3 1 0001 10000000000000000         5720
   4 1 0010 10000000000000000         7520
 ```
-If open the `testbench.v`, you could see,
+If you open the `testbench.v`, you could see,
 
 ```verilog
         aluon = 1'b0;
@@ -195,7 +195,7 @@ the is the 3 bit wide `opcode` to the ALU.
 Change the A and B inputs as you wish, and choose the correct `opcode`
 (see the Specification) and run `make` again.
 
-## Using alutester
+## Simulation Using alutester
 
 `alutester` is an ncurses based tui C program to test the ALU interactivly.
 To compile and run, run these command from the root directory of this repo.
@@ -210,6 +210,53 @@ it inside `alutester`'s source too.)
 This will compile the `alutester` and runs it.
 
 ![](./alutester-demo/demo.gif)
+
+### Using alutester
+
+Basically while you are in `alutester`, you in different modes (just like in
+vim). Currenty there are two modes implemented: `Normal Mode` and `Bit Mode`
+
+#### Normal Mode
+
+When you start `alutester`, you will be in `Normal Mode`. You can use h,j,k,l
+to move around (ofcourse, vim bindings) to A input, B input and opcode. Once
+you selected the bit group you want to change, press `Enter` to switch to `Bit
+Mode`.
+
+- h -> move left
+- j -> move down
+- k -> move up
+- l -> move right
+
+#### Bit Mode
+
+In `Bit Mode` you can manipulate bits. Press h and l to move left and right
+respectively. Pressing j and k will flip the current bit. Current bit will be
+hightlighted in `Bit Mode`. (Note: the current bit will be remembered even
+after leaving and entering the `Bit Mode`.) To leave `Bit Mode` just press
+escape or Ctrl[.
+
+- h   -> move left
+- j,k -> flips the bit
+- l   -> move right
+
+#### Running Simulation
+
+Once you finished choosing the oparands and opcodes, you can press `r` while
+you are in `Normal Mode`. `alutester` will compile and simulate the ALU for
+you. Once that's done, you can see the bit at the top left corner changes to
+`0` from `X` (if you are running for the first time). Its the clock state. Now
+you can press `n` to step forward through half clock cycle. This will toggle
+the clock, and you can see the output changing as you step through. Similarly,
+`p` step backwards.
+
+- r -> runs the simulation
+- n -> step forewards
+- p -> step backwards
+
+#### Quitting alutester
+
+Please plug off your computer.>! Just kidding press `q` while you are in `Normal Mode`
 
 # Rest of the README
 
