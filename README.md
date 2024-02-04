@@ -11,7 +11,7 @@ done. The documentation is still in wip.
 
 # Final Schematic of the entire ALU
 
-![image](./finalschematic/finalschematic-monolight.svg)
+![image](./finalschematic/finalschematic.svg)
 
 # Rest of the README
 
