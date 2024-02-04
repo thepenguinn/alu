@@ -20,6 +20,32 @@ experience, use the `alutester`, which is a small `ncurses` based tui C program
 to test the ALU. `testbench/` directory contains the source code for the
 `alutester`.
 
+# Specification
+
+```
+    Inputs
+        A - 16 bit number
+        B - 16 bit number
+
+        Clk - A clock pulse
+        On  - An on signal to start the computation
+
+    Opcodes
+
+        ADD  -  000
+        SUB  -  001
+        XOR  -  010
+        AND  -  011
+        NOT  -  100
+        OR   -  101
+        NOR  -  110
+        NAND -  111
+
+    Output
+        Out    - 16 bit from memory unit
+        Regout - 1 bit from register inside ALU
+```
+
 # Compiling and Simulating the ALU
 
 ## Prerequisites
