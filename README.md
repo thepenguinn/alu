@@ -195,6 +195,22 @@ the is the 3 bit wide `opcode` to the ALU.
 Change the A and B inputs as you wish, and choose the correct `opcode`
 (see the Specification) and run `make` again.
 
+## Using alutester
+
+`alutester` is an ncurses based tui C program to test the ALU interactivly.
+To compile and run, run these command from the root directory of this repo.
+
+```sh
+make runtest
+```
+
+(NOTE: Don't change the name of `alu.v` file. Otherwise you have to modify
+it inside `alutester`'s source too.)
+
+This will compile the `alutester` and runs it.
+
+![](./alutester-demo/demo.gif)
+
 # Rest of the README
 
 #wip
