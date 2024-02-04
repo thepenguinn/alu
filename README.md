@@ -9,6 +9,14 @@ the ability to ADD, SUB and perform 6 other logical operations.
 The design and implementation in verilog is done. And the alutester is almost
 done. The documentation is still in wip.
 
+# Final Schematic of the entire ALU
+
+![image](./finalschematic/finalschematic-mocha.svg)
+
 # Rest of the README
 
 #wip
+
+finalschematic/finalschematic-mocha.svg
+finalschematic/finalschematic-monolight.svg
+finalschematic/finalschematic.svg
