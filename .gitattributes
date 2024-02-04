@@ -1,4 +1,2 @@
 docs/* linguist-documentation=false
-alu.v linguist-documentation=false
-alu.v linguist-venddored=false
-alu.v linguist-generated=false
+finalschematic/* linguist-generated
