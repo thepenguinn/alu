@@ -33,8 +33,8 @@ module testbench;
         #900;
         en = 1'b1;
 
-        aluina = 16'b0000_0000_0000_0111;
-        aluinb = 16'b0000_0000_0000_0001;
+        aluina = 16'b0000_0000_1100_0111;
+        aluinb = 16'b0000_0000_0010_0001;
 
         aluop = 3'b000;
 
@@ -50,14 +50,14 @@ module testbench;
     end
 
     initial begin
-        $display("  Count  Aluout                          Time");
+        $display("Clk  Count            Aluout         Time");
     end
 
     always @(posedge clkout) begin
         if (aluon == 1'b0) begin
             if (i < 32) begin
                 i++;
-                #20 $display("%b %b %b %t", clkout, alucount, aluout, $time);
+                #20 $display("%3d %b %b %b %12t", i, clkout, alucount, aluout, $time);
             end else begin
                 $finish;
             end
