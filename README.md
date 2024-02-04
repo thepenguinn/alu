@@ -1,23 +1,24 @@
-# An implementation of a basic 16 bit ALU
+# What is this thing ?
 
 This project aims to design and implement a basic 16 bit ALU which performs the
 operations sequentially with a 1 bit ALU having 3 bit wide opcodes, and having
 the ability to ADD, SUB and perform 6 other logical operations.
 
-# What's done
+# What's done ?
 
 The design and implementation in verilog is done. And the alutester is almost
-done. The documentation is still in wip.
+done. The documentation is still in #wip.
 
 ## Final Schematic of the entire ALU
 
 ![image](./finalschematic/finalschematic.svg)
 
-`alu.v` contains the Verilog implementation of the above schematic. Just for the
-kicks, the entire ALU is written in `structural` Verilog. The `testbench.v` contains
-a small testbench to test the ALU. For interactive simulating experience, use the `alutester`,
-which is a small `ncurses` based tui C program to test the ALU. `testbench/` directory
-contains the source code for the `alutester`.
+`alu.v` contains the Verilog implementation of the above schematic. Just for
+the kicks, the entire ALU is written in `structural` Verilog. The `testbench.v`
+contains a small testbench to test the ALU. For an interactive simulating
+experience, use the `alutester`, which is a small `ncurses` based tui C program
+to test the ALU. `testbench/` directory contains the source code for the
+`alutester`.
 
 # Compiling and Simulating the ALU
 
@@ -25,9 +26,10 @@ contains the source code for the `alutester`.
 
 In order to compile and simulate the ALU, you need a Verilog compiler and a
 simulator. We will be using the `iverilog` as the compiler and `vvp` as the
-simulator. In order to simulate the ALU, we need to a file that `vvp` can
-understand. That's where the Icarus Verilog Compiler comes in.
-The compiler will generate a file that can be used by the `vvp`.
+simulator. In order to simulate the ALU, we need to convert the `*.v` files
+into a format that `vvp` can understand (vvp format). That's where the Icarus
+Verilog Compiler comes in. The compiler will generate a file that can be used
+by `vvp`.
 
 ### Installing iverilog and vvp
 
@@ -44,11 +46,12 @@ This will install `iverilog` and `vvp` on your machine.
 
 ### Other Simulation Prerequisites
 
-You also need `make`, that is the build system we are using, and
-`git`.
+You also need `make`, that is the build system we are using, and `git`. And if
+you wish to use the `alutester` you need the `ncurses` library and a C
+compiler. Use `gcc`. (You might alsoe need the `build-essential` package)
 
 ```sh
-apt install make git
+apt install make git gcc build-essential
 ```
 
 ## Clone this Repo
@@ -63,16 +66,16 @@ cd alu
 
 ## Direct Simulation
 
-In order to simulate, simply run `make`. `make` will take care
-of compiling `alu.v` and `testbench.v` into  an `alu` file, and
-simulating that `alu` file using `vvp`.
+In order to simulate, simply run `make`. `make` will take care of compiling
+`alu.v` and `testbench.v` into  an `alu` file (vvp format), and simulating that
+`alu` file using `vvp`.
 
 ```sh
 make
 ```
 
-If you haven't changed anything in the `testbench.v` file, the output
-will look something like this.
+If you haven't changed anything in the `testbench.v` file, the output will look
+something like this.
 
 ```
 iverilog -o alu -g2012 testbench.v alu.v
@@ -124,7 +127,7 @@ Clk  Count            Aluout         Time
 ```
 If open the `testbench.v`, you could see,
 
-```
+```verilog
         aluon = 1'b0;
         #100;
         aluon = 1'b1;
@@ -133,8 +136,8 @@ If open the `testbench.v`, you could see,
 ```
 
 We are giving an impulse to `on` pin of the ALU (like pressing a push button).
-This will cause the ALU to reset all of its flipflops during the next, first
-full clock cycle. This is the reason for the resetting of `counter`, `shift
+This will cause the ALU to reset all of its flipflops during the next full
+clock cycle. This is the reason for the resetting of the `counter`, the `shift
 register`, and the register inside the `one bit alu`.
 
 Once the `counter` hits `1111`, it will cause the ALU to halt the `clock`. And in
@@ -153,7 +156,7 @@ If you look at the output,
 
 Open the `testbench.v`, and go to these lines
 
-```
+```verilog
         aluina = 16'b0000_0000_1100_0111;
         aluinb = 16'b0000_0000_0010_0001;
 
