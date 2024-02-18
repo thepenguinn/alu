@@ -1,0 +1,155 @@
+return {
+    ["sctkglvlnorgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkglvlmsflipflop"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["epicglvldflipflopsr"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkclkgen"] = {
+        ["parent_dir"] = "initializer/tikzpics",
+    },
+    ["sctkglvlnotgateleft"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkglvlxnorgate"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["sctkglvlnotgatedown"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkglvlsrlatch"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkmuxtwo"] = {
+        ["parent_dir"] = "counter/tikzpics",
+    },
+    ["epicglvldflipflop"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["epicshiftregister"] = {
+        ["parent_dir"] = "memoryunit/tikzpics",
+    },
+    ["epicinitcircuit"] = {
+        ["parent_dir"] = "initializer/tikzpics",
+    },
+    ["sctkglvlandgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["epicglvlxorgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["epicglvlandgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkglvlnotgateright"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkglvlnotgateup"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["epicglvlmsflipflop"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["epicglvlorgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["epicglvlnotgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkaluinit"] = {
+        ["parent_dir"] = "onebitalu/tikzpics",
+    },
+    ["sctkglvlxorgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkrstgen"] = {
+        ["parent_dir"] = "initializer/tikzpics",
+    },
+    ["sctkglvlnandgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["epicglvlsrflipflop"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkglvlnotgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkmuxsecondlayer"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkglvldflipfloptst"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctklogicop"] = {
+        ["parent_dir"] = "onebitalu/tikzpics",
+    },
+    ["sctkcounterfour"] = {
+        ["parent_dir"] = "counter/tikzpics",
+    },
+    ["epiccounterfour"] = {
+        ["parent_dir"] = "counter/tikzpics",
+    },
+    ["sctkglvldflipflopsr"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["epicmuxsixteen"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkmuxeight"] = {
+        ["parent_dir"] = "onebitalu/tikzpics",
+    },
+    ["sctkmuxsixteen"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkfulladder"] = {
+        ["parent_dir"] = "onebitalu/tikzpics",
+    },
+    ["sctkinitcircuit"] = {
+        ["parent_dir"] = "initializer/tikzpics",
+    },
+    ["epicglvlsrlatch"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkedgedetector"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["sctkmuxfirstlayer"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkglvlorgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkglvldflipflop"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["epicfinalschematic"] = {
+        ["parent_dir"] = "finalschematics/tikzpics",
+    },
+    ["sctkaluonebit"] = {
+        ["parent_dir"] = "onebitalu/tikzpics",
+    },
+    ["sctkglvlsrflipflop"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkshiftregister"] = {
+        ["parent_dir"] = "memoryunit/tikzpics",
+    },
+    ["sctkmsflipflop"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["epicglvlnandgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+    ["sctkhaltunit"] = {
+        ["parent_dir"] = "initializer/tikzpics",
+    },
+    ["epicaluonebit"] = {
+        ["parent_dir"] = "onebitalu/tikzpics",
+    },
+    ["epicglvlnorgate"] = {
+        ["parent_dir"] = "basiccircuits/tikzpics",
+    },
+}

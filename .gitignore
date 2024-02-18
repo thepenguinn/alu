@@ -19,3 +19,4 @@ testbench/true.c
 *.log
 *.pdf
 *.tstp
+dep_cache

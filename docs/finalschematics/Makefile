@@ -20,8 +20,7 @@ _viewpdf: runlunatikz chapter.pdf
 	viewpdf chapter.pdf
 
 runlunatikz:
-	lunatikz --style-root-path --style-file colorscheme.sty --style-macro usepackage \
-		--touch-file need_to_build chapter.tex
+	lunatikz build
 
 .SUFFIXES: .tex .pdf
 

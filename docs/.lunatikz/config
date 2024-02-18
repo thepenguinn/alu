@@ -1,0 +1,6 @@
+return {
+    ["touch"] = true,
+    ["style.file"] = "colorscheme.sty",
+    ["pics.skip"] = true,
+    ["style.macro"] = "usepackage",
+}

@@ -1,0 +1,11 @@
+return {
+    ["initializer"] = "chapter.tex",
+    ["testbench"] = "chapter.tex",
+    ["basiccircuits"] = "chapter.tex",
+    ["counter"] = "chapter.tex",
+    ["onebitalu"] = "chapter.tex",
+    ["memoryunit"] = "chapter.tex",
+    [""] = "main.tex",
+    ["finalschematics"] = "chapter.tex",
+    ["introduction"] = "chapter.tex",
+}
