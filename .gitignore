@@ -20,3 +20,4 @@ testbench/true.c
 *.pdf
 *.tstp
 dep_cache
+subfix_cache
